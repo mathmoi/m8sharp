@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace m8.chess;
 
@@ -170,6 +171,18 @@ public readonly struct PieceType
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => 1 <= _value && _value <= 6;
+    }
+
+    /// <summary>
+    ///  Returns the character representing this piece type
+    /// </summary>
+    public char Character
+    {
+        get
+        {
+            Debug.Assert(IsValid);
+            return VALUE_TO_CHAR_MAP[_value];
+        }
     }
 
     #endregion

@@ -79,6 +79,11 @@ public readonly struct Rank(byte value)
     public static readonly Rank Eight = new(7);
 
     /// <summary>
+    ///  All the ranks from First to Eight
+    /// </summary>
+    public static readonly IEnumerable<Rank> AllRanks = [First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eight];
+
+    /// <summary>
     ///  Represent an invalid rank.
     /// </summary>
     /// <remarks>This value can be used to represent the absence of a rank,</remarks>

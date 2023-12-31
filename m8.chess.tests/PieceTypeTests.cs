@@ -52,4 +52,15 @@ public class PieceTypeTests
     {
         Assert.False(PieceType.None.IsValid);
     }
+
+    [Fact]
+    public void Character_ValidPiece_ReturnsCorrectCharacter()
+    {
+        Assert.Equal('P', PieceType.Pawn.Character);
+        Assert.Equal('R', PieceType.Rook.Character);
+        Assert.Equal('B', PieceType.Bishop.Character);
+        Assert.Equal('N', PieceType.Knight.Character);
+        Assert.Equal('Q', PieceType.Queen.Character);
+        Assert.Equal('K', PieceType.King.Character);
+    }
 }

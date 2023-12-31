@@ -237,6 +237,25 @@ public readonly struct Piece
         get => this.Type.IsValid;
     }
 
+
+    /// <summary>
+    ///  Returns the character representing this piece type
+    /// </summary>
+    public char Character
+    {
+        get
+        {
+            Debug.Assert(IsValid);
+            return this.Color == Color.White
+                    ? char.ToUpper(this.Type.Character)
+                    : char.ToLower(this.Type.Character);
+        }
+    }
+
+    #endregion
+
+    #region Public Methods
+
     /// <summary>
     ///  Returns the piece name in english (ex.: Black Queen).
     /// </summary>

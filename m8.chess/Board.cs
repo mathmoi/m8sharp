@@ -3,6 +3,7 @@ using m8.common;
 using m8.common.Extensions;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace m8.chess;
 
@@ -402,6 +403,118 @@ public class Board
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => _fullMoveNumber;
+    }
+
+    public override string ToString()
+    {
+        var sb = new StringBuilder();
+
+        // Indicator if black is the side to move
+        sb.Append(_sideToMove == Color.Black ? "=>" : "  ");
+
+        // Top border
+        sb.Append('╔');
+        foreach (var file in File.AllFiles)
+        {
+            var canCastle = this.GetCastlingFile(CastlingSide.QueenSide) == file
+                            && (this.CastlingOptions & CastlingOptions.BlackQueenside) == CastlingOptions.BlackQueenside;
+            canCastle |= this.GetCastlingFile(CastlingSide.KingSide) == file
+                            && (this.CastlingOptions & CastlingOptions.BlackKingside) == CastlingOptions.BlackKingside;
+
+            sb.Append(canCastle ? "═▼═" : "═══");
+
+            if (file != File.h)
+            {
+                sb.Append('╤');
+            }
+        }
+        sb.AppendLine("╗");
+
+        foreach (var rank in Rank.AllRanks.Reverse())
+        {
+            // Rank indicator and left border
+            sb.Append(rank.ToString())
+              .Append(" ║");
+
+            foreach (var file in File.AllFiles)
+            {
+                var sq = new Square(file, rank);
+                var piece = this[sq];
+                if (piece.IsValid)
+                {
+                    if (piece.Color == Color.White)
+                    {
+                        sb.Append(' ')
+                          .Append(piece.Type.Character)
+                          .Append(' ');
+                    }
+                    else
+                    {
+                        sb.Append('▶')
+                          .Append(piece.Type.Character)
+                          .Append('◀');
+                    }
+                }
+                else
+                {
+                    if ((byte)file % 2 == (byte)rank % 2)
+                    {
+                        sb.Append(" ⬩ ");
+                    }
+                    else
+                    {
+                        sb.Append("   ");
+                    }
+                    
+                }
+                
+                if (file != File.h)
+                {
+                    sb.Append('│');
+                }
+            }
+
+            // Right border 
+            sb.AppendLine("║");
+
+            // Rank separator
+            if (rank != Rank.First)
+            {
+                sb.AppendLine("  ╟───┼───┼───┼───┼───┼───┼───┼───╢");
+            }
+        }
+
+        // Indicator if white is the side to move
+        sb.Append(_sideToMove == Color.White ? "=>" : "  ");
+
+        // Bottom border
+        sb.Append('╚');
+        foreach (var file in File.AllFiles)
+        {
+            var canCastle = this.GetCastlingFile(CastlingSide.QueenSide) == file
+                            && (this.CastlingOptions & CastlingOptions.WhiteQueenside) == CastlingOptions.WhiteQueenside;
+            canCastle |= this.GetCastlingFile(CastlingSide.KingSide) == file
+                            && (this.CastlingOptions & CastlingOptions.WhiteKingside) == CastlingOptions.WhiteKingside;
+
+            sb.Append(canCastle ? "═▲═" : "═══");
+
+            if (file != File.h)
+            {
+                sb.Append('╧');
+            }
+        }
+        sb.AppendLine("╝");
+
+        sb.Append("    a   b   c   d   e   f   g   h");
+
+        if (this.EnPassantFile.IsValid)
+        {
+            sb.AppendLine();
+            sb.Append(' ', 4 + (byte)this.EnPassantFile * 4);
+            sb.Append('△');
+        }
+
+        return sb.ToString();
     }
 
     #endregion
