@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using m8.common;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace m8.chess;
@@ -268,6 +269,19 @@ public readonly struct Rank(byte value)
             return new Rank((byte)(7 - _value));
         }
         return this;
+    }
+
+    /// <summary>
+    ///  Gets a bitboard of the squares of the rank
+    /// </summary>
+    public Bitboard Bitboard
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            Debug.Assert(IsValid);
+            return new Bitboard(0x00000000000000fful << (8 * _value));
+        }
     }
 
     /// <summary>

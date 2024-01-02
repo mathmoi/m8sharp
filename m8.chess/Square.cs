@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using m8.common;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace m8.chess;
@@ -32,12 +33,21 @@ public readonly struct Square
     }
 
     /// <summary>
+    ///  Constructor from a string representation of the square.
+    /// </summary>
+    /// <param name="sq">String containing two characters representing the square</param>
+    public Square(string sq)
+        : this(new File(sq[0]), new Rank(sq[1]))
+    {
+        Debug.Assert(sq.Length == 2);
+    }
+
+    /// <summary>
     ///  Private constructor to construct the Invalid instance.
     /// </summary>
     public Square(byte value) => _value = value;
 
     #endregion
-
 
     #region Static instances
 
@@ -157,6 +167,19 @@ public readonly struct Square
         {
             Debug.Assert(IsValid);
             return new((byte)(_value >> 3));
+        }
+    }
+
+    /// <summary>
+    ///  Gets a bitboard representing the square
+    /// </summary>
+    public Bitboard Bitboard
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            Debug.Assert(IsValid);
+            return Bitboard.CreateSingleBit(_value);
         }
     }
 

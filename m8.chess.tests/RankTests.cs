@@ -1,4 +1,6 @@
-﻿namespace m8.chess.tests;
+﻿using m8.common;
+
+namespace m8.chess.tests;
 
 /// <summary>
 ///  Tests for the Rank struct.
@@ -93,5 +95,24 @@ public class RankTests
         Rank actual = sut.MoveDown(positions);
 
         Assert.Equal(expected, actual);
+    }
+
+    [Theory]
+    [InlineData('1', 0x00000000000000fful)]
+    [InlineData('2', 0x000000000000ff00ul)]
+    [InlineData('3', 0x0000000000ff0000ul)]
+    [InlineData('4', 0x00000000ff000000ul)]
+    [InlineData('5', 0x000000ff00000000ul)]
+    [InlineData('6', 0x0000ff0000000000ul)]
+    [InlineData('7', 0x00ff000000000000ul)]
+    [InlineData('8', 0xff00000000000000ul)]
+    public void Bitboard_AllValidValues_CorrectBitboardReturned(char sut_char, ulong expectedValue)
+    {
+        Rank sut = new(sut_char);
+        var expectedBb = new Bitboard(expectedValue);
+
+        var result = sut.Bitboard;
+
+        Assert.Equal(expectedBb, result);
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace m8.chess.tests;
+﻿using m8.common;
+
+namespace m8.chess.tests;
 
 /// <summary>
 ///  Tests for the Square struct.
@@ -313,5 +315,80 @@ public class SquareTests
         Assert.Equal("f8", Square.f8.ToString());
         Assert.Equal("g8", Square.g8.ToString());
         Assert.Equal("h8", Square.h8.ToString());
+    }
+
+    [Theory]
+    [InlineData("a1", 0x0000000000000001ul)]
+    [InlineData("b1", 0x0000000000000002ul)]
+    [InlineData("c1", 0x0000000000000004ul)]
+    [InlineData("d1", 0x0000000000000008ul)]
+    [InlineData("e1", 0x0000000000000010ul)]
+    [InlineData("f1", 0x0000000000000020ul)]
+    [InlineData("g1", 0x0000000000000040ul)]
+    [InlineData("h1", 0x0000000000000080ul)]
+    [InlineData("a2", 0x0000000000000100ul)]
+    [InlineData("b2", 0x0000000000000200ul)]
+    [InlineData("c2", 0x0000000000000400ul)]
+    [InlineData("d2", 0x0000000000000800ul)]
+    [InlineData("e2", 0x0000000000001000ul)]
+    [InlineData("f2", 0x0000000000002000ul)]
+    [InlineData("g2", 0x0000000000004000ul)]
+    [InlineData("h2", 0x0000000000008000ul)]
+    [InlineData("a3", 0x0000000000010000ul)]
+    [InlineData("b3", 0x0000000000020000ul)]
+    [InlineData("c3", 0x0000000000040000ul)]
+    [InlineData("d3", 0x0000000000080000ul)]
+    [InlineData("e3", 0x0000000000100000ul)]
+    [InlineData("f3", 0x0000000000200000ul)]
+    [InlineData("g3", 0x0000000000400000ul)]
+    [InlineData("h3", 0x0000000000800000ul)]
+    [InlineData("a4", 0x0000000001000000ul)]
+    [InlineData("b4", 0x0000000002000000ul)]
+    [InlineData("c4", 0x0000000004000000ul)]
+    [InlineData("d4", 0x0000000008000000ul)]
+    [InlineData("e4", 0x0000000010000000ul)]
+    [InlineData("f4", 0x0000000020000000ul)]
+    [InlineData("g4", 0x0000000040000000ul)]
+    [InlineData("h4", 0x0000000080000000ul)]
+    [InlineData("a5", 0x0000000100000000ul)]
+    [InlineData("b5", 0x0000000200000000ul)]
+    [InlineData("c5", 0x0000000400000000ul)]
+    [InlineData("d5", 0x0000000800000000ul)]
+    [InlineData("e5", 0x0000001000000000ul)]
+    [InlineData("f5", 0x0000002000000000ul)]
+    [InlineData("g5", 0x0000004000000000ul)]
+    [InlineData("h5", 0x0000008000000000ul)]
+    [InlineData("a6", 0x0000010000000000ul)]
+    [InlineData("b6", 0x0000020000000000ul)]
+    [InlineData("c6", 0x0000040000000000ul)]
+    [InlineData("d6", 0x0000080000000000ul)]
+    [InlineData("e6", 0x0000100000000000ul)]
+    [InlineData("f6", 0x0000200000000000ul)]
+    [InlineData("g6", 0x0000400000000000ul)]
+    [InlineData("h6", 0x0000800000000000ul)]
+    [InlineData("a7", 0x0001000000000000ul)]
+    [InlineData("b7", 0x0002000000000000ul)]
+    [InlineData("c7", 0x0004000000000000ul)]
+    [InlineData("d7", 0x0008000000000000ul)]
+    [InlineData("e7", 0x0010000000000000ul)]
+    [InlineData("f7", 0x0020000000000000ul)]
+    [InlineData("g7", 0x0040000000000000ul)]
+    [InlineData("h7", 0x0080000000000000ul)]
+    [InlineData("a8", 0x0100000000000000ul)]
+    [InlineData("b8", 0x0200000000000000ul)]
+    [InlineData("c8", 0x0400000000000000ul)]
+    [InlineData("d8", 0x0800000000000000ul)]
+    [InlineData("e8", 0x1000000000000000ul)]
+    [InlineData("f8", 0x2000000000000000ul)]
+    [InlineData("g8", 0x4000000000000000ul)]
+    [InlineData("h8", 0x8000000000000000ul)]
+    public void Bitboard_AllValidValues_CorrectBitboardReturned(string sutString, ulong expectedValue)
+    {
+        var sut = new Square(sutString);
+        var expectedBb = new Bitboard(expectedValue);
+
+        var result = sut.Bitboard;
+
+        Assert.Equal(expectedBb, result);
     }
 }

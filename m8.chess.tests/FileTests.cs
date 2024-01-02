@@ -1,4 +1,6 @@
-﻿namespace m8.chess.tests;
+﻿using m8.common;
+
+namespace m8.chess.tests;
 
 /// <summary>
 ///  Tests for the File struct.
@@ -93,5 +95,24 @@ public class FileTests
         File actual = sut.MoveRight(positions);
 
         Assert.Equal(expected, actual);
+    }
+
+    [Theory]
+    [InlineData('a', 0x0101010101010101ul)]
+    [InlineData('b', 0x0202020202020202ul)]
+    [InlineData('c', 0x0404040404040404ul)]
+    [InlineData('d', 0x0808080808080808ul)]
+    [InlineData('e', 0x1010101010101010ul)]
+    [InlineData('f', 0x2020202020202020ul)]
+    [InlineData('g', 0x4040404040404040ul)]
+    [InlineData('h', 0x8080808080808080ul)]
+    public void Bitboard_AllValidValues_CorrectBitboardReturned(char sut_char, ulong expectedValue)
+    {
+        var sut = new File(sut_char);
+        var expectedBb = new Bitboard(expectedValue);
+
+        var result = sut.Bitboard;
+
+        Assert.Equal(expectedBb, result);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using m8.common;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace m8.chess;
@@ -259,6 +260,19 @@ public readonly struct File(byte value)
     {
         Debug.Assert(this.IsValid);
         return new File((byte)(_value + positions));
+    }
+
+    /// <summary>
+    ///  Gets a bitboard of the squares of the file
+    /// </summary>
+    public Bitboard Bitboard
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            Debug.Assert(IsValid);
+            return new Bitboard(0x0101010101010101ul << _value);
+        }
     }
 
     /// <summary>
