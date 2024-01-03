@@ -11,6 +11,8 @@ public readonly struct Bitboard
 {
     private readonly ulong _value;
 
+    #region Static instances
+
     /// <summary>
     ///  A Bitboard with all bits to zero.
     /// </summary>
@@ -20,6 +22,10 @@ public readonly struct Bitboard
     ///  A bitboard with all bits set to one.
     /// </summary>
     public static readonly Bitboard Full = new(0xfffffffffffffffful);
+
+    #endregion
+
+    #region Constructor and builders
 
     /// <summary>
     ///  Constructor
@@ -41,6 +47,10 @@ public readonly struct Bitboard
         Debug.Assert(index < 64);
         return new(0x1ul << index);
     }
+
+    #endregion
+
+    #region Public properties and accessors
 
     /// <summary>
     ///  Get the value of a given bit using the index operator.
@@ -93,6 +103,18 @@ public readonly struct Bitboard
     }
 
     /// <summary>
+    ///  Returns a string representing the Bitboard value.
+    /// </summary>
+    public override string ToString()
+    {
+        return "0x" + _value.ToString("x");
+    }
+
+    #endregion
+
+    #region Public mutators
+
+    /// <summary>
     ///  Returns a copy of the bitboard with a given bit set.
     /// </summary>
     /// <param name="index">Index of the bit to set</param>
@@ -114,11 +136,36 @@ public readonly struct Bitboard
         return new(_value & ~(1ul << index));
     }
 
+    #endregion
+
+    #region Operators overloading
+
     /// <summary>
-    ///  Returns a string representing the Bitboard value.
+    ///  Overload of the operator &
     /// </summary>
-    public override string ToString()
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Bitboard operator &(Bitboard left, Bitboard right)
     {
-        return "0x" + _value.ToString("x");
+        return new Bitboard(left._value &  right._value);
     }
+
+    /// <summary>
+    ///  Overload of the operator |
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Bitboard operator |(Bitboard left, Bitboard right)
+    {
+        return new Bitboard(left._value | right._value);
+    }
+
+    /// <summary>
+    ///  Overload of the operator ^
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Bitboard operator ^(Bitboard left, Bitboard right)
+    {
+        return new Bitboard(left._value ^ right._value);
+    }
+
+    #endregion
 }

@@ -1,7 +1,9 @@
 ﻿using m8.chess.Exceptions;
 using m8.common;
 using m8.common.Extensions;
+using System.Data.Common;
 using System.Diagnostics;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -312,9 +314,7 @@ public class Board
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void SetCastlingOption(Color color, CastlingSide side)
     {
-        CastlingOptions option = side == CastlingSide.QueenSide ? CastlingOptions.WhiteQueenside : CastlingOptions.WhiteKingside;
-        option = (CastlingOptions)((int)option << (int)color);
-        _castlingOptions |= option;
+        _castlingOptions |= CastlingOptionsHelpers.Create(color, side);
     }
 
     #endregion
@@ -405,6 +405,166 @@ public class Board
         get => _fullMoveNumber;
     }
 
+    #region FEN property
+
+    /// <summary>
+    ///  Returns a FEN string representing the current position
+    /// </summary>
+    public string FEN
+    {
+        get
+        {
+            var sb = new StringBuilder();
+
+            AppendPiecePlacementData(sb);
+
+            sb.Append(_sideToMove.Character)
+              .Append(' ');
+
+            AppendCastingAvailabilities(sb);
+            AppendEnPassantTargetSquare(sb);
+
+            sb.Append(_halfMoveClock)
+              .Append(' ')
+              .Append(_fullMoveNumber);
+
+            return sb.ToString();
+        }
+    }
+
+    private void AppendPiecePlacementData(StringBuilder sb)
+    {
+        uint emptySquaresSkipped = 0;
+        foreach (var rank in Rank.AllRanks.Reverse())
+        {
+            foreach (var file in File.AllFiles)
+            {
+                var sq = new Square(file, rank);
+                var piece = this[sq];
+                if (piece.IsValid)
+                {
+                    if (0 < emptySquaresSkipped)
+                    {
+                        sb.Append(emptySquaresSkipped);
+                        emptySquaresSkipped = 0;
+                    }
+                    sb.Append(piece.Character);
+                }
+                else
+                {
+                    ++emptySquaresSkipped;
+                }
+            }
+
+            if (0 < emptySquaresSkipped)
+            {
+                sb.Append(emptySquaresSkipped);
+                emptySquaresSkipped = 0;
+            }
+
+            if (rank > Rank.First)
+            {
+                sb.Append('/');
+            }
+        }
+        sb.Append(' ');
+    }
+
+    private void AppendCastingAvailabilities(StringBuilder sb)
+    {
+        var anyCastle = AppendCastlingAvailability(sb, Color.White, CastlingSide.KingSide);
+        anyCastle |= AppendCastlingAvailability(sb, Color.White, CastlingSide.QueenSide);
+        anyCastle |= AppendCastlingAvailability(sb, Color.Black, CastlingSide.KingSide);
+        anyCastle |= AppendCastlingAvailability(sb, Color.Black, CastlingSide.QueenSide);
+
+        if (!anyCastle)
+        {
+            sb.Append('-');
+        }
+        sb.Append(' ');
+    }
+
+    private bool AppendCastlingAvailability(StringBuilder sb, Color color, CastlingSide side)
+    {
+        var castlingOption = CastlingOptionsHelpers.Create(color, side);
+        var canCastle = (_castlingOptions & castlingOption) == castlingOption;
+
+        if (canCastle)
+        {
+            var rooks = _pieces[(byte)new Piece(color, PieceType.Rook)];
+            rooks &= Rank.First.FlipForBlack(color).Bitboard;
+            var outterRookSquare = new Square((byte)(side == CastlingSide.KingSide ? rooks.MSB : rooks.LSB));
+            var outterRookFile = outterRookSquare.File;
+
+            var castlingColumn = this.GetCastlingFile(side);
+            if (outterRookFile == castlingColumn)
+            {
+                sb.Append(castlingOption.GetCastlingCharacter());
+            }
+            else
+            {
+                var c =  castlingColumn.ToString();
+                c = color == Color.White ? c.ToUpper() : c.ToLower();
+                sb.Append(c);
+            }
+        }
+
+        return canCastle;
+    }
+
+    private void AppendEnPassantTargetSquare(StringBuilder sb)
+    {
+        if (_enPassantFile.IsValid)
+        {
+            sb.Append(new Square(_enPassantFile, Rank.Fifth.FlipForBlack(_sideToMove)));
+        }
+        else
+        {
+            sb.Append('-');
+        }
+        sb.Append(' ');
+    }
+
+    #endregion
+
+    /// <summary>
+    ///  Returns a representation of the board as a string
+    /// </summary>
+    /// <example>
+    ///   ╔═▼═╤═══╤═══╤═══╤═══╤═══╤═══╤═▼═╗
+    /// 8 ║▶R◀│▶N◀│▶B◀│▶Q◀│▶K◀│▶B◀│▶N◀│▶R◀║
+    ///   ╟───┼───┼───┼───┼───┼───┼───┼───╢
+    /// 7 ║▶P◀│▶P◀│▶P◀│   │▶P◀│   │▶P◀│▶P◀║
+    ///   ╟───┼───┼───┼───┼───┼───┼───┼───╢
+    /// 6 ║   │ ⬩ │   │ ⬩ │   │ ⬩ │   │ ⬩ ║
+    ///   ╟───┼───┼───┼───┼───┼───┼───┼───╢
+    /// 5 ║ ⬩ │   │ ⬩ │▶P◀│ P │▶P◀│ ⬩ │   ║
+    ///   ╟───┼───┼───┼───┼───┼───┼───┼───╢
+    /// 4 ║   │ ⬩ │   │ ⬩ │   │ ⬩ │   │ ⬩ ║
+    ///   ╟───┼───┼───┼───┼───┼───┼───┼───╢
+    /// 3 ║ ⬩ │   │ ⬩ │   │ ⬩ │   │ ⬩ │   ║
+    ///   ╟───┼───┼───┼───┼───┼───┼───┼───╢
+    /// 2 ║ P │ P │ P │ P │   │ P │ P │ P ║
+    ///   ╟───┼───┼───┼───┼───┼───┼───┼───╢
+    /// 1 ║ R │ N │ B │ Q │ K │ B │ N │ R ║
+    /// =>╚═▲═╧═══╧═══╧═══╧═══╧═══╧═══╧═▲═╝
+    ///     a   b   c   d   e   f   g   h
+    ///                         △
+    /// </example>
+    /// <remarks>
+    ///  The value returned as a text representation of the current position status. The 
+    ///  pieces are represented by their usual English characters. The black pieces are
+    ///  framed by two triangles to differentiate them from the white pieces.
+    ///  
+    ///  There is an arrow displayed to the left of the board either at the top to denote
+    ///  that it is black's turn to play or at the bottom if it is white's turn to play.
+    ///  
+    ///  Triangles appear in the border near the original squares of the rooks if they can
+    ///  still castle.
+    ///  
+    ///  If a pawn can be taken in passing, a triangle appears under the letter 
+    ///  representing the column.
+    /// </remarks>
     public override string ToString()
     {
         var sb = new StringBuilder();

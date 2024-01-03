@@ -136,7 +136,18 @@ public readonly struct Color
 
     #endregion
 
-    #region Public methods
+    #region Public methods and properties
+
+    /// <summary>
+    ///  Returns the character representing this color
+    /// </summary>
+    public char Character
+    {
+        get
+        {
+            return _value == WHITE_VALUE ? 'w' : 'b';
+        }
+    }
 
     /// <summary>
     ///  Returns a string representing the name of the color.
