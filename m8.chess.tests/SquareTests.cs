@@ -1,4 +1,5 @@
-﻿using m8.common;
+﻿using FluentAssertions;
+using m8.common;
 
 namespace m8.chess.tests;
 
@@ -10,311 +11,283 @@ public class SquareTests
     [Fact]
     public void File_AllSquares_CorrectFile()
     {
-        Assert.Equal(File.a, Square.a1.File);
-        Assert.Equal(File.a, Square.a2.File);
-        Assert.Equal(File.a, Square.a3.File);
-        Assert.Equal(File.a, Square.a4.File);
-        Assert.Equal(File.a, Square.a5.File);
-        Assert.Equal(File.a, Square.a6.File);
-        Assert.Equal(File.a, Square.a7.File);
-        Assert.Equal(File.a, Square.a8.File);
-
-        Assert.Equal(File.b, Square.b1.File);
-        Assert.Equal(File.b, Square.b2.File);
-        Assert.Equal(File.b, Square.b3.File);
-        Assert.Equal(File.b, Square.b4.File);
-        Assert.Equal(File.b, Square.b5.File);
-        Assert.Equal(File.b, Square.b6.File);
-        Assert.Equal(File.b, Square.b7.File);
-        Assert.Equal(File.b, Square.b8.File);
-
-        Assert.Equal(File.c, Square.c1.File);
-        Assert.Equal(File.c, Square.c2.File);
-        Assert.Equal(File.c, Square.c3.File);
-        Assert.Equal(File.c, Square.c4.File);
-        Assert.Equal(File.c, Square.c5.File);
-        Assert.Equal(File.c, Square.c6.File);
-        Assert.Equal(File.c, Square.c7.File);
-        Assert.Equal(File.c, Square.c8.File);
-
-        Assert.Equal(File.d, Square.d1.File);
-        Assert.Equal(File.d, Square.d2.File);
-        Assert.Equal(File.d, Square.d3.File);
-        Assert.Equal(File.d, Square.d4.File);
-        Assert.Equal(File.d, Square.d5.File);
-        Assert.Equal(File.d, Square.d6.File);
-        Assert.Equal(File.d, Square.d7.File);
-        Assert.Equal(File.d, Square.d8.File);
-
-        Assert.Equal(File.e, Square.e1.File);
-        Assert.Equal(File.e, Square.e2.File);
-        Assert.Equal(File.e, Square.e3.File);
-        Assert.Equal(File.e, Square.e4.File);
-        Assert.Equal(File.e, Square.e5.File);
-        Assert.Equal(File.e, Square.e6.File);
-        Assert.Equal(File.e, Square.e7.File);
-        Assert.Equal(File.e, Square.e8.File);
-
-        Assert.Equal(File.f, Square.f1.File);
-        Assert.Equal(File.f, Square.f2.File);
-        Assert.Equal(File.f, Square.f3.File);
-        Assert.Equal(File.f, Square.f4.File);
-        Assert.Equal(File.f, Square.f5.File);
-        Assert.Equal(File.f, Square.f6.File);
-        Assert.Equal(File.f, Square.f7.File);
-        Assert.Equal(File.f, Square.f8.File);
-
-        Assert.Equal(File.g, Square.g1.File);
-        Assert.Equal(File.g, Square.g2.File);
-        Assert.Equal(File.g, Square.g3.File);
-        Assert.Equal(File.g, Square.g4.File);
-        Assert.Equal(File.g, Square.g5.File);
-        Assert.Equal(File.g, Square.g6.File);
-        Assert.Equal(File.g, Square.g7.File);
-        Assert.Equal(File.g, Square.g8.File);
-
-        Assert.Equal(File.h, Square.h1.File);
-        Assert.Equal(File.h, Square.h2.File);
-        Assert.Equal(File.h, Square.h3.File);
-        Assert.Equal(File.h, Square.h4.File);
-        Assert.Equal(File.h, Square.h5.File);
-        Assert.Equal(File.h, Square.h6.File);
-        Assert.Equal(File.h, Square.h7.File);
-        Assert.Equal(File.h, Square.h8.File);
+        Square.a1.File.Should().Be(File.a);
+        Square.a2.File.Should().Be(File.a);
+        Square.a3.File.Should().Be(File.a);
+        Square.a4.File.Should().Be(File.a);
+        Square.a5.File.Should().Be(File.a);
+        Square.a6.File.Should().Be(File.a);
+        Square.a7.File.Should().Be(File.a);
+        Square.a8.File.Should().Be(File.a);
+        Square.b1.File.Should().Be(File.b);
+        Square.b2.File.Should().Be(File.b);
+        Square.b3.File.Should().Be(File.b);
+        Square.b4.File.Should().Be(File.b);
+        Square.b5.File.Should().Be(File.b);
+        Square.b6.File.Should().Be(File.b);
+        Square.b7.File.Should().Be(File.b);
+        Square.b8.File.Should().Be(File.b);
+        Square.c1.File.Should().Be(File.c);
+        Square.c2.File.Should().Be(File.c);
+        Square.c3.File.Should().Be(File.c);
+        Square.c4.File.Should().Be(File.c);
+        Square.c5.File.Should().Be(File.c);
+        Square.c6.File.Should().Be(File.c);
+        Square.c7.File.Should().Be(File.c);
+        Square.c8.File.Should().Be(File.c);
+        Square.d1.File.Should().Be(File.d);
+        Square.d2.File.Should().Be(File.d);
+        Square.d3.File.Should().Be(File.d);
+        Square.d4.File.Should().Be(File.d);
+        Square.d5.File.Should().Be(File.d);
+        Square.d6.File.Should().Be(File.d);
+        Square.d7.File.Should().Be(File.d);
+        Square.d8.File.Should().Be(File.d);
+        Square.e1.File.Should().Be(File.e);
+        Square.e2.File.Should().Be(File.e);
+        Square.e3.File.Should().Be(File.e);
+        Square.e4.File.Should().Be(File.e);
+        Square.e5.File.Should().Be(File.e);
+        Square.e6.File.Should().Be(File.e);
+        Square.e7.File.Should().Be(File.e);
+        Square.e8.File.Should().Be(File.e);
+        Square.f1.File.Should().Be(File.f);
+        Square.f2.File.Should().Be(File.f);
+        Square.f3.File.Should().Be(File.f);
+        Square.f4.File.Should().Be(File.f);
+        Square.f5.File.Should().Be(File.f);
+        Square.f6.File.Should().Be(File.f);
+        Square.f7.File.Should().Be(File.f);
+        Square.f8.File.Should().Be(File.f);
+        Square.g1.File.Should().Be(File.g);
+        Square.g2.File.Should().Be(File.g);
+        Square.g3.File.Should().Be(File.g);
+        Square.g4.File.Should().Be(File.g);
+        Square.g5.File.Should().Be(File.g);
+        Square.g6.File.Should().Be(File.g);
+        Square.g7.File.Should().Be(File.g);
+        Square.g8.File.Should().Be(File.g);
+        Square.h1.File.Should().Be(File.h);
+        Square.h2.File.Should().Be(File.h);
+        Square.h3.File.Should().Be(File.h);
+        Square.h4.File.Should().Be(File.h);
+        Square.h5.File.Should().Be(File.h);
+        Square.h6.File.Should().Be(File.h);
+        Square.h7.File.Should().Be(File.h);
+        Square.h8.File.Should().Be(File.h);
     }
 
     [Fact]
     public void Rank_AllSquares_CorrectRank()
     {
-        Assert.Equal(Rank.First,   Square.a1.Rank);
-        Assert.Equal(Rank.Second,  Square.a2.Rank);
-        Assert.Equal(Rank.Third,   Square.a3.Rank);
-        Assert.Equal(Rank.Fourth,  Square.a4.Rank);
-        Assert.Equal(Rank.Fifth,   Square.a5.Rank);
-        Assert.Equal(Rank.Sixth,   Square.a6.Rank);
-        Assert.Equal(Rank.Seventh, Square.a7.Rank);
-        Assert.Equal(Rank.Eight,   Square.a8.Rank);
-
-        Assert.Equal(Rank.First,   Square.b1.Rank);
-        Assert.Equal(Rank.Second,  Square.b2.Rank);
-        Assert.Equal(Rank.Third,   Square.b3.Rank);
-        Assert.Equal(Rank.Fourth,  Square.b4.Rank);
-        Assert.Equal(Rank.Fifth,   Square.b5.Rank);
-        Assert.Equal(Rank.Sixth,   Square.b6.Rank);
-        Assert.Equal(Rank.Seventh, Square.b7.Rank);
-        Assert.Equal(Rank.Eight,   Square.b8.Rank);
-
-        Assert.Equal(Rank.First,   Square.c1.Rank);
-        Assert.Equal(Rank.Second,  Square.c2.Rank);
-        Assert.Equal(Rank.Third,   Square.c3.Rank);
-        Assert.Equal(Rank.Fourth,  Square.c4.Rank);
-        Assert.Equal(Rank.Fifth,   Square.c5.Rank);
-        Assert.Equal(Rank.Sixth,   Square.c6.Rank);
-        Assert.Equal(Rank.Seventh, Square.c7.Rank);
-        Assert.Equal(Rank.Eight,   Square.c8.Rank);
-
-        Assert.Equal(Rank.First,   Square.d1.Rank);
-        Assert.Equal(Rank.Second,  Square.d2.Rank);
-        Assert.Equal(Rank.Third,   Square.d3.Rank);
-        Assert.Equal(Rank.Fourth,  Square.d4.Rank);
-        Assert.Equal(Rank.Fifth,   Square.d5.Rank);
-        Assert.Equal(Rank.Sixth,   Square.d6.Rank);
-        Assert.Equal(Rank.Seventh, Square.d7.Rank);
-        Assert.Equal(Rank.Eight,   Square.d8.Rank);
-
-        Assert.Equal(Rank.First,   Square.e1.Rank);
-        Assert.Equal(Rank.Second,  Square.e2.Rank);
-        Assert.Equal(Rank.Third,   Square.e3.Rank);
-        Assert.Equal(Rank.Fourth,  Square.e4.Rank);
-        Assert.Equal(Rank.Fifth,   Square.e5.Rank);
-        Assert.Equal(Rank.Sixth,   Square.e6.Rank);
-        Assert.Equal(Rank.Seventh, Square.e7.Rank);
-        Assert.Equal(Rank.Eight,   Square.e8.Rank);
-
-        Assert.Equal(Rank.First,   Square.f1.Rank);
-        Assert.Equal(Rank.Second,  Square.f2.Rank);
-        Assert.Equal(Rank.Third,   Square.f3.Rank);
-        Assert.Equal(Rank.Fourth,  Square.f4.Rank);
-        Assert.Equal(Rank.Fifth,   Square.f5.Rank);
-        Assert.Equal(Rank.Sixth,   Square.f6.Rank);
-        Assert.Equal(Rank.Seventh, Square.f7.Rank);
-        Assert.Equal(Rank.Eight,   Square.f8.Rank);
-
-        Assert.Equal(Rank.First,   Square.g1.Rank);
-        Assert.Equal(Rank.Second,  Square.g2.Rank);
-        Assert.Equal(Rank.Third,   Square.g3.Rank);
-        Assert.Equal(Rank.Fourth,  Square.g4.Rank);
-        Assert.Equal(Rank.Fifth,   Square.g5.Rank);
-        Assert.Equal(Rank.Sixth,   Square.g6.Rank);
-        Assert.Equal(Rank.Seventh, Square.g7.Rank);
-        Assert.Equal(Rank.Eight,   Square.g8.Rank);
-
-        Assert.Equal(Rank.First,   Square.h1.Rank);
-        Assert.Equal(Rank.Second,  Square.h2.Rank);
-        Assert.Equal(Rank.Third,   Square.h3.Rank);
-        Assert.Equal(Rank.Fourth,  Square.h4.Rank);
-        Assert.Equal(Rank.Fifth,   Square.h5.Rank);
-        Assert.Equal(Rank.Sixth,   Square.h6.Rank);
-        Assert.Equal(Rank.Seventh, Square.h7.Rank);
-        Assert.Equal(Rank.Eight,   Square.h8.Rank);
+        Square.a1.Rank.Should().Be(Rank.First);
+        Square.a2.Rank.Should().Be(Rank.Second);
+        Square.a3.Rank.Should().Be(Rank.Third);
+        Square.a4.Rank.Should().Be(Rank.Fourth);
+        Square.a5.Rank.Should().Be(Rank.Fifth);
+        Square.a6.Rank.Should().Be(Rank.Sixth);
+        Square.a7.Rank.Should().Be(Rank.Seventh);
+        Square.a8.Rank.Should().Be(Rank.Eight);
+        Square.b1.Rank.Should().Be(Rank.First);
+        Square.b2.Rank.Should().Be(Rank.Second);
+        Square.b3.Rank.Should().Be(Rank.Third);
+        Square.b4.Rank.Should().Be(Rank.Fourth);
+        Square.b5.Rank.Should().Be(Rank.Fifth);
+        Square.b6.Rank.Should().Be(Rank.Sixth);
+        Square.b7.Rank.Should().Be(Rank.Seventh);
+        Square.b8.Rank.Should().Be(Rank.Eight);
+        Square.c1.Rank.Should().Be(Rank.First);
+        Square.c2.Rank.Should().Be(Rank.Second);
+        Square.c3.Rank.Should().Be(Rank.Third);
+        Square.c4.Rank.Should().Be(Rank.Fourth);
+        Square.c5.Rank.Should().Be(Rank.Fifth);
+        Square.c6.Rank.Should().Be(Rank.Sixth);
+        Square.c7.Rank.Should().Be(Rank.Seventh);
+        Square.c8.Rank.Should().Be(Rank.Eight);
+        Square.d1.Rank.Should().Be(Rank.First);
+        Square.d2.Rank.Should().Be(Rank.Second);
+        Square.d3.Rank.Should().Be(Rank.Third);
+        Square.d4.Rank.Should().Be(Rank.Fourth);
+        Square.d5.Rank.Should().Be(Rank.Fifth);
+        Square.d6.Rank.Should().Be(Rank.Sixth);
+        Square.d7.Rank.Should().Be(Rank.Seventh);
+        Square.d8.Rank.Should().Be(Rank.Eight);
+        Square.e1.Rank.Should().Be(Rank.First);
+        Square.e2.Rank.Should().Be(Rank.Second);
+        Square.e3.Rank.Should().Be(Rank.Third);
+        Square.e4.Rank.Should().Be(Rank.Fourth);
+        Square.e5.Rank.Should().Be(Rank.Fifth);
+        Square.e6.Rank.Should().Be(Rank.Sixth);
+        Square.e7.Rank.Should().Be(Rank.Seventh);
+        Square.e8.Rank.Should().Be(Rank.Eight);
+        Square.f1.Rank.Should().Be(Rank.First);
+        Square.f2.Rank.Should().Be(Rank.Second);
+        Square.f3.Rank.Should().Be(Rank.Third);
+        Square.f4.Rank.Should().Be(Rank.Fourth);
+        Square.f5.Rank.Should().Be(Rank.Fifth);
+        Square.f6.Rank.Should().Be(Rank.Sixth);
+        Square.f7.Rank.Should().Be(Rank.Seventh);
+        Square.f8.Rank.Should().Be(Rank.Eight);
+        Square.g1.Rank.Should().Be(Rank.First);
+        Square.g2.Rank.Should().Be(Rank.Second);
+        Square.g3.Rank.Should().Be(Rank.Third);
+        Square.g4.Rank.Should().Be(Rank.Fourth);
+        Square.g5.Rank.Should().Be(Rank.Fifth);
+        Square.g6.Rank.Should().Be(Rank.Sixth);
+        Square.g7.Rank.Should().Be(Rank.Seventh);
+        Square.g8.Rank.Should().Be(Rank.Eight);
+        Square.h1.Rank.Should().Be(Rank.First);
+        Square.h2.Rank.Should().Be(Rank.Second);
+        Square.h3.Rank.Should().Be(Rank.Third);
+        Square.h4.Rank.Should().Be(Rank.Fourth);
+        Square.h5.Rank.Should().Be(Rank.Fifth);
+        Square.h6.Rank.Should().Be(Rank.Sixth);
+        Square.h7.Rank.Should().Be(Rank.Seventh);
+        Square.h8.Rank.Should().Be(Rank.Eight);
     }
 
     [Fact]
     public void IsValid_AllSquares_ReturnsTrue()
     {
-        Assert.True(Square.a1.IsValid);
-        Assert.True(Square.b1.IsValid);
-        Assert.True(Square.c1.IsValid);
-        Assert.True(Square.d1.IsValid);
-        Assert.True(Square.e1.IsValid);
-        Assert.True(Square.f1.IsValid);
-        Assert.True(Square.g1.IsValid);
-        Assert.True(Square.h1.IsValid);
-
-        Assert.True(Square.a2.IsValid);
-        Assert.True(Square.b2.IsValid);
-        Assert.True(Square.c2.IsValid);
-        Assert.True(Square.d2.IsValid);
-        Assert.True(Square.e2.IsValid);
-        Assert.True(Square.f2.IsValid);
-        Assert.True(Square.g2.IsValid);
-        Assert.True(Square.h2.IsValid);
-
-        Assert.True(Square.a3.IsValid);
-        Assert.True(Square.b3.IsValid);
-        Assert.True(Square.c3.IsValid);
-        Assert.True(Square.d3.IsValid);
-        Assert.True(Square.e3.IsValid);
-        Assert.True(Square.f3.IsValid);
-        Assert.True(Square.g3.IsValid);
-        Assert.True(Square.h3.IsValid);
-
-        Assert.True(Square.a4.IsValid);
-        Assert.True(Square.b4.IsValid);
-        Assert.True(Square.c4.IsValid);
-        Assert.True(Square.d4.IsValid);
-        Assert.True(Square.e4.IsValid);
-        Assert.True(Square.f4.IsValid);
-        Assert.True(Square.g4.IsValid);
-        Assert.True(Square.h4.IsValid);
-
-        Assert.True(Square.a5.IsValid);
-        Assert.True(Square.b5.IsValid);
-        Assert.True(Square.c5.IsValid);
-        Assert.True(Square.d5.IsValid);
-        Assert.True(Square.e5.IsValid);
-        Assert.True(Square.f5.IsValid);
-        Assert.True(Square.g5.IsValid);
-        Assert.True(Square.h5.IsValid);
-
-        Assert.True(Square.a6.IsValid);
-        Assert.True(Square.b6.IsValid);
-        Assert.True(Square.c6.IsValid);
-        Assert.True(Square.d6.IsValid);
-        Assert.True(Square.e6.IsValid);
-        Assert.True(Square.f6.IsValid);
-        Assert.True(Square.g6.IsValid);
-        Assert.True(Square.h6.IsValid);
-
-        Assert.True(Square.a7.IsValid);
-        Assert.True(Square.b7.IsValid);
-        Assert.True(Square.c7.IsValid);
-        Assert.True(Square.d7.IsValid);
-        Assert.True(Square.e7.IsValid);
-        Assert.True(Square.f7.IsValid);
-        Assert.True(Square.g7.IsValid);
-        Assert.True(Square.h7.IsValid);
-
-        Assert.True(Square.a8.IsValid);
-        Assert.True(Square.b8.IsValid);
-        Assert.True(Square.c8.IsValid);
-        Assert.True(Square.d8.IsValid);
-        Assert.True(Square.e8.IsValid);
-        Assert.True(Square.f8.IsValid);
-        Assert.True(Square.g8.IsValid);
-        Assert.True(Square.h8.IsValid);
+        Square.a1.IsValid.Should().BeTrue();
+        Square.b1.IsValid.Should().BeTrue();
+        Square.c1.IsValid.Should().BeTrue();
+        Square.d1.IsValid.Should().BeTrue();
+        Square.e1.IsValid.Should().BeTrue();
+        Square.f1.IsValid.Should().BeTrue();
+        Square.g1.IsValid.Should().BeTrue();
+        Square.h1.IsValid.Should().BeTrue();
+        Square.a2.IsValid.Should().BeTrue();
+        Square.b2.IsValid.Should().BeTrue();
+        Square.c2.IsValid.Should().BeTrue();
+        Square.d2.IsValid.Should().BeTrue();
+        Square.e2.IsValid.Should().BeTrue();
+        Square.f2.IsValid.Should().BeTrue();
+        Square.g2.IsValid.Should().BeTrue();
+        Square.h2.IsValid.Should().BeTrue();
+        Square.a3.IsValid.Should().BeTrue();
+        Square.b3.IsValid.Should().BeTrue();
+        Square.c3.IsValid.Should().BeTrue();
+        Square.d3.IsValid.Should().BeTrue();
+        Square.e3.IsValid.Should().BeTrue();
+        Square.f3.IsValid.Should().BeTrue();
+        Square.g3.IsValid.Should().BeTrue();
+        Square.h3.IsValid.Should().BeTrue();
+        Square.a4.IsValid.Should().BeTrue();
+        Square.b4.IsValid.Should().BeTrue();
+        Square.c4.IsValid.Should().BeTrue();
+        Square.d4.IsValid.Should().BeTrue();
+        Square.e4.IsValid.Should().BeTrue();
+        Square.f4.IsValid.Should().BeTrue();
+        Square.g4.IsValid.Should().BeTrue();
+        Square.h4.IsValid.Should().BeTrue();
+        Square.a5.IsValid.Should().BeTrue();
+        Square.b5.IsValid.Should().BeTrue();
+        Square.c5.IsValid.Should().BeTrue();
+        Square.d5.IsValid.Should().BeTrue();
+        Square.e5.IsValid.Should().BeTrue();
+        Square.f5.IsValid.Should().BeTrue();
+        Square.g5.IsValid.Should().BeTrue();
+        Square.h5.IsValid.Should().BeTrue();
+        Square.a6.IsValid.Should().BeTrue();
+        Square.b6.IsValid.Should().BeTrue();
+        Square.c6.IsValid.Should().BeTrue();
+        Square.d6.IsValid.Should().BeTrue();
+        Square.e6.IsValid.Should().BeTrue();
+        Square.f6.IsValid.Should().BeTrue();
+        Square.g6.IsValid.Should().BeTrue();
+        Square.h6.IsValid.Should().BeTrue();
+        Square.a7.IsValid.Should().BeTrue();
+        Square.b7.IsValid.Should().BeTrue();
+        Square.c7.IsValid.Should().BeTrue();
+        Square.d7.IsValid.Should().BeTrue();
+        Square.e7.IsValid.Should().BeTrue();
+        Square.f7.IsValid.Should().BeTrue();
+        Square.g7.IsValid.Should().BeTrue();
+        Square.h7.IsValid.Should().BeTrue();
+        Square.a8.IsValid.Should().BeTrue();
+        Square.b8.IsValid.Should().BeTrue();
+        Square.c8.IsValid.Should().BeTrue();
+        Square.d8.IsValid.Should().BeTrue();
+        Square.e8.IsValid.Should().BeTrue();
+        Square.f8.IsValid.Should().BeTrue();
+        Square.g8.IsValid.Should().BeTrue();
+        Square.h8.IsValid.Should().BeTrue();
     }
 
     [Fact]
     public void IsValid_InvalidSquare_ReturnsFalse()
     {
-        Assert.False(Square.Invalid.IsValid);
+        Square.Invalid.IsValid.Should().BeFalse();
     }
 
     [Fact]
     public void ToString_AllSquares_CorrectRepresentation()
     {
-        Assert.Equal("a1", Square.a1.ToString());
-        Assert.Equal("b1", Square.b1.ToString());
-        Assert.Equal("c1", Square.c1.ToString());
-        Assert.Equal("d1", Square.d1.ToString());
-        Assert.Equal("e1", Square.e1.ToString());
-        Assert.Equal("f1", Square.f1.ToString());
-        Assert.Equal("g1", Square.g1.ToString());
-        Assert.Equal("h1", Square.h1.ToString());
-
-        Assert.Equal("a2", Square.a2.ToString());
-        Assert.Equal("b2", Square.b2.ToString());
-        Assert.Equal("c2", Square.c2.ToString());
-        Assert.Equal("d2", Square.d2.ToString());
-        Assert.Equal("e2", Square.e2.ToString());
-        Assert.Equal("f2", Square.f2.ToString());
-        Assert.Equal("g2", Square.g2.ToString());
-        Assert.Equal("h2", Square.h2.ToString());
-
-        Assert.Equal("a3", Square.a3.ToString());
-        Assert.Equal("b3", Square.b3.ToString());
-        Assert.Equal("c3", Square.c3.ToString());
-        Assert.Equal("d3", Square.d3.ToString());
-        Assert.Equal("e3", Square.e3.ToString());
-        Assert.Equal("f3", Square.f3.ToString());
-        Assert.Equal("g3", Square.g3.ToString());
-        Assert.Equal("h3", Square.h3.ToString());
-
-        Assert.Equal("a4", Square.a4.ToString());
-        Assert.Equal("b4", Square.b4.ToString());
-        Assert.Equal("c4", Square.c4.ToString());
-        Assert.Equal("d4", Square.d4.ToString());
-        Assert.Equal("e4", Square.e4.ToString());
-        Assert.Equal("f4", Square.f4.ToString());
-        Assert.Equal("g4", Square.g4.ToString());
-        Assert.Equal("h4", Square.h4.ToString());
-
-        Assert.Equal("a5", Square.a5.ToString());
-        Assert.Equal("b5", Square.b5.ToString());
-        Assert.Equal("c5", Square.c5.ToString());
-        Assert.Equal("d5", Square.d5.ToString());
-        Assert.Equal("e5", Square.e5.ToString());
-        Assert.Equal("f5", Square.f5.ToString());
-        Assert.Equal("g5", Square.g5.ToString());
-        Assert.Equal("h5", Square.h5.ToString());
-
-        Assert.Equal("a6", Square.a6.ToString());
-        Assert.Equal("b6", Square.b6.ToString());
-        Assert.Equal("c6", Square.c6.ToString());
-        Assert.Equal("d6", Square.d6.ToString());
-        Assert.Equal("e6", Square.e6.ToString());
-        Assert.Equal("f6", Square.f6.ToString());
-        Assert.Equal("g6", Square.g6.ToString());
-        Assert.Equal("h6", Square.h6.ToString());
-
-        Assert.Equal("a7", Square.a7.ToString());
-        Assert.Equal("b7", Square.b7.ToString());
-        Assert.Equal("c7", Square.c7.ToString());
-        Assert.Equal("d7", Square.d7.ToString());
-        Assert.Equal("e7", Square.e7.ToString());
-        Assert.Equal("f7", Square.f7.ToString());
-        Assert.Equal("g7", Square.g7.ToString());
-        Assert.Equal("h7", Square.h7.ToString());
-
-        Assert.Equal("a8", Square.a8.ToString());
-        Assert.Equal("b8", Square.b8.ToString());
-        Assert.Equal("c8", Square.c8.ToString());
-        Assert.Equal("d8", Square.d8.ToString());
-        Assert.Equal("e8", Square.e8.ToString());
-        Assert.Equal("f8", Square.f8.ToString());
-        Assert.Equal("g8", Square.g8.ToString());
-        Assert.Equal("h8", Square.h8.ToString());
+        Square.a1.ToString().Should().Be("a1");
+        Square.b1.ToString().Should().Be("b1");
+        Square.c1.ToString().Should().Be("c1");
+        Square.d1.ToString().Should().Be("d1");
+        Square.e1.ToString().Should().Be("e1");
+        Square.f1.ToString().Should().Be("f1");
+        Square.g1.ToString().Should().Be("g1");
+        Square.h1.ToString().Should().Be("h1");
+        Square.a2.ToString().Should().Be("a2");
+        Square.b2.ToString().Should().Be("b2");
+        Square.c2.ToString().Should().Be("c2");
+        Square.d2.ToString().Should().Be("d2");
+        Square.e2.ToString().Should().Be("e2");
+        Square.f2.ToString().Should().Be("f2");
+        Square.g2.ToString().Should().Be("g2");
+        Square.h2.ToString().Should().Be("h2");
+        Square.a3.ToString().Should().Be("a3");
+        Square.b3.ToString().Should().Be("b3");
+        Square.c3.ToString().Should().Be("c3");
+        Square.d3.ToString().Should().Be("d3");
+        Square.e3.ToString().Should().Be("e3");
+        Square.f3.ToString().Should().Be("f3");
+        Square.g3.ToString().Should().Be("g3");
+        Square.h3.ToString().Should().Be("h3");
+        Square.a4.ToString().Should().Be("a4");
+        Square.b4.ToString().Should().Be("b4");
+        Square.c4.ToString().Should().Be("c4");
+        Square.d4.ToString().Should().Be("d4");
+        Square.e4.ToString().Should().Be("e4");
+        Square.f4.ToString().Should().Be("f4");
+        Square.g4.ToString().Should().Be("g4");
+        Square.h4.ToString().Should().Be("h4");
+        Square.a5.ToString().Should().Be("a5");
+        Square.b5.ToString().Should().Be("b5");
+        Square.c5.ToString().Should().Be("c5");
+        Square.d5.ToString().Should().Be("d5");
+        Square.e5.ToString().Should().Be("e5");
+        Square.f5.ToString().Should().Be("f5");
+        Square.g5.ToString().Should().Be("g5");
+        Square.h5.ToString().Should().Be("h5");
+        Square.a6.ToString().Should().Be("a6");
+        Square.b6.ToString().Should().Be("b6");
+        Square.c6.ToString().Should().Be("c6");
+        Square.d6.ToString().Should().Be("d6");
+        Square.e6.ToString().Should().Be("e6");
+        Square.f6.ToString().Should().Be("f6");
+        Square.g6.ToString().Should().Be("g6");
+        Square.h6.ToString().Should().Be("h6");
+        Square.a7.ToString().Should().Be("a7");
+        Square.b7.ToString().Should().Be("b7");
+        Square.c7.ToString().Should().Be("c7");
+        Square.d7.ToString().Should().Be("d7");
+        Square.e7.ToString().Should().Be("e7");
+        Square.f7.ToString().Should().Be("f7");
+        Square.g7.ToString().Should().Be("g7");
+        Square.h7.ToString().Should().Be("h7");
+        Square.a8.ToString().Should().Be("a8");
+        Square.b8.ToString().Should().Be("b8");
+        Square.c8.ToString().Should().Be("c8");
+        Square.d8.ToString().Should().Be("d8");
+        Square.e8.ToString().Should().Be("e8");
+        Square.f8.ToString().Should().Be("f8");
+        Square.g8.ToString().Should().Be("g8");
+        Square.h8.ToString().Should().Be("h8");
     }
 
     [Theory]
@@ -389,6 +362,6 @@ public class SquareTests
 
         var result = sut.Bitboard;
 
-        Assert.Equal(expectedBb, result);
+        result.Should().Be(expectedBb);
     }
 }

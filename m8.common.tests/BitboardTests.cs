@@ -1,3 +1,5 @@
+using FluentAssertions;
+
 namespace m8.common.tests;
 
 /// <summary>
@@ -12,7 +14,7 @@ public class BitboardTests
 
         Bitboard actual = Bitboard.CreateSingleBit(0);
 
-        Assert.Equal(expected, actual);
+        actual.Should().Be(expected);
     }
 
     [Fact]
@@ -22,7 +24,7 @@ public class BitboardTests
 
         Bitboard actual = Bitboard.CreateSingleBit(63);
 
-        Assert.Equal(expected, actual);
+        actual.Should().Be(expected);
     }
 
     [Fact]
@@ -32,7 +34,7 @@ public class BitboardTests
 
         Bitboard actual = Bitboard.Empty.Set(8);
 
-        Assert.Equal(expected, actual);
+        actual.Should().Be(expected);
     }
 
     [Fact]
@@ -42,7 +44,7 @@ public class BitboardTests
 
         var result = sut[52];
 
-        Assert.True(result);
+        result.Should().BeTrue();
     }
 
     [Fact]
@@ -52,6 +54,6 @@ public class BitboardTests
 
         var result = sut[13];
 
-        Assert.False(result);
+        result.Should().BeFalse();
     }
 }

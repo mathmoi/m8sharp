@@ -1,36 +1,33 @@
-﻿namespace m8.chess.tests;
+﻿using FluentAssertions;
 
-/// <summary>
-///  Test for the PieceType structure
-/// </summary>
+namespace m8.chess.tests;
+
 public class PieceTypeTests
 {
     [Fact]
     public void Constructor_WithValidChar_ShouldCreateCorrectValues()
     {
-        Assert.Equal(PieceType.Pawn,   new PieceType('p'));
-        Assert.Equal(PieceType.Rook,   new PieceType('r'));
-        Assert.Equal(PieceType.Bishop, new PieceType('b'));
-        Assert.Equal(PieceType.Knight, new PieceType('n'));
-        Assert.Equal(PieceType.Queen,  new PieceType('q'));
-        Assert.Equal(PieceType.King,   new PieceType('k'));
+        new PieceType('p').Should().Be(PieceType.Pawn);
+        new PieceType('r').Should().Be(PieceType.Rook);
+        new PieceType('b').Should().Be(PieceType.Bishop);
+        new PieceType('n').Should().Be(PieceType.Knight);
+        new PieceType('q').Should().Be(PieceType.Queen);
+        new PieceType('k').Should().Be(PieceType.King);
 
-        Assert.Equal(PieceType.Pawn,   new PieceType('P'));
-        Assert.Equal(PieceType.Rook,   new PieceType('R'));
-        Assert.Equal(PieceType.Bishop, new PieceType('B'));
-        Assert.Equal(PieceType.Knight, new PieceType('N'));
-        Assert.Equal(PieceType.Queen,  new PieceType('Q'));
-        Assert.Equal(PieceType.King,   new PieceType('K'));
+        new PieceType('P').Should().Be(PieceType.Pawn);
+        new PieceType('R').Should().Be(PieceType.Rook);
+        new PieceType('B').Should().Be(PieceType.Bishop);
+        new PieceType('N').Should().Be(PieceType.Knight);
+        new PieceType('Q').Should().Be(PieceType.Queen);
+        new PieceType('K').Should().Be(PieceType.King);
     }
 
     [Fact]
     public void Constructor_WithInvalidChar_ShouldSetToNone()
     {
-        // Arrange & Act
         var invalidPiece = new PieceType('X');
 
-        // Assert
-        Assert.Equal(PieceType.None, invalidPiece);
+        invalidPiece.Should().Be(PieceType.None);
     }
 
     [Theory]
@@ -44,23 +41,23 @@ public class PieceTypeTests
     {
         PieceType piece_type = new(piece_char);
 
-        Assert.True(piece_type.IsValid);
+        piece_type.IsValid.Should().BeTrue();
     }
 
     [Fact]
     public void IsValid_InvalidPiece_ReturnsFalse()
     {
-        Assert.False(PieceType.None.IsValid);
+        PieceType.None.IsValid.Should().BeFalse();
     }
 
     [Fact]
     public void Character_ValidPiece_ReturnsCorrectCharacter()
     {
-        Assert.Equal('P', PieceType.Pawn.Character);
-        Assert.Equal('R', PieceType.Rook.Character);
-        Assert.Equal('B', PieceType.Bishop.Character);
-        Assert.Equal('N', PieceType.Knight.Character);
-        Assert.Equal('Q', PieceType.Queen.Character);
-        Assert.Equal('K', PieceType.King.Character);
+        PieceType.Pawn.Character.Should().Be('P');
+        PieceType.Rook.Character.Should().Be('R');
+        PieceType.Bishop.Character.Should().Be('B');
+        PieceType.Knight.Character.Should().Be('N');
+        PieceType.Queen.Character.Should().Be('Q');
+        PieceType.King.Character.Should().Be('K');
     }
 }

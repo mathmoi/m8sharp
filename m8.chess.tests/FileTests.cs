@@ -1,10 +1,8 @@
-﻿using m8.common;
+﻿using FluentAssertions;
+using m8.common;
 
 namespace m8.chess.tests;
 
-/// <summary>
-///  Tests for the File struct.
-/// </summary>
 public class FileTests
 {
     [Theory]
@@ -20,13 +18,13 @@ public class FileTests
     {
         File file = new(file_char);
 
-        Assert.True(file.IsValid);
+        file.IsValid.Should().BeTrue();
     }
 
     [Fact]
     public void IsValid_InvalidFile_ReturnsFalse()
     {
-        Assert.False(File.Invalid.IsValid);
+        File.Invalid.IsValid.Should().BeFalse();
     }
 
     [Theory]
@@ -44,7 +42,7 @@ public class FileTests
 
         byte actual = (byte)file;
 
-        Assert.Equal(expected, actual);
+        actual.Should().Be(expected);
     }
 
     [Theory]
@@ -62,7 +60,7 @@ public class FileTests
 
         string actual = file.ToString();
 
-        Assert.Equal(expected, actual);
+        actual.Should().Be(expected);
     }
 
     [Theory]
@@ -78,7 +76,7 @@ public class FileTests
 
         File actual = sut.MoveLeft(positions);
 
-        Assert.Equal(expected, actual);
+        actual.Should().Be(expected);
     }
 
     [Theory]
@@ -94,7 +92,7 @@ public class FileTests
 
         File actual = sut.MoveRight(positions);
 
-        Assert.Equal(expected, actual);
+        actual.Should().Be(expected);
     }
 
     [Theory]
@@ -113,6 +111,6 @@ public class FileTests
 
         var result = sut.Bitboard;
 
-        Assert.Equal(expectedBb, result);
+        result.Should().Be(expectedBb);
     }
 }

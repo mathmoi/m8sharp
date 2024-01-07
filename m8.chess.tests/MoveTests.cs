@@ -1,4 +1,6 @@
-﻿namespace m8.chess.tests;
+﻿using FluentAssertions;
+
+namespace m8.chess.tests;
 
 public class MoveTests
 {
@@ -11,12 +13,12 @@ public class MoveTests
 
         var move = new Move(from, to, piece);
 
-        Assert.Equal(from, move.From);
-        Assert.Equal(to, move.To);
-        Assert.Equal(piece, move.Piece);
-        Assert.False(move.Taken.IsValid);
-        Assert.False(move.PromoteTo.IsValid);
-        Assert.Equal(CastlingSide.None, move.CastlingSide);
+        move.From.Should().Be(from);
+        move.To.Should().Be(to);
+        move.Piece.Should().Be(piece);
+        move.Taken.IsValid.Should().BeFalse();
+        move.PromoteTo.IsValid.Should().BeFalse();
+        move.CastlingSide.Should().Be(CastlingSide.None);
     }
 
     [Fact]
@@ -29,12 +31,12 @@ public class MoveTests
 
         var move = new Move(from, to, piece, taken);
 
-        Assert.Equal(from, move.From);
-        Assert.Equal(to, move.To);
-        Assert.Equal(piece, move.Piece);
-        Assert.Equal(taken, move.Taken);
-        Assert.False(move.PromoteTo.IsValid);
-        Assert.Equal(CastlingSide.None, move.CastlingSide);
+        move.From.Should().Be(from);
+        move.To.Should().Be(to);
+        move.Piece.Should().Be(piece);
+        move.Taken.Should().Be(taken);
+        move.PromoteTo.IsValid.Should().BeFalse();
+        move.CastlingSide.Should().Be(CastlingSide.None);
     }
 
     [Fact]
@@ -48,11 +50,11 @@ public class MoveTests
 
         var move = new Move(from, to, piece, taken, promoteTo);
 
-        Assert.Equal(from, move.From);
-        Assert.Equal(to, move.To);
-        Assert.Equal(piece, move.Piece);
-        Assert.False(taken.IsValid);
-        Assert.Equal(promoteTo, move.PromoteTo);
-        Assert.Equal(CastlingSide.None, move.CastlingSide);
+        move.From.Should().Be(from);
+        move.To.Should().Be(to);
+        move.Piece.Should().Be(piece);
+        taken.IsValid.Should().BeFalse();
+        move.PromoteTo.Should().Be(promoteTo);
+        move.CastlingSide.Should().Be(CastlingSide.None);
     }
 }

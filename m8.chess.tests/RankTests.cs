@@ -1,10 +1,8 @@
-﻿using m8.common;
+﻿using FluentAssertions;
+using m8.common;
 
 namespace m8.chess.tests;
 
-/// <summary>
-///  Tests for the Rank struct.
-/// </summary>
 public class RankTests
 {
     [Theory]
@@ -20,13 +18,13 @@ public class RankTests
     {
         Rank rank = new(rank_char);
 
-        Assert.True(rank.IsValid);
+        rank.IsValid.Should().BeTrue();
     }
 
     [Fact]
     public void IsValid_InvalidRank_ReturnsFalse()
     {
-        Assert.False(Rank.Invalid.IsValid);
+        Rank.Invalid.IsValid.Should().BeFalse();
     }
 
     [Theory]
@@ -44,7 +42,7 @@ public class RankTests
 
         byte actual = (byte)rank;
 
-        Assert.Equal(expected, actual);
+        actual.Should().Be(expected);
     }
 
     [Theory]
@@ -62,13 +60,13 @@ public class RankTests
 
         string actual = rank.ToString();
 
-        Assert.Equal(expected, actual);
+        actual.Should().Be(expected);
     }
 
     [Theory]
-    [InlineData('1',  1, '2')]
-    [InlineData('3',  3, '6')]
-    [InlineData('7',  0, '7')]
+    [InlineData('1', 1, '2')]
+    [InlineData('3', 3, '6')]
+    [InlineData('7', 0, '7')]
     [InlineData('5', -1, '4')]
     [InlineData('8', -4, '4')]
     public void MoveUp_ExpectedRankReturned(char sut_char, sbyte positions, char expected_char)
@@ -78,13 +76,13 @@ public class RankTests
 
         Rank actual = sut.MoveUp(positions);
 
-        Assert.Equal(expected, actual);
+        actual.Should().Be(expected);
     }
 
     [Theory]
-    [InlineData('5',  1, '4')]
-    [InlineData('7',  3, '4')]
-    [InlineData('2',  0, '2')]
+    [InlineData('5', 1, '4')]
+    [InlineData('7', 3, '4')]
+    [InlineData('2', 0, '2')]
     [InlineData('5', -1, '6')]
     [InlineData('1', -4, '5')]
     public void MoveDown_ExpectedRankReturned(char sut_char, sbyte positions, char expected_char)
@@ -94,7 +92,7 @@ public class RankTests
 
         Rank actual = sut.MoveDown(positions);
 
-        Assert.Equal(expected, actual);
+        actual.Should().Be(expected);
     }
 
     [Theory]
@@ -113,6 +111,6 @@ public class RankTests
 
         var result = sut.Bitboard;
 
-        Assert.Equal(expectedBb, result);
+        result.Should().Be(expectedBb);
     }
 }
