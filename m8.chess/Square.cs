@@ -14,6 +14,16 @@ public readonly struct Square
     #region Constructors
 
     /// <summary>
+    ///  Constructor from a value
+    /// </summary>
+    /// <param name="value"></param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Square(byte value)
+    {
+        _value = value;
+    }
+
+    /// <summary>
     ///  Default constructor
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -41,11 +51,6 @@ public readonly struct Square
     {
         Debug.Assert(sq.Length == 2);
     }
-
-    /// <summary>
-    ///  Private constructor to construct the Invalid instance.
-    /// </summary>
-    public Square(byte value) => _value = value;
 
     #endregion
 

@@ -23,6 +23,12 @@ public readonly struct Piece
     #region Constructors
 
     /// <summary>
+    ///  Constructor
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Piece(byte value) => _value = value;
+
+    /// <summary>
     ///  Default constructor
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -50,12 +56,6 @@ public readonly struct Piece
     : this(Char.IsUpper(c) ? Color.White : Color.Black, new PieceType(c))
     { }
 
-    /// <summary>
-    ///  Constructor
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)] 
-    private Piece(byte value) => _value = value;
-
     #endregion
 
     #region Static instances
@@ -63,7 +63,7 @@ public readonly struct Piece
     /// <summary>
     ///  Represent the absence of a piece.
     /// </summary>
-    public static readonly Piece None = new(byte.MaxValue);
+    public static readonly Piece None = new(0);
 
     /// <summary>
     ///  White pawn
