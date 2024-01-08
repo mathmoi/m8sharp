@@ -136,6 +136,16 @@ public readonly struct Bitboard
         return new(_value & ~(1ul << index));
     }
 
+    /// <summary>
+    ///  Remove the least significatn bit set to one.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Bitboard RemoveLSB()
+    {
+        Debug.Assert(_value != 0);
+        return new Bitboard(_value & (_value - 1));
+    }
+
     #endregion
 
     #region Operators overloading
@@ -165,6 +175,14 @@ public readonly struct Bitboard
     public static Bitboard operator ^(Bitboard left, Bitboard right)
     {
         return new Bitboard(left._value ^ right._value);
+    }
+
+    /// <summary>
+    ///  Implicit conversion to bool. Returns true if the bitboard has any bit set to one.
+    /// </summary>
+    public static implicit operator bool(Bitboard bb)
+    {
+        return bb._value != 0;
     }
 
     #endregion

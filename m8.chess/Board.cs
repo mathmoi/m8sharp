@@ -355,6 +355,20 @@ public class Board
     }
 
     /// <summary>
+    ///  Accessor allowing to get a bitboard representing the position of a specific 
+    ///  piece type.
+    /// </summary>
+    public Bitboard this[Piece pieceType]
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            Debug.Assert(pieceType.IsValid);
+            return _pieces[(byte)pieceType];
+        }
+    }
+
+    /// <summary>
     ///  Returns the castling options
     /// </summary>
     public CastlingOptions CastlingOptions

@@ -1,4 +1,5 @@
 ﻿using m8.common;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -12,6 +13,16 @@ public readonly struct Square
     private readonly byte _value;
 
     #region Constructors
+
+    /// <summary>
+    ///  Constructor from a value
+    /// </summary>
+    /// <param name="value"></param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Square(int value)
+    {
+        _value = (byte)value;
+    }
 
     /// <summary>
     ///  Constructor from a value
@@ -134,6 +145,20 @@ public readonly struct Square
     /// <remarks>This value can be used to represent the absence of a square</remarks>
     public static readonly Square Invalid = new(byte.MaxValue);
 
+    /// <summary>
+    ///  All the ranks from First to Eight
+    /// </summary>
+    public static IEnumerable<Square> AllSquares
+    {
+        get
+        {
+            for (byte value = 0; value < 64; ++value)
+            {
+                yield return new Square(value);
+            }
+        }
+    }
+
     #endregion
 
     #region Static methods
@@ -143,6 +168,19 @@ public readonly struct Square
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator byte(Square sq) => sq._value;
+
+    #endregion
+
+    #region Operators
+
+    /// <summary>
+    ///  Overloading the plus operator between a square and a integer value.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Square operator+(Square sq, sbyte delta)
+    {
+        return new Square((byte)(sq._value + delta));
+    }
 
     #endregion
 
