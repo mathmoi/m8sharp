@@ -14,25 +14,40 @@ public static class MoveGeneration
     /// </summary>
     public static void GenerateQuietMoves(Board board, IList<Move> moves)
     {
-        GenerateKingMoves(board, moves);
-        GenerateKnightMoves(board, moves);
+        var targetFilter = ~board.Occupied;
+
+        GenerateKingMoves(board, targetFilter, moves);
+        GenerateKnightMoves(board, targetFilter, moves);
+    }
+
+    /// <summary>
+    ///  Generate all the quiet moves.
+    /// </summary>
+    public static void GenerateCaptures(Board board, IList<Move> moves)
+    {
+        var targetFilter = board[!board.SideToMove];
+
+        GenerateKingMoves(board, targetFilter, moves);
+        GenerateKnightMoves(board, targetFilter, moves);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void GenerateKingMoves(Board board, IList<Move> moves)
+    private static void GenerateKingMoves(Board board, Bitboard targetFilter, IList<Move> moves)
     {
         GenerateSimpleMoves(board,
                             new Piece(board.SideToMove, PieceType.King),
                             Attacks.KingAttaks,
+                            targetFilter,
                             moves);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void GenerateKnightMoves(Board board, IList<Move> moves)
+    private static void GenerateKnightMoves(Board board, Bitboard targetFilter, IList<Move> moves)
     {
         GenerateSimpleMoves(board,
                             new Piece(board.SideToMove, PieceType.Knight),
                             Attacks.KnightAttaks,
+                            targetFilter,
                             moves);
     }
 
@@ -40,6 +55,7 @@ public static class MoveGeneration
     private static void GenerateSimpleMoves(Board board,
                                             Piece piece,
                                             UnsafeArray<Bitboard> attackTable,
+                                            Bitboard targetFilter,
                                             IList<Move> moves)
     {
         var origins = board[piece];
@@ -49,12 +65,13 @@ public static class MoveGeneration
             origins = origins.RemoveLSB();
 
             var targets = attackTable[(byte)from];
+            targets &= targetFilter;
             while (targets)
             {
                 var to = new Square(targets.LSB);
                 targets = targets.RemoveLSB();
 
-                moves.Add(new Move(from, to, piece));
+                moves.Add(new Move(from, to, piece, board[to]));
             }
         }        
     }

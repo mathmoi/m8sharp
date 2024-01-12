@@ -369,6 +369,25 @@ public class Board
     }
 
     /// <summary>
+    ///  Accessor allowing to get a bitboard representing the position of all the pieces 
+    ///  of a specific color.
+    /// </summary>
+    public Bitboard this[Color color]
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => _colors[(byte)color];
+    }
+
+    /// <summary>
+    ///  Return a bitboard of all occupied squares.
+    /// </summary>
+    public Bitboard Occupied
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => _colors[(byte)Color.White] | _colors[(byte)Color.Black];
+    }
+
+    /// <summary>
     ///  Returns the castling options
     /// </summary>
     public CastlingOptions CastlingOptions

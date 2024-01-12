@@ -52,7 +52,6 @@ public readonly struct Move
         Debug.Assert(from.IsValid);
         Debug.Assert(to.IsValid);
         Debug.Assert(piece.IsValid);
-        Debug.Assert(taken.IsValid);
 
         _value = (uint)(byte)from << FROM_OFFSET
                | (uint)(byte)to << TO_OFFSET

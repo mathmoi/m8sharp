@@ -178,8 +178,18 @@ public readonly struct Bitboard
     }
 
     /// <summary>
+    ///  Overload the not operator (~)
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Bitboard operator ~(Bitboard bb)
+    {
+        return new Bitboard(~bb._value);
+    }
+
+    /// <summary>
     ///  Implicit conversion to bool. Returns true if the bitboard has any bit set to one.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator bool(Bitboard bb)
     {
         return bb._value != 0;
