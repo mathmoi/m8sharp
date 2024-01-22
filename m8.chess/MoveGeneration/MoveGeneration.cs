@@ -36,7 +36,7 @@ public static class MoveGeneration
     {
         GenerateSimpleMoves(board,
                             new Piece(board.SideToMove, PieceType.King),
-                            Attacks.KingAttaks,
+                            Attacks.kingAttacks,
                             targetFilter,
                             moves);
     }
@@ -46,7 +46,7 @@ public static class MoveGeneration
     {
         GenerateSimpleMoves(board,
                             new Piece(board.SideToMove, PieceType.Knight),
-                            Attacks.KnightAttaks,
+                            Attacks.knightAttacks,
                             targetFilter,
                             moves);
     }
@@ -59,14 +59,14 @@ public static class MoveGeneration
                                             IList<Move> moves)
     {
         var origins = board[piece];
-        while (origins)
+        while (origins.Any)
         {
             var from = new Square(origins.LSB);
             origins = origins.RemoveLSB();
 
-            var targets = attackTable[(byte)from];
+            var targets = attackTable[from.Value];
             targets &= targetFilter;
-            while (targets)
+            while (targets.Any)
             {
                 var to = new Square(targets.LSB);
                 targets = targets.RemoveLSB();

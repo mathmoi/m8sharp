@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Drawing;
 using System.Runtime.CompilerServices;
 
 namespace m8.chess;
@@ -38,8 +37,8 @@ public readonly struct Move
         Debug.Assert(to.IsValid);
         Debug.Assert(piece.IsValid);
 
-        _value = (uint)(byte)from << FROM_OFFSET
-               | (uint)(byte)to << TO_OFFSET
+        _value = (uint)from.Value  << FROM_OFFSET
+               | (uint)to.Value    << TO_OFFSET
                | (uint)(byte)piece << PIECE_OFFSET;
     }
 
@@ -53,8 +52,8 @@ public readonly struct Move
         Debug.Assert(to.IsValid);
         Debug.Assert(piece.IsValid);
 
-        _value = (uint)(byte)from << FROM_OFFSET
-               | (uint)(byte)to << TO_OFFSET
+        _value = (uint)from.Value  << FROM_OFFSET
+               | (uint)to.Value    << TO_OFFSET
                | (uint)(byte)piece << PIECE_OFFSET
                | (uint)(byte)taken << TAKEN_OFFSET;
     }
@@ -70,10 +69,10 @@ public readonly struct Move
         Debug.Assert(piece.IsValid);
         Debug.Assert(promoteTo.IsValid);
 
-        _value = (uint)(byte)from << FROM_OFFSET
-               | (uint)(byte)to << TO_OFFSET
-               | (uint)(byte)piece << PIECE_OFFSET
-               | (uint)(byte)taken << TAKEN_OFFSET
+        _value = (uint)from.Value      << FROM_OFFSET
+               | (uint)to.Value        << TO_OFFSET
+               | (uint)(byte)piece     << PIECE_OFFSET
+               | (uint)(byte)taken     << TAKEN_OFFSET
                | (uint)(byte)promoteTo << PROMOTE_TO_OFFSET;
     }
 
@@ -88,10 +87,10 @@ public readonly struct Move
         Debug.Assert(piece.IsValid);
         Debug.Assert(Enum.IsDefined<CastlingSide>(castlingSide));
 
-        _value = (uint)(byte)from      << FROM_OFFSET
-               | (uint)(byte)to        << TO_OFFSET
-               | (uint)castlingSide    << CASTLING_OFFSET
-               | (uint)(byte)piece     << PIECE_OFFSET;
+        _value = (uint)from.Value   << FROM_OFFSET
+               | (uint)to.Value     << TO_OFFSET
+               | (uint)castlingSide << CASTLING_OFFSET
+               | (uint)(byte)piece  << PIECE_OFFSET;
     }
 
     #endregion

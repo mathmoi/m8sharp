@@ -1,5 +1,4 @@
 ﻿using m8.common;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -161,16 +160,6 @@ public readonly struct Square
 
     #endregion
 
-    #region Static methods
-
-    /// <summary>
-    ///  Extract the value of the Square.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator byte(Square sq) => sq._value;
-
-    #endregion
-
     #region Operators
 
     /// <summary>
@@ -183,6 +172,56 @@ public readonly struct Square
     }
 
     #endregion
+
+    #region Mutators
+
+    /// <summary>
+    ///  Returns a new Square that is positioned a specified number of positions above
+    ///  the current Square.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Square MoveUp(sbyte positions = 1)
+    {
+        Debug.Assert(this.IsValid);
+        return new Square((byte)(_value + positions * 8));
+    }
+
+    /// <summary>
+    ///  Returns a new Square that is positioned a specified number of positions bellow
+    ///  the current Square.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Square MoveDown(sbyte positions = 1)
+    {
+        Debug.Assert(this.IsValid);
+        return new Square((byte)(_value - positions * 8));
+    }
+
+    /// <summary>
+    ///  Returns a new Square that is positioned a specified number of positions left of
+    ///  the current Square.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Square MoveLeft(sbyte positions = 1)
+    {
+        Debug.Assert(this.IsValid);
+        return new Square((byte)(_value - positions));
+    }
+
+    /// <summary>
+    ///  Returns a new Square that is positioned a specified number of positions right of
+    ///  the current Square.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Square MoveRight(sbyte positions = 1)
+    {
+        Debug.Assert(this.IsValid);
+        return new Square((byte)(_value + positions));
+    }
+
+    #endregion
+
+    #region Accessors
 
     /// <summary>
     ///  Indicate if the current objects represents a valid square.
@@ -227,6 +266,15 @@ public readonly struct Square
     }
 
     /// <summary>
+    ///  Returns the internal value for this instance. This can be used to index an array.
+    /// </summary>
+    public byte Value
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get { return _value; }
+    }
+
+    /// <summary>
     ///  Returns a string representing the current file
     /// </summary>
     /// <returns></returns>
@@ -238,4 +286,6 @@ public readonly struct Square
         }
         return File.ToString() + Rank.ToString();
     }
+
+    #endregion
 }

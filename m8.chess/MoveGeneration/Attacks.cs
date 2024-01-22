@@ -1,16 +1,17 @@
-﻿using m8.common;
+﻿using m8.chess.MoveGeneration.sliders.magics;
+using m8.common;
 using m8.common.Collections;
-using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace m8.chess.MoveGeneration;
 
 /// <summary>
 ///  Classes containings methods about how to piece attacks squares on a chess board.
 /// </summary>
-internal static class Attacks
+public static class Attacks
 {
-    public static readonly UnsafeArray<Bitboard> KingAttaks = new(64);
-    public static readonly UnsafeArray<Bitboard> KnightAttaks = new(64);
+    public static readonly UnsafeArray<Bitboard> kingAttacks;
+    public static readonly UnsafeArray<Bitboard> knightAttacks;
 
     #region Static construction and initialization
 
@@ -19,8 +20,8 @@ internal static class Attacks
     /// </summary>
     static Attacks()
     {
-        KingAttaks   = InitializeKingAttacks();
-        KnightAttaks = InitializeKnightAttacks();
+        kingAttacks   = InitializeKingAttacks();
+        knightAttacks = InitializeKnightAttacks();
     }
 
     private static UnsafeArray<Bitboard> InitializeKingAttacks()
@@ -58,11 +59,11 @@ internal static class Attacks
                 if (targetFile.IsValid && targetRank.IsValid)
                 {
                     var targetSquare = new Square(targetFile, targetRank);
-                    attacks = attacks.Set((byte)targetSquare);
+                    attacks = attacks.Set(targetSquare.Value);
                 }
             }
 
-            result[(byte)sq] = attacks;
+            result[sq.Value] = attacks;
         }
 
         return result;

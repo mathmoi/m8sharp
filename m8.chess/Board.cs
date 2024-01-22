@@ -1,9 +1,7 @@
 ﻿using m8.chess.Exceptions;
 using m8.common;
 using m8.common.Extensions;
-using System.Data.Common;
 using System.Diagnostics;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -350,7 +348,7 @@ public class Board
         get
         {
             Debug.Assert(sq.IsValid);
-            return _board[(byte)sq];
+            return _board[sq.Value];
         }
     }
 
@@ -726,9 +724,9 @@ public class Board
         Debug.Assert(piece.IsValid, "The piece is invalid");
         Debug.Assert(!this[sq].IsValid, "The square is not empty");
 
-        _board[(byte)sq] = piece;
-        _pieces[(int)piece] = _pieces[(int)piece].Set((int)sq);
-        _colors[(int)piece.Color] = _colors[(int)piece.Color].Set((int)sq);
+        _board[sq.Value] = piece;
+        _pieces[(int)piece] = _pieces[(int)piece].Set(sq.Value);
+        _colors[(int)piece.Color] = _colors[(int)piece.Color].Set(sq.Value);
     }
 
     #endregion

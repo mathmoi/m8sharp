@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using m8.common;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace m8.chess;
@@ -159,6 +161,62 @@ public readonly struct PieceType
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator PieceType(byte value) => new(value);
+
+    #endregion
+
+    #region Comparison operators
+
+    /// <summary>
+    ///  Determine if two Piece types instances are equal.
+    /// </summary>
+    /// <param name="lhs">Left hand side instance to compare</param>
+    /// <param name="rhs">Right hand dide instance to compare</param>
+    /// <returns>True if the two instances are equals</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator ==(PieceType lhs, PieceType rhs)
+    {
+        Debug.Assert(lhs.IsValid);
+        Debug.Assert(rhs.IsValid);
+        return lhs._value == rhs._value;
+    }
+
+    /// <summary>
+    ///  Determine if two PieceType instances are differents.
+    /// </summary>
+    /// <param name="lhs">Left hand side instance to compare</param>
+    /// <param name="rhs">Right hand dide instance to compare</param>
+    /// <returns>True if the two instances are differents</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator !=(PieceType lhs, PieceType rhs)
+    {
+        Debug.Assert(lhs.IsValid);
+        Debug.Assert(rhs.IsValid);
+        return lhs._value != rhs._value;
+    }
+
+    /// <summary>
+    ///  Verify if another instance is equal to this instance.
+    /// </summary>
+    public bool Equals(PieceType other)
+    {
+        return this._value == other._value;
+    }
+
+    /// <summary>
+    ///  Verify if another object is equal to this instance.
+    /// </summary>
+    public override bool Equals([NotNullWhen(true)] object? obj)
+    {
+        return obj is PieceType other && this._value == other._value;
+    }
+
+    /// <summary>
+    ///  Get a hash code for this instance
+    /// </summary>
+    public override int GetHashCode()
+    {
+        return _value.GetHashCode();
+    }
 
     #endregion
 

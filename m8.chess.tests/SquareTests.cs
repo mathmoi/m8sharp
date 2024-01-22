@@ -364,4 +364,48 @@ public class SquareTests
 
         result.Should().Be(expectedBb);
     }
+
+    [Fact]
+    public void MoveUp_E4_ResultIsE5()
+    {
+        var sut = Square.e4;
+        var expected = Square.e5;
+
+        var actual = sut.MoveUp();
+
+        actual.Should().Be(expected);
+    }
+
+    [Fact]
+    public void MoveDown_E4_ResultIsE5()
+    {
+        var sut = Square.e4;
+        var expected = Square.e3;
+
+        var actual = sut.MoveDown();
+
+        actual.Should().Be(expected);
+    }
+
+    [Fact]
+    public void MoveLeft_E4_ResultIsD4()
+    {
+        var sut = Square.e4;
+        var expected = Square.d4;
+
+        var actual = sut.MoveLeft();
+
+        actual.Should().Be(expected);
+    }
+
+    [Fact]
+    public void MoveRight_E4_ResultIsF4()
+    {
+        var sut = Square.e4;
+        var expected = Square.f4;
+
+        var actual = sut.MoveRight();
+
+        actual.Should().Be(expected);
+    }
 }

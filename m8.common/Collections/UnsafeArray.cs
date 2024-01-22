@@ -14,16 +14,26 @@ public unsafe class UnsafeArray<T> : IDisposable where T : unmanaged
     private int _length;
     private bool _disposed;
 
-
     /// <summary>
     ///  Constructor
     /// </summary>
     /// <param name="length">Size of the array</param>
     public UnsafeArray(int length)
     {
-        _array = (T*)Marshal.AllocHGlobal(sizeof(T) * length);
+        _array = (T*)NativeMemory.Alloc((nuint)length, (nuint)sizeof(T));
         _length = length;
         _disposed = false;
+    }
+
+    /// <summary>
+    ///  Fill the array with a value.
+    /// </summary>
+    public void Fill(T value)
+    {
+        for (int i = 0; i < _length; ++i)
+        {
+            *(_array + i) = value;
+        }
     }
 
     /// <summary>
@@ -63,7 +73,7 @@ public unsafe class UnsafeArray<T> : IDisposable where T : unmanaged
         {
             if (_array != null)
             {
-                Marshal.FreeHGlobal((IntPtr) _array);
+                NativeMemory.Free(_array);
                 _array = null;
             }
 

@@ -1,13 +1,16 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.Intrinsics.X86;
+using System.Text;
 
 namespace m8.common;
 
 /// <summary>
 ///  Represents a binary (true/false) state for each square of a chess board.
 /// </summary>
-public readonly struct Bitboard
+public readonly struct Bitboard : IEquatable<Bitboard>
 {
     private readonly ulong _value;
 
@@ -22,6 +25,24 @@ public readonly struct Bitboard
     ///  A bitboard with all bits set to one.
     /// </summary>
     public static readonly Bitboard Full = new(0xfffffffffffffffful);
+
+    #endregion
+
+    #region Static methods
+
+    /// <summary>
+    ///  Given a bitboard mask generate all the variations of the bitboard where only the 
+    ///  bit set in the mask can be set to one in the variations.
+    /// </summary>
+    public static IEnumerable<Bitboard> GenerateAllVariations(Bitboard mask)
+    {
+        var numberOfVariations = 1ul << mask.PopCount;
+
+        for (ulong variation = 0; variation < numberOfVariations; ++variation)
+        {
+            yield return new Bitboard(Bmi2.X64.ParallelBitDeposit(variation, (ulong)mask));
+        }
+    }
 
     #endregion
 
@@ -103,11 +124,43 @@ public readonly struct Bitboard
     }
 
     /// <summary>
+    ///  Indicate if the bitboard has any bit set to one.
+    /// </summary>
+    public bool Any
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            return _value != 0ul;
+        }
+    }
+
+    /// <summary>
     ///  Returns a string representing the Bitboard value.
     /// </summary>
     public override string ToString()
     {
         return "0x" + _value.ToString("x");
+    }
+
+    /// <summary>
+    ///  Return the value of the bitboard in a user friendly table of 8x8 
+    ///  binary numbers.
+    /// </summary>
+    public string ToBinaryBoardString()
+    {
+        var sb = new StringBuilder();
+
+        for (int rank = 7; 0 <= rank; --rank)
+        {
+            for (int file = 0; file < 8; ++file)
+            {
+                sb.Append(this[rank * 8 + file] ? '1' : '0');
+            }
+            sb.AppendLine();
+        }
+
+        return sb.ToString();
     }
 
     #endregion
@@ -144,6 +197,30 @@ public readonly struct Bitboard
     {
         Debug.Assert(_value != 0);
         return new Bitboard(_value & (_value - 1));
+    }
+
+    /// <summary>
+    ///  Verify if another instance is equal to this instance.
+    /// </summary>
+    public bool Equals(Bitboard other)
+    {
+        return this._value == other._value;
+    }
+
+    /// <summary>
+    ///  Verify if another object is equal to this instance.
+    /// </summary>
+    public override bool Equals([NotNullWhen(true)] object? obj)
+    {
+        return obj is Bitboard other && this._value == other._value;
+    }
+
+    /// <summary>
+    ///  Get a hash code for this instance
+    /// </summary>
+    public override int GetHashCode()
+    {
+        return _value.GetHashCode();
     }
 
     #endregion
@@ -187,12 +264,27 @@ public readonly struct Bitboard
     }
 
     /// <summary>
-    ///  Implicit conversion to bool. Returns true if the bitboard has any bit set to one.
+    ///  Extract the value of the Bitboard.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator bool(Bitboard bb)
+    public static explicit operator ulong(Bitboard bb) => bb._value;
+
+    /// <summary>
+    ///  Overload the equality operator (==)
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator ==(Bitboard left, Bitboard right)
     {
-        return bb._value != 0;
+        return left._value == right._value;
+    }
+
+    /// <summary>
+    ///  Overload the not equal operator (!=)
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator !=(Bitboard left, Bitboard right)
+    {
+        return left._value != right._value;
     }
 
     #endregion

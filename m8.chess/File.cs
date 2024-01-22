@@ -102,6 +102,7 @@ public readonly struct File(byte value)
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator byte(File file)
     {
+        // TODO : Remplacer les conversion par des propriétés (.Value, .Index?)
         Debug.Assert(file.IsValid);
         return file._value;
     }
