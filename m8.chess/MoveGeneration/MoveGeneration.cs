@@ -1,4 +1,5 @@
-﻿using m8.common;
+﻿using m8.chess.MoveGeneration.sliders;
+using m8.common;
 using m8.common.Collections;
 using System.Runtime.CompilerServices;
 
@@ -18,6 +19,8 @@ public static class MoveGeneration
 
         GenerateKingMoves(board, targetFilter, moves);
         GenerateKnightMoves(board, targetFilter, moves);
+        GeneratesRookLikeMoves(board, targetFilter, moves);
+        GeneratesBishopLikeMoves(board, targetFilter, moves);
     }
 
     /// <summary>
@@ -29,6 +32,8 @@ public static class MoveGeneration
 
         GenerateKingMoves(board, targetFilter, moves);
         GenerateKnightMoves(board, targetFilter, moves);
+        GeneratesRookLikeMoves(board, targetFilter, moves);
+        GeneratesBishopLikeMoves(board, targetFilter, moves);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -74,5 +79,49 @@ public static class MoveGeneration
                 moves.Add(new Move(from, to, piece, board[to]));
             }
         }        
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void GeneratesRookLikeMoves(Board board, Bitboard targetFilter, IList<Move> moves)
+    {
+        var bbFrom = board[new Piece(board.SideToMove, PieceType.Rook)]
+                   | board[new Piece(board.SideToMove, PieceType.Queen)];
+        GenerateSliderMoves(board, bbFrom, true, targetFilter, moves);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void GeneratesBishopLikeMoves(Board board, Bitboard targetFilter, IList<Move> moves)
+    {
+        var bbFrom = board[new Piece(board.SideToMove, PieceType.Bishop)]
+                   | board[new Piece(board.SideToMove, PieceType.Queen)];
+        GenerateSliderMoves(board, bbFrom, false, targetFilter, moves);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void GenerateSliderMoves(Board board,
+                                            Bitboard bbFrom,
+                                            bool slideLikeRook,
+                                            Bitboard targetFilter,
+                                            IList<Move> moves)
+    {
+        while(bbFrom.Any)
+        {
+            var from = new Square(bbFrom.LSB);
+            bbFrom = bbFrom.RemoveLSB();
+
+            var piece = board[from];
+
+            var bbTo = slideLikeRook ? BlackMagicSliders.GetRooksAttacks(from, board.Occupied)
+                                     : BlackMagicSliders.GetBishopAttacks(from , board.Occupied);
+            bbTo &= targetFilter;
+
+            while (bbTo.Any)
+            {
+                var to = new Square(bbTo.LSB);
+                bbTo = bbTo.RemoveLSB();
+
+                moves.Add(new Move(from, to, piece, board[to]));
+            }
+        }
     }
 }
