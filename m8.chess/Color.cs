@@ -51,13 +51,6 @@ public readonly struct Color
     #region Static Methods
 
     /// <summary>
-    ///  Extract the value of the color.
-    /// </summary>
-    /// <param name="color">A byte corresponding to the internal value for the color</param>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator byte(Color color) => color._value;
-
-    /// <summary>
     ///  Convert a byte into a Color
     /// </summary>
     /// <param name="value"></param>
@@ -147,6 +140,15 @@ public readonly struct Color
         {
             return _value == WHITE_VALUE ? 'w' : 'b';
         }
+    }
+
+    /// <summary>
+    ///  Return the internal value of the instance.
+    /// </summary>
+    public byte Value
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => _value;
     }
 
     /// <summary>

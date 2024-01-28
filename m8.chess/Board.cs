@@ -354,15 +354,30 @@ public class Board
 
     /// <summary>
     ///  Accessor allowing to get a bitboard representing the position of a specific 
+    ///  piece.
+    /// </summary>
+    public Bitboard this[Piece piece]
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            Debug.Assert(piece.IsValid);
+            return _pieces[piece.Value];
+        }
+    }
+
+    /// <summary>
+    ///  Accessor allowing to get a bitboard representing the position of a specific 
     ///  piece type.
     /// </summary>
-    public Bitboard this[Piece pieceType]
+    public Bitboard this[PieceType pieceType]
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
             Debug.Assert(pieceType.IsValid);
-            return _pieces[(byte)pieceType];
+            return _pieces[new Piece(Color.White, pieceType).Value]
+                 | _pieces[new Piece(Color.Black, pieceType).Value];
         }
     }
 
@@ -373,7 +388,7 @@ public class Board
     public Bitboard this[Color color]
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => _colors[(byte)color];
+        get => _colors[color.Value];
     }
 
     /// <summary>
@@ -382,7 +397,7 @@ public class Board
     public Bitboard Occupied
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => _colors[(byte)Color.White] | _colors[(byte)Color.Black];
+        get => _colors[Color.White.Value] | _colors[Color.Black.Value];
     }
 
     /// <summary>
@@ -413,7 +428,7 @@ public class Board
     public Square GetKingPosition(Color color)
     {
         Piece king = new(color, PieceType.King);
-        return new((byte)_pieces[(int)king].LSB);
+        return new((byte)_pieces[king.Value].LSB);
     }
 
     /// <summary>
@@ -522,7 +537,7 @@ public class Board
 
         if (canCastle)
         {
-            var rooks = _pieces[(byte)new Piece(color, PieceType.Rook)];
+            var rooks = _pieces[new Piece(color, PieceType.Rook).Value];
             rooks &= Rank.First.FlipForBlack(color).Bitboard;
             var outterRookSquare = new Square((byte)(side == CastlingSide.KingSide ? rooks.MSB : rooks.LSB));
             var outterRookFile = outterRookSquare.File;
@@ -648,7 +663,7 @@ public class Board
                 }
                 else
                 {
-                    if ((byte)file % 2 == (byte)rank % 2)
+                    if (file.Value % 2 == rank.Value % 2)
                     {
                         sb.Append(" ⬩ ");
                     }
@@ -701,7 +716,7 @@ public class Board
         if (this.EnPassantFile.IsValid)
         {
             sb.AppendLine();
-            sb.Append(' ', 4 + (byte)this.EnPassantFile * 4);
+            sb.Append(' ', 4 + this.EnPassantFile.Value * 4);
             sb.Append('△');
         }
 
@@ -725,8 +740,8 @@ public class Board
         Debug.Assert(!this[sq].IsValid, "The square is not empty");
 
         _board[sq.Value] = piece;
-        _pieces[(int)piece] = _pieces[(int)piece].Set(sq.Value);
-        _colors[(int)piece.Color] = _colors[(int)piece.Color].Set(sq.Value);
+        _pieces[piece.Value] = _pieces[piece.Value].Set(sq.Value);
+        _colors[piece.Color.Value] = _colors[piece.Color.Value].Set(sq.Value);
     }
 
     #endregion

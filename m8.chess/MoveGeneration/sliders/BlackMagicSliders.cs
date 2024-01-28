@@ -161,7 +161,7 @@ public static unsafe class BlackMagicSliders
 
     static BlackMagicSliders()
     {
-        ptrMagicAttackTable = (Bitboard*)NativeMemory.AlignedAlloc(MAGIC_ATTACK_TABLE_SIZE * (nuint)sizeof(BlackMagic), (nuint)sizeof(BlackMagic));
+        ptrMagicAttackTable = (Bitboard*)NativeMemory.AlignedAlloc(MAGIC_ATTACK_TABLE_SIZE * (nuint)sizeof(Bitboard), (nuint)sizeof(Bitboard));
         NativeMemory.Clear(ptrMagicAttackTable, MAGIC_ATTACK_TABLE_SIZE);
 
         rookBlackMagics = new BlackMagic[64];
@@ -240,7 +240,6 @@ public static unsafe class BlackMagicSliders
                                         postMask,
                                         magicConstants.Magic);
 
-        Console.WriteLine($"{sq} {pieceType}");
         foreach (var occupancy in Bitboard.GenerateAllVariations(relevants))
         {
             var index = blackMagic.GetIndex(occupancy);

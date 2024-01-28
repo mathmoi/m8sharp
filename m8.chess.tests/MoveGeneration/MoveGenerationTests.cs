@@ -4,6 +4,8 @@ namespace m8.chess.tests.MoveGeneration;
 
 public class MoveGenerationTests
 {
+    #region GenerateQuietMoves tests
+
     [Fact]
     public void GenerateQuietMoves_WhiteKingOnE4_EightMovesGenerated()
     {
@@ -31,7 +33,7 @@ public class MoveGenerationTests
     {
         var board = new Board("7k/PPP5/RKR5/NQN5/8/8/8/8 w - - 0 1");
         var actual = new List<Move>();
-        
+
         m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
 
         actual.Where(x => x.Piece == Piece.WhiteKing).Should().BeEmpty();
@@ -89,25 +91,9 @@ public class MoveGenerationTests
     }
 
     [Fact]
-    public void GenerateCaptures_WhiteKingOnF1TwoCapturesAvailable_TwoCapturesMovesGenerated()
-    {
-        var board = new Board("4k3/8/8/8/8/8/4pr2/5K2 w - - 0 1");
-        var actual = new List<Move>();
-        var expected = new List<Move>()
-        {
-            new Move(Square.f1, Square.e2, Piece.WhiteKing, Piece.BlackPawn),
-            new Move(Square.f1, Square.f2, Piece.WhiteKing, Piece.BlackRook)
-        };
-
-        m8.chess.MoveGeneration.MoveGeneration.GenerateCaptures(board, actual);
-
-        actual.Should().BeEquivalentTo(expected);
-    }
-
-    [Fact]
     public void GenerateQuietMoves_WhiteKnightOnF3_EightMovesGeneratedForKnight()
     {
-        
+
         var board = new Board("7k/8/8/8/8/5N2/8/K7 w - - 0 1");
         var actual = new List<Move>();
         var expected = new List<Move>()
@@ -153,22 +139,6 @@ public class MoveGenerationTests
         m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
 
         actual.Should().Contain(expected);
-    }
-
-    [Fact]
-    public void GenerateCaptures_BlackKnightOnC4TwoCapturesAvailable_TwoCapturesMovesGenerated()
-    {
-        var board = new Board("4k3/8/8/8/2n5/8/1P1P4/4K3 b - - 0 1");
-        var actual = new List<Move>();
-        var expected = new List<Move>()
-        {
-            new Move(Square.c4, Square.b2, Piece.BlackKnight, Piece.WhitePawn),
-            new Move(Square.c4, Square.d2, Piece.BlackKnight, Piece.WhitePawn)
-        };
-
-        m8.chess.MoveGeneration.MoveGeneration.GenerateCaptures(board, actual);
-
-        actual.Should().BeEquivalentTo(expected);
     }
 
     [Fact]
@@ -258,6 +228,111 @@ public class MoveGenerationTests
     }
 
     [Fact]
+    public void GenerateQuietMovesTwoCastlingMovesAvailable_CastlingMovesAreGenerated()
+    {
+        var board = new Board("4k3/8/8/8/8/8/8/R3K2R w KQ - 0 1");
+        var actual = new List<Move>();
+        var expected = new List<Move>()
+        {
+            new Move(Square.e1, Square.g1, Piece.WhiteKing, CastlingSide.KingSide),
+            new Move(Square.e1, Square.c1, Piece.WhiteKing, CastlingSide.QueenSide)
+        };
+
+        m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
+
+        actual.Where(x => x.CastlingSide != CastlingSide.None).Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void GenerateQuietMoves_Chess960Position_KingCastlingReturned()
+    {
+        var board = new Board("rk2r3/8/8/8/8/8/4P3/RK2R3 w KQkq - 0 1");
+        var actual = new List<Move>();
+        var expected = new List<Move>()
+        {
+            new Move(Square.b1, Square.g1, Piece.WhiteKing, CastlingSide.KingSide),
+            new Move(Square.b1, Square.c1, Piece.WhiteKing, CastlingSide.QueenSide)
+        };
+
+        m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
+
+        actual.Where(x => x.CastlingSide != CastlingSide.None).Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void GenerateQuietMoves_PositionTraversedByRookAttacked_CastlingPossible()
+    {
+        var board = new Board("1k6/8/1r6/8/8/8/8/R3K3 w Q - 0 1");
+        var actual = new List<Move>();
+        var expected = new List<Move>()
+        {
+            new Move(Square.e1, Square.c1, Piece.WhiteKing, CastlingSide.QueenSide)
+        };
+
+        m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
+
+        actual.Where(x => x.CastlingSide != CastlingSide.None).Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void GenerateQuietMoves_PositionTraversedByKingAttacked_CastlingImpossible()
+    {
+        var board = new Board("1k6/8/3r4/8/8/8/8/R3K3 w Q - 0 1");
+        var actual = new List<Move>();
+
+        m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
+
+        actual.Where(x => x.CastlingSide != CastlingSide.None).Should().BeEmpty();
+    }
+
+    [Fact]
+    public void GenerateQuietMoves_PositionTraveledByRookOccupied_CastlingImpossible()
+    {
+        var board = new Board("1k6/8/8/8/8/8/8/RB2K3 w Q - 0 1");
+        var actual = new List<Move>();
+
+        m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
+
+        actual.Where(x => x.CastlingSide != CastlingSide.None).Should().BeEmpty();
+    }
+
+    #endregion
+
+    #region GenerateCaptures tests
+
+    [Fact]
+    public void GenerateCaptures_WhiteKingOnF1TwoCapturesAvailable_TwoCapturesMovesGenerated()
+    {
+        var board = new Board("4k3/8/8/8/8/8/4pr2/5K2 w - - 0 1");
+        var actual = new List<Move>();
+        var expected = new List<Move>()
+        {
+            new Move(Square.f1, Square.e2, Piece.WhiteKing, Piece.BlackPawn),
+            new Move(Square.f1, Square.f2, Piece.WhiteKing, Piece.BlackRook)
+        };
+
+        m8.chess.MoveGeneration.MoveGeneration.GenerateCaptures(board, actual);
+
+        actual.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void GenerateCaptures_BlackKnightOnC4TwoCapturesAvailable_TwoCapturesMovesGenerated()
+    {
+        var board = new Board("4k3/8/8/8/2n5/8/1P1P4/4K3 b - - 0 1");
+        var actual = new List<Move>();
+        var expected = new List<Move>()
+        {
+            new Move(Square.c4, Square.b2, Piece.BlackKnight, Piece.WhitePawn),
+            new Move(Square.c4, Square.d2, Piece.BlackKnight, Piece.WhitePawn)
+        };
+
+        m8.chess.MoveGeneration.MoveGeneration.GenerateCaptures(board, actual);
+
+        actual.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
     public void GenerateCaptures_BlackQueenOnG4OwnAndOpponentBlockers_OnlyOpponentAreCaptured()
     {
         var board = new Board("8/1k1N2N1/6r1/8/1N4qN/5r1r/4N1N1/4K3 b - - 0 1");
@@ -276,6 +351,7 @@ public class MoveGenerationTests
         actual.Where(x => x.Piece == Piece.BlackQueen).Should().BeEquivalentTo(expected);
     }
 
+    #endregion
 
     // TODO : Ajouter un test pour vérifier que cette position à 218 coups et qu'on peut bien les générer : R6R/3Q4/1Q4Q1/4Q3/2Q4Q/Q4Q2/pp1Q4/kBNNK1B1 b - - 0 1
 }

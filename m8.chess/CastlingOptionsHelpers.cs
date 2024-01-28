@@ -11,7 +11,7 @@ internal static class CastlingOptionsHelpers
     public static CastlingOptions Create(Color color, CastlingSide side)
     {
         CastlingOptions option = side == CastlingSide.QueenSide ? CastlingOptions.WhiteQueenside : CastlingOptions.WhiteKingside;
-        option = (CastlingOptions)((int)option << (int)color);
+        option = (CastlingOptions)((int)option << color.Value);
         return option;
     }
 

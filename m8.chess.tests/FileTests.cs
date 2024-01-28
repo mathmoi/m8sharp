@@ -36,11 +36,11 @@ public class FileTests
     [InlineData('f', 5)]
     [InlineData('g', 6)]
     [InlineData('h', 7)]
-    public void ExplicitOperatorByte_AllFiles_CorrectValues(char file_char, byte expected)
+    public void Value_AllFiles_CorrectValues(char file_char, byte expected)
     {
         File file = new(file_char);
 
-        byte actual = (byte)file;
+        byte actual = file.Value;
 
         actual.Should().Be(expected);
     }

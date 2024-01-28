@@ -49,7 +49,7 @@ public readonly struct Square
     {
         Debug.Assert(file.IsValid);
         Debug.Assert(rank.IsValid);
-        _value = (byte)(((byte)rank) << 3 | (byte)file);
+        _value = (byte)((rank.Value) << 3 | file.Value);
     }
 
     /// <summary>
@@ -166,10 +166,131 @@ public readonly struct Square
     ///  Overloading the plus operator between a square and a integer value.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Square operator+(Square sq, sbyte delta)
+    public static Square operator+(Square sq, int delta)
     {
         return new Square((byte)(sq._value + delta));
     }
+
+    #endregion
+
+    #region Comparison operators
+
+    /// <summary>
+    ///  Determine if an instance is less than another one.
+    /// </summary>
+    /// <param name="lhs">Left hand side instance to compare</param>
+    /// <param name="rhs">Right hand dide instance to compare</param>
+    /// <returns>True if the lhs is to the left of rhs</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator <(Square lhs, Square rhs)
+    {
+        Debug.Assert(lhs.IsValid);
+        Debug.Assert(rhs.IsValid);
+        return lhs._value < rhs._value;
+    }
+
+    /// <summary>
+    ///  Determine if an instance is greater than another one.
+    /// </summary>
+    /// <param name="lhs">Left hand side instance to compare</param>
+    /// <param name="rhs">Right hand dide instance to compare</param>
+    /// <returns>True if the lhs is to the right of rhs</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator >(Square lhs, Square rhs)
+    {
+        Debug.Assert(lhs.IsValid);
+        Debug.Assert(rhs.IsValid);
+        return lhs._value > rhs._value;
+    }
+
+    /// <summary>
+    ///  Determine if an instance is less than or equal to another one.
+    /// </summary>
+    /// <param name="lhs">Left hand side instance to compare</param>
+    /// <param name="rhs">Right hand dide instance to compare</param>
+    /// <returns>True if the lhs is to the left or the same as rhs</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator <=(Square lhs, Square rhs)
+    {
+        Debug.Assert(lhs.IsValid);
+        Debug.Assert(rhs.IsValid);
+        return lhs._value <= rhs._value;
+    }
+
+    /// <summary>
+    ///  Determine if an instance is greateror equal than another one.
+    /// </summary>
+    /// <param name="lhs">Left hand side instance to compare</param>
+    /// <param name="rhs">Right hand dide instance to compare</param>
+    /// <returns>True if the lhs is to the right or the same as rhs</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator >=(Square lhs, Square rhs)
+    {
+        Debug.Assert(lhs.IsValid);
+        Debug.Assert(rhs.IsValid);
+        return lhs._value >= rhs._value;
+    }
+
+    /// <summary>
+    ///  Determine if two Square instances are equal.
+    /// </summary>
+    /// <param name="lhs">Left hand side instance to compare</param>
+    /// <param name="rhs">Right hand dide instance to compare</param>
+    /// <returns>True if the two instances are equals</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator ==(Square lhs, Square rhs)
+    {
+        Debug.Assert(lhs.IsValid);
+        Debug.Assert(rhs.IsValid);
+        return lhs._value == rhs._value;
+    }
+
+    /// <summary>
+    ///  Determine if two Square instances are differents.
+    /// </summary>
+    /// <param name="lhs">Left hand side instance to compare</param>
+    /// <param name="rhs">Right hand dide instance to compare</param>
+    /// <returns>True if the two instances are differents</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator !=(Square lhs, Square rhs)
+    {
+        Debug.Assert(lhs.IsValid);
+        Debug.Assert(rhs.IsValid);
+        return lhs._value != rhs._value;
+    }
+
+    /// <summary>
+    ///  Determine if the current instance is equals to another object.
+    /// </summary>
+    /// <param name="obj">The other object</param>
+    /// <returns>True if the other object is a Square and its value is equal</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override bool Equals(object? obj)
+    {
+        if (!this.IsValid)
+        {
+            return false;
+        }
+
+        if (obj is Square other)
+        {
+            if (!other.IsValid)
+            {
+                return false;
+            }
+
+            return this == other;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Serves as the default hash function.
+    /// </summary>
+    /// <returns>A hash code for the current object.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override int GetHashCode() => _value.GetHashCode();
 
     #endregion
 
@@ -271,7 +392,16 @@ public readonly struct Square
     public byte Value
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get { return _value; }
+        get => _value;
+    }
+
+    /// <summary>
+    ///  Returns the 0x88 index of the current square.
+    /// </summary>
+    public int Index0x88
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => _value + (_value & ~7);
     }
 
     /// <summary>

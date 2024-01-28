@@ -39,7 +39,7 @@ public readonly struct Move
 
         _value = (uint)from.Value  << FROM_OFFSET
                | (uint)to.Value    << TO_OFFSET
-               | (uint)(byte)piece << PIECE_OFFSET;
+               | (uint)piece.Value << PIECE_OFFSET;
     }
 
     /// <summary>
@@ -54,8 +54,8 @@ public readonly struct Move
 
         _value = (uint)from.Value  << FROM_OFFSET
                | (uint)to.Value    << TO_OFFSET
-               | (uint)(byte)piece << PIECE_OFFSET
-               | (uint)(byte)taken << TAKEN_OFFSET;
+               | (uint)piece.Value << PIECE_OFFSET
+               | (uint)taken.Value << TAKEN_OFFSET;
     }
 
     /// <summary>
@@ -71,9 +71,9 @@ public readonly struct Move
 
         _value = (uint)from.Value      << FROM_OFFSET
                | (uint)to.Value        << TO_OFFSET
-               | (uint)(byte)piece     << PIECE_OFFSET
-               | (uint)(byte)taken     << TAKEN_OFFSET
-               | (uint)(byte)promoteTo << PROMOTE_TO_OFFSET;
+               | (uint)piece.Value     << PIECE_OFFSET
+               | (uint)taken.Value     << TAKEN_OFFSET
+               | (uint)promoteTo.Value << PROMOTE_TO_OFFSET;
     }
 
     /// <summary>
@@ -90,7 +90,7 @@ public readonly struct Move
         _value = (uint)from.Value   << FROM_OFFSET
                | (uint)to.Value     << TO_OFFSET
                | (uint)castlingSide << CASTLING_OFFSET
-               | (uint)(byte)piece  << PIECE_OFFSET;
+               | (uint)piece.Value  << PIECE_OFFSET;
     }
 
     #endregion

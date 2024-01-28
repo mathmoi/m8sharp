@@ -27,7 +27,7 @@ internal unsafe struct BlackMagic
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ulong GetIndex(Bitboard occupancy)
     {
-        var index = (ulong)(occupancy | _notMask);
+        var index = (occupancy | _notMask).Value;
         index *= _blackMagic;
         index >>= 64 - 12;
         return index;

@@ -43,7 +43,7 @@ public readonly struct Piece
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Piece(Color color, PieceType type)
     {
-        _value = (byte)((((byte)color) << 3) | ((byte)type));
+        _value = (byte)((color.Value << 3) | type.Value);
     }
 
     /// <summary>
@@ -128,12 +128,6 @@ public readonly struct Piece
     #endregion
 
     #region Static methods
-
-    /// <summary>
-    ///  Extract the value of the Piece.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator byte(Piece piece) => piece._value;
 
     /// <summary>
     ///  Convert a byte into a Piece
@@ -237,6 +231,14 @@ public readonly struct Piece
         get => this.Type.IsValid;
     }
 
+    /// <summary>
+    ///  Return the internal value of the instance.
+    /// </summary>
+    public byte Value
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => _value;
+    }
 
     /// <summary>
     ///  Returns the character representing this piece type

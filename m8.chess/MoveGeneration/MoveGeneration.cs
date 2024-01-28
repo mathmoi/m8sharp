@@ -21,6 +21,7 @@ public static class MoveGeneration
         GenerateKnightMoves(board, targetFilter, moves);
         GeneratesRookLikeMoves(board, targetFilter, moves);
         GeneratesBishopLikeMoves(board, targetFilter, moves);
+        GenerateCastlingMoves(board, moves);
     }
 
     /// <summary>
@@ -121,6 +122,53 @@ public static class MoveGeneration
                 bbTo = bbTo.RemoveLSB();
 
                 moves.Add(new Move(from, to, piece, board[to]));
+            }
+        }
+    }
+
+    private static void GenerateCastlingMoves(Board board,
+                                              IList<Move> moves)
+    {
+        for (var side = CastlingSide.KingSide; side <= CastlingSide.QueenSide; ++side)
+        {
+            if (board.CastlingOptions.HasFlag(CastlingOptionsHelpers.Create(board.SideToMove, side)))
+            {
+                // IDEA : There is lot of calculation here that could be computed once when we setup the position. Would it be faster?
+                var king = new Piece(board.SideToMove, PieceType.King);
+                var bbKing = board[king];
+                var rank = Rank.First.FlipForBlack(board.SideToMove);
+                var kingFromSq = new Square(bbKing.LSB);
+                var kingToSq = new Square(side == CastlingSide.KingSide ? File.g : File.c, rank);
+                var rookFromSq = new Square(board.GetCastlingFile(side), rank);
+                var rookToSq = new Square(side == CastlingSide.KingSide ? File.f : File.d, rank);
+
+                // Check if any of the travel squares are occupied
+                var bbTravelKing = BetweenSquare.GetBetween(kingFromSq, kingToSq);
+                var bbTravelRook = BetweenSquare.GetBetween(rookFromSq, rookToSq);
+                var occupied = board.Occupied;
+                occupied ^= bbKing | rookFromSq.Bitboard;
+                var bbTravelOccupied = (bbTravelKing | bbTravelRook) & occupied;
+
+                if (!bbTravelOccupied.Any)
+                {
+                    // Check that the origin of the king, all the squared traveled by the
+                    // king and the destination of the king are not under attack.
+                    var bbAttacksToCheck = bbTravelKing | bbKing | kingToSq.Bitboard;
+                    var bbOpponents = board[!board.SideToMove];
+
+                    var attackers = Bitboard.Empty;
+                    while (!attackers.Any && bbAttacksToCheck.Any)
+                    {
+                        Square sq = new Square(bbAttacksToCheck.LSB);
+                        bbAttacksToCheck = bbAttacksToCheck.RemoveLSB();
+                        attackers = Attacks.AttacksTo(board, sq) & bbOpponents;
+                    }
+
+                    if (!attackers.Any)
+                    {
+                        moves.Add(new Move(kingFromSq, kingToSq, king, side));
+                    }
+                }
             }
         }
     }

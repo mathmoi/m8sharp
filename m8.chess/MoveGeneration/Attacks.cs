@@ -1,4 +1,5 @@
-﻿using m8.chess.MoveGeneration.sliders.magics;
+﻿using m8.chess.MoveGeneration.sliders;
+using m8.chess.MoveGeneration.sliders.magics;
 using m8.common;
 using m8.common.Collections;
 using System.Runtime.InteropServices;
@@ -70,4 +71,23 @@ public static class Attacks
     }
 
     #endregion
+
+    /// <summary>
+    ///  Returns a bitboard of all the squares that attacks a given square.
+    /// </summary>
+    public static Bitboard AttacksTo(Board board, Square sq)
+    {
+        var queens = board[PieceType.Queen];
+
+        Bitboard attackers = BlackMagicSliders.GetRooksAttacks(sq, board.Occupied) & (queens | board[PieceType.Rook]);
+        attackers |= BlackMagicSliders.GetBishopAttacks(sq, board.Occupied) & (queens | board[PieceType.Bishop]);
+        attackers |= knightAttacks[sq.Value] & board[PieceType.Knight];
+        attackers |= kingAttacks[sq.Value] & board[PieceType.King];
+
+        var bbSq = sq.Bitboard;
+        attackers |= (((bbSq << 7) & ~File.h.Bitboard) | ((bbSq << 9) & ~File.a.Bitboard)) & board[Piece.BlackPawn];
+        attackers |= (((bbSq >> 9) & ~File.h.Bitboard) | ((bbSq >> 7) & ~File.a.Bitboard)) & board[Piece.WhitePawn];
+
+        return attackers;
+    }
 }

@@ -92,21 +92,6 @@ public readonly struct Rank(byte value)
 
     #endregion
 
-    #region Static methods
-
-    /// <summary>
-    ///  Explicit convertion operator to a byte
-    /// </summary>
-    /// <param name="rank">Object to convert</param>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator byte(Rank rank)
-    {
-        Debug.Assert(rank.IsValid);
-        return rank._value;
-    }
-
-    #endregion
-
     #region Comparison operators
 
     /// <summary>
@@ -237,6 +222,19 @@ public readonly struct Rank(byte value)
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => (_value & 0xf8) == 0;
+    }
+
+    /// <summary>
+    ///  Return the internal value of the instance.
+    /// </summary>
+    public byte Value
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            Debug.Assert(this.IsValid);
+            return _value;
+        }
     }
 
     /// <summary>

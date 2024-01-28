@@ -36,11 +36,11 @@ public class RankTests
     [InlineData('6', 5)]
     [InlineData('7', 6)]
     [InlineData('8', 7)]
-    public void ExplicitOperatorByte_AllRanks_CorrectValues(char rank_char, byte expected)
+    public void Value_AllRanks_CorrectValues(char rank_char, byte expected)
     {
         Rank rank = new(rank_char);
 
-        byte actual = (byte)rank;
+        byte actual = rank.Value;
 
         actual.Should().Be(expected);
     }

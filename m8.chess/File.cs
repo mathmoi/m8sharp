@@ -93,22 +93,6 @@ public readonly struct File(byte value)
 
     #endregion
 
-    #region Static methods
-
-    /// <summary>
-    ///  Explicit convertion operator to a byte
-    /// </summary>
-    /// <param name="file">Object to convert</param>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator byte(File file)
-    {
-        // TODO : Remplacer les conversion par des propriétés (.Value, .Index?)
-        Debug.Assert(file.IsValid);
-        return file._value;
-    }
-
-    #endregion
-
     #region Comparison operators
 
     /// <summary>
@@ -235,10 +219,23 @@ public readonly struct File(byte value)
     /// <summary>
     ///  Indicate if the current objects represents a valid file.
     /// </summary>
-    public readonly bool IsValid
+    public bool IsValid
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => (_value & 0xf8) == 0;
+    }
+
+    /// <summary>
+    ///  Return the internal value of the instance.
+    /// </summary>
+    public byte Value
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            Debug.Assert(this.IsValid);
+            return _value;
+        }
     }
 
     /// <summary>

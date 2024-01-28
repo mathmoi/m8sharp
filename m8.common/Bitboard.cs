@@ -40,7 +40,7 @@ public readonly struct Bitboard : IEquatable<Bitboard>
 
         for (ulong variation = 0; variation < numberOfVariations; ++variation)
         {
-            yield return new Bitboard(Bmi2.X64.ParallelBitDeposit(variation, (ulong)mask));
+            yield return new Bitboard(Bmi2.X64.ParallelBitDeposit(variation, mask.Value));
         }
     }
 
@@ -136,6 +136,15 @@ public readonly struct Bitboard : IEquatable<Bitboard>
     }
 
     /// <summary>
+    ///  Return the internal value of the instance.
+    /// </summary>
+    public ulong Value
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => _value;
+    }
+
+    /// <summary>
     ///  Returns a string representing the Bitboard value.
     /// </summary>
     public override string ToString()
@@ -200,6 +209,21 @@ public readonly struct Bitboard : IEquatable<Bitboard>
     }
 
     /// <summary>
+    ///  Rotate the bit in the bitboard to the left
+    /// </summary>
+    /// <param name="offset">Number of bits to rotate</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Bitboard RotateLeft(int offset) => new Bitboard(BitOperations.RotateLeft(_value, offset));
+
+    /// <summary>
+    ///  Rotate the bit in the bitboard to the right
+    /// </summary>
+    /// <param name="offset">Number of bits to rotate</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Bitboard RotateRight(int offset) => new Bitboard(BitOperations.RotateRight(_value, offset));
+
+
+    /// <summary>
     ///  Verify if another instance is equal to this instance.
     /// </summary>
     public bool Equals(Bitboard other)
@@ -255,6 +279,24 @@ public readonly struct Bitboard : IEquatable<Bitboard>
     }
 
     /// <summary>
+    ///  Overload of the operator <<
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Bitboard operator <<(Bitboard bb, int shiftAmount)
+    {
+        return new Bitboard(bb._value << shiftAmount);
+    }
+
+    /// <summary>
+    ///  Overload of the operator >>
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Bitboard operator >>(Bitboard bb, int shiftAmount)
+    {
+        return new Bitboard(bb._value >> shiftAmount);
+    }
+
+    /// <summary>
     ///  Overload the not operator (~)
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -262,12 +304,6 @@ public readonly struct Bitboard : IEquatable<Bitboard>
     {
         return new Bitboard(~bb._value);
     }
-
-    /// <summary>
-    ///  Extract the value of the Bitboard.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator ulong(Bitboard bb) => bb._value;
 
     /// <summary>
     ///  Overload the equality operator (==)

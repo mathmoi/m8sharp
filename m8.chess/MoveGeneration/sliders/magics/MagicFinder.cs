@@ -143,6 +143,6 @@ public static class MagicFinder
     }
     private static int CalculateMagicIndex(Bitboard occupancy, Bitboard notMask, ulong magic, int shift)
     {
-        return (int)(((ulong)(occupancy | notMask) * magic) >> shift);
+        return (int)(((occupancy | notMask).Value * magic) >> shift);
     }
 }

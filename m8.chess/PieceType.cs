@@ -151,12 +151,6 @@ public readonly struct PieceType
     #region Static Methods
 
     /// <summary>
-    ///  Extract the value of the PieceType.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator byte(PieceType type) => type._value;
-
-    /// <summary>
     ///  Convert a byte into a PieceType
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -229,6 +223,15 @@ public readonly struct PieceType
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => 1 <= _value && _value <= 6;
+    }
+
+    /// <summary>
+    ///  Return the internal value of the instance.
+    /// </summary>
+    public byte Value
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => _value;
     }
 
     /// <summary>

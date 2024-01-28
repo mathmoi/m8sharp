@@ -408,4 +408,19 @@ public class SquareTests
 
         actual.Should().Be(expected);
     }
+
+    [Theory]
+    [InlineData("a1", 0)]
+    [InlineData("h1", 7)]
+    [InlineData("f6", 85)]
+    [InlineData("a8", 112)]
+    [InlineData("h8", 119)]
+    public void IndexOx88_DifferentsSquares_CorrectIndexReturned(string sutString, int expected)
+    {
+        var sut = new Square(sutString);
+
+        var actual = sut.Index0x88;
+
+        actual.Should().Be(expected);
+    }
 }
