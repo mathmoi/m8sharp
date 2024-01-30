@@ -1,6 +1,5 @@
 ﻿using m8.common;
 using System.Diagnostics;
-using System.Runtime.Intrinsics.X86;
 
 namespace m8.chess.MoveGeneration.sliders.magics;
 

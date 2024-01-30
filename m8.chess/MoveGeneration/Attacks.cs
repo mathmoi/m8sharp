@@ -1,8 +1,6 @@
 ﻿using m8.chess.MoveGeneration.sliders;
-using m8.chess.MoveGeneration.sliders.magics;
 using m8.common;
 using m8.common.Collections;
-using System.Runtime.InteropServices;
 
 namespace m8.chess.MoveGeneration;
 

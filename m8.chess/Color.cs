@@ -114,21 +114,6 @@ public readonly struct Color
 
     #endregion
 
-    #region Operators overloading
-
-    /// <summary>
-    ///  Overload the not operator (!) to return the opposite color.
-    /// </summary>
-    /// <param name="color">Color to apply the operator to</param>
-    /// <returns>Opposite color</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Color operator !(Color color)
-    {
-        return new Color((byte)(color._value ^ 1));
-    }
-
-    #endregion
-
     #region Public methods and properties
 
     /// <summary>
@@ -149,6 +134,15 @@ public readonly struct Color
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => _value;
+    }
+
+    /// <summary>
+    ///  Returns the opposite color
+    /// </summary>
+    public Color Opposite
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => new Color((byte)(_value ^ 1));
     }
 
     /// <summary>

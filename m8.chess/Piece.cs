@@ -148,8 +148,6 @@ public readonly struct Piece
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator ==(Piece lhs, Piece rhs)
     {
-        Debug.Assert(lhs.IsValid);
-        Debug.Assert(rhs.IsValid);
         return lhs._value == rhs._value;
     }
 

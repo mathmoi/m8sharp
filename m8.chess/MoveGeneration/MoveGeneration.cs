@@ -18,10 +18,11 @@ public static class MoveGeneration
         var targetFilter = ~board.Occupied;
 
         GenerateKingMoves(board, targetFilter, moves);
+        GenerateCastlingMoves(board, moves);
         GenerateKnightMoves(board, targetFilter, moves);
         GeneratesRookLikeMoves(board, targetFilter, moves);
         GeneratesBishopLikeMoves(board, targetFilter, moves);
-        GenerateCastlingMoves(board, moves);
+        GeneratePawnQuietMoves(board, moves);
     }
 
     /// <summary>
@@ -29,12 +30,18 @@ public static class MoveGeneration
     /// </summary>
     public static void GenerateCaptures(Board board, IList<Move> moves)
     {
-        var targetFilter = board[!board.SideToMove];
+        var targetFilter = board[board.SideToMove.Opposite];
 
         GenerateKingMoves(board, targetFilter, moves);
         GenerateKnightMoves(board, targetFilter, moves);
         GeneratesRookLikeMoves(board, targetFilter, moves);
         GeneratesBishopLikeMoves(board, targetFilter, moves);
+
+        GeneratePawnCaptures(board, targetFilter, moves);
+        GeneratePawnPriseEnPassant(board, moves);
+        GeneratePawnPromotions(board, 8 - 16 * board.SideToMove.Value, ~board.Occupied, moves);
+        GeneratePawnPromotions(board, 7 - 16 * board.SideToMove.Value, board[board.SideToMove.Opposite], moves);
+        GeneratePawnPromotions(board, 9 - 16 * board.SideToMove.Value, board[board.SideToMove.Opposite], moves);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -154,7 +161,7 @@ public static class MoveGeneration
                     // Check that the origin of the king, all the squared traveled by the
                     // king and the destination of the king are not under attack.
                     var bbAttacksToCheck = bbTravelKing | bbKing | kingToSq.Bitboard;
-                    var bbOpponents = board[!board.SideToMove];
+                    var bbOpponents = board[board.SideToMove.Opposite];
 
                     var attackers = Bitboard.Empty;
                     while (!attackers.Any && bbAttacksToCheck.Any)
@@ -172,4 +179,123 @@ public static class MoveGeneration
             }
         }
     }
+
+    #region Pawn moves generation
+
+    private static void GeneratePawnQuietMoves(Board board,
+                                               IList<Move> moves)
+    {
+        Piece piece = new Piece(board.SideToMove, PieceType.Pawn);
+        int forwardDelta = 8 - 16 * board.SideToMove.Value;
+
+        // Generate the standard one square forward moves. We need to exclude pawns on 
+        // the 7th rank that will generate promotions.
+        Bitboard destinations = board[piece] & ~Rank.Seventh.FlipForBlack(board.SideToMove).Bitboard;
+        destinations = destinations.Shift(forwardDelta);
+        destinations &= ~board.Occupied;
+        UnpackPawnMoves(board, destinations, piece, -forwardDelta, moves);
+
+        // Generate the two squares moves
+        destinations = destinations & Rank.Third.FlipForBlack(board.SideToMove).Bitboard;
+        destinations = destinations.Shift(forwardDelta);
+        destinations &= ~board.Occupied;
+        UnpackPawnMoves(board, destinations, piece, -forwardDelta * 2, moves);
+    }
+
+    private static void GeneratePawnCaptures(Board board,
+                                             Bitboard targetFilter,
+                                             IList<Move> moves)
+    {
+        Piece piece = new Piece(board.SideToMove, PieceType.Pawn);
+
+        // We must exclude the captures that are also promotions
+        targetFilter &= ~Rank.Eight.FlipForBlack(board.SideToMove).Bitboard;
+
+        // Go left
+        int delta = 7 - 16 * board.SideToMove.Value;
+        var destinations = board[piece] & ~File.a.Bitboard;
+        destinations = destinations.Shift(delta);
+        destinations &= targetFilter;
+        UnpackPawnMoves(board, destinations, piece, -delta, moves);
+
+        // Go right
+        delta = 9 - 16 * board.SideToMove.Value;
+        destinations = board[piece] & ~File.h.Bitboard;
+        destinations = destinations.Shift(delta);
+        destinations &= targetFilter;
+        UnpackPawnMoves(board, destinations, piece, -delta, moves);
+    }
+
+    private static void GeneratePawnPriseEnPassant(Board board,
+                                                   IList<Move> moves)
+    {
+        if (board.EnPassantFile.IsValid)
+        {
+            var piece = new Piece(board.SideToMove, PieceType.Pawn);
+            var rankFrom = Rank.Fifth.FlipForBlack(board.SideToMove);
+
+            if (board.EnPassantFile > File.a)
+            {
+                var from = new Square(board.EnPassantFile.MoveLeft(), rankFrom);
+                if (board[from] == piece)
+                {
+                    var to = new Square(board.EnPassantFile, Rank.Sixth.FlipForBlack(board.SideToMove));
+                    var captured = new Piece(board.SideToMove.Opposite, PieceType.Pawn);
+                    moves.Add(new Move(from, to, piece, captured));
+                }
+            }
+
+            if (board.EnPassantFile < File.h)
+            {
+                var from = new Square(board.EnPassantFile.MoveRight(), rankFrom);
+                if (board[from] == piece)
+                {
+                    var to = new Square(board.EnPassantFile, Rank.Sixth.FlipForBlack(board.SideToMove));
+                    var captured = new Piece(board.SideToMove.Opposite, PieceType.Pawn);
+                    moves.Add(new Move(from, to, piece, captured));
+                }
+            }
+        }
+    }
+
+    // IDEA : This method (and others) are called from a single place. Maybe it would be a good idea to inline them even if they are not small.
+    private static void GeneratePawnPromotions(Board board,
+                                               int delta,
+                                               Bitboard targetFilter,
+                                               IList<Move> moves)
+    {
+        Piece piece = new Piece(board.SideToMove, PieceType.Pawn);
+
+        Bitboard destinations = board[piece] & Rank.Seventh.FlipForBlack(board.SideToMove).Bitboard;
+        destinations = destinations.Shift(delta);
+        destinations &= targetFilter;
+
+        while (destinations.Any)
+        {
+            var to = new Square(destinations.LSB);
+            var from = new Square(to.Value - delta);
+            moves.Add(new Move(from, to, piece, board[to], new Piece(board.SideToMove, PieceType.Queen)));
+            moves.Add(new Move(from, to, piece, board[to], new Piece(board.SideToMove, PieceType.Rook)));
+            moves.Add(new Move(from, to, piece, board[to], new Piece(board.SideToMove, PieceType.Bishop)));
+            moves.Add(new Move(from, to, piece, board[to], new Piece(board.SideToMove, PieceType.Knight)));
+
+            destinations = destinations.RemoveLSB();
+        }
+    }
+
+    // TODO : Test if the inlining is justified
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void UnpackPawnMoves(Board board, Bitboard destinations, Piece piece, int fromDelta, IList<Move> moves)
+    {
+        while (destinations.Any)
+        {
+            var to = new Square(destinations.LSB);
+            var from = new Square(to.Value + fromDelta);
+            moves.Add(new Move(from, to, piece, board[to]));
+
+            destinations = destinations.RemoveLSB();
+        }
+    }
+
+    #endregion
 }

@@ -1,5 +1,4 @@
-﻿using m8.chess.MoveGeneration.sliders.magics;
-using m8.common;
+﻿using m8.common;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 

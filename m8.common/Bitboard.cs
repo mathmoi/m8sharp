@@ -222,6 +222,27 @@ public readonly struct Bitboard : IEquatable<Bitboard>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Bitboard RotateRight(int offset) => new Bitboard(BitOperations.RotateRight(_value, offset));
 
+    /// <summary>
+    ///  Shift the bitboard left or right by the amount of the offset depending on the 
+    ///  offset sign.
+    /// </summary>
+    /// <param name="offset">
+    ///  Length to shift. If the value is positive a left shift is applied. If the value 
+    ///  is negative a right shift is applied.
+    /// </param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Bitboard Shift(int offset)
+    {
+        if (offset > 0)
+        {
+            return new Bitboard(_value << offset);
+        }
+        else
+        {
+            return new Bitboard(Value >> -offset);
+        }
+    }
+
 
     /// <summary>
     ///  Verify if another instance is equal to this instance.
