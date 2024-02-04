@@ -4,7 +4,6 @@ using System.Runtime.CompilerServices;
 
 namespace m8.chess;
 
-// TODO : Is this class usefull?
 internal struct Ray
 {
     [InlineArray(8)]

@@ -17,11 +17,11 @@ public static class MoveGeneration
     {
         var targetFilter = ~board.Occupied;
 
-        GenerateKingMoves(board, targetFilter, moves);
+        GenerateKingMoves(board, targetFilter, MoveType.Normal, moves);
         GenerateCastlingMoves(board, moves);
-        GenerateKnightMoves(board, targetFilter, moves);
-        GeneratesRookLikeMoves(board, targetFilter, moves);
-        GeneratesBishopLikeMoves(board, targetFilter, moves);
+        GenerateKnightMoves(board, targetFilter, MoveType.Normal, moves);
+        GeneratesRookLikeMoves(board, targetFilter, MoveType.Normal, moves);
+        GeneratesBishopLikeMoves(board, targetFilter, MoveType.Normal, moves);
         GeneratePawnQuietMoves(board, moves);
     }
 
@@ -32,10 +32,10 @@ public static class MoveGeneration
     {
         var targetFilter = board[board.SideToMove.Opposite];
 
-        GenerateKingMoves(board, targetFilter, moves);
-        GenerateKnightMoves(board, targetFilter, moves);
-        GeneratesRookLikeMoves(board, targetFilter, moves);
-        GeneratesBishopLikeMoves(board, targetFilter, moves);
+        GenerateKingMoves(board, targetFilter, MoveType.Capture, moves);
+        GenerateKnightMoves(board, targetFilter, MoveType.Capture, moves);
+        GeneratesRookLikeMoves(board, targetFilter, MoveType.Capture, moves);
+        GeneratesBishopLikeMoves(board, targetFilter, MoveType.Capture, moves);
 
         GeneratePawnCaptures(board, targetFilter, moves);
         GeneratePawnPriseEnPassant(board, moves);
@@ -45,22 +45,24 @@ public static class MoveGeneration
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void GenerateKingMoves(Board board, Bitboard targetFilter, IList<Move> moves)
+    private static void GenerateKingMoves(Board board, Bitboard targetFilter, MoveType type, IList<Move> moves)
     {
         GenerateSimpleMoves(board,
                             new Piece(board.SideToMove, PieceType.King),
                             Attacks.kingAttacks,
                             targetFilter,
+                            type,
                             moves);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void GenerateKnightMoves(Board board, Bitboard targetFilter, IList<Move> moves)
+    private static void GenerateKnightMoves(Board board, Bitboard targetFilter, MoveType type, IList<Move> moves)
     {
         GenerateSimpleMoves(board,
                             new Piece(board.SideToMove, PieceType.Knight),
                             Attacks.knightAttacks,
                             targetFilter,
+                            type,
                             moves);
     }
 
@@ -69,6 +71,7 @@ public static class MoveGeneration
                                             Piece piece,
                                             UnsafeArray<Bitboard> attackTable,
                                             Bitboard targetFilter,
+                                            MoveType type,
                                             IList<Move> moves)
     {
         var origins = board[piece];
@@ -84,32 +87,33 @@ public static class MoveGeneration
                 var to = new Square(targets.LSB);
                 targets = targets.RemoveLSB();
 
-                moves.Add(new Move(from, to, piece, board[to]));
+                moves.Add(new Move(from, to, piece, board[to], type));
             }
         }        
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void GeneratesRookLikeMoves(Board board, Bitboard targetFilter, IList<Move> moves)
+    private static void GeneratesRookLikeMoves(Board board, Bitboard targetFilter, MoveType type, IList<Move> moves)
     {
         var bbFrom = board[new Piece(board.SideToMove, PieceType.Rook)]
                    | board[new Piece(board.SideToMove, PieceType.Queen)];
-        GenerateSliderMoves(board, bbFrom, true, targetFilter, moves);
+        GenerateSliderMoves(board, bbFrom, true, targetFilter, type, moves);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void GeneratesBishopLikeMoves(Board board, Bitboard targetFilter, IList<Move> moves)
+    private static void GeneratesBishopLikeMoves(Board board, Bitboard targetFilter, MoveType type, IList<Move> moves)
     {
         var bbFrom = board[new Piece(board.SideToMove, PieceType.Bishop)]
                    | board[new Piece(board.SideToMove, PieceType.Queen)];
-        GenerateSliderMoves(board, bbFrom, false, targetFilter, moves);
+        GenerateSliderMoves(board, bbFrom, false, targetFilter, type, moves);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void GenerateSliderMoves(Board board,
-                                            Bitboard bbFrom,
-                                            bool slideLikeRook,
-                                            Bitboard targetFilter,
+    private static void GenerateSliderMoves(Board       board,
+                                            Bitboard    bbFrom,
+                                            bool        slideLikeRook,
+                                            Bitboard    targetFilter,
+                                            MoveType    type,
                                             IList<Move> moves)
     {
         while(bbFrom.Any)
@@ -128,7 +132,7 @@ public static class MoveGeneration
                 var to = new Square(bbTo.LSB);
                 bbTo = bbTo.RemoveLSB();
 
-                moves.Add(new Move(from, to, piece, board[to]));
+                moves.Add(new Move(from, to, piece, board[to], type));
             }
         }
     }
@@ -173,7 +177,10 @@ public static class MoveGeneration
 
                     if (!attackers.Any)
                     {
-                        moves.Add(new Move(kingFromSq, kingToSq, king, side));
+                        moves.Add(new Move(kingFromSq,
+                                           kingToSq,
+                                           king,
+                                           side == CastlingSide.KingSide ? MoveType.CastleKingSide : MoveType.CastleQueenSide));
                     }
                 }
             }
@@ -193,13 +200,13 @@ public static class MoveGeneration
         Bitboard destinations = board[piece] & ~Rank.Seventh.FlipForBlack(board.SideToMove).Bitboard;
         destinations = destinations.Shift(forwardDelta);
         destinations &= ~board.Occupied;
-        UnpackPawnMoves(board, destinations, piece, -forwardDelta, moves);
+        UnpackPawnMoves(board, destinations, piece, -forwardDelta, MoveType.PawnMove, moves);
 
         // Generate the two squares moves
         destinations = destinations & Rank.Third.FlipForBlack(board.SideToMove).Bitboard;
         destinations = destinations.Shift(forwardDelta);
         destinations &= ~board.Occupied;
-        UnpackPawnMoves(board, destinations, piece, -forwardDelta * 2, moves);
+        UnpackPawnMoves(board, destinations, piece, -forwardDelta * 2, MoveType.PawnDouble, moves);
     }
 
     private static void GeneratePawnCaptures(Board board,
@@ -216,14 +223,14 @@ public static class MoveGeneration
         var destinations = board[piece] & ~File.a.Bitboard;
         destinations = destinations.Shift(delta);
         destinations &= targetFilter;
-        UnpackPawnMoves(board, destinations, piece, -delta, moves);
+        UnpackPawnMoves(board, destinations, piece, -delta, MoveType.Capture, moves);
 
         // Go right
         delta = 9 - 16 * board.SideToMove.Value;
         destinations = board[piece] & ~File.h.Bitboard;
         destinations = destinations.Shift(delta);
         destinations &= targetFilter;
-        UnpackPawnMoves(board, destinations, piece, -delta, moves);
+        UnpackPawnMoves(board, destinations, piece, -delta, MoveType.Capture, moves);
     }
 
     private static void GeneratePawnPriseEnPassant(Board board,
@@ -241,7 +248,7 @@ public static class MoveGeneration
                 {
                     var to = new Square(board.EnPassantFile, Rank.Sixth.FlipForBlack(board.SideToMove));
                     var captured = new Piece(board.SideToMove.Opposite, PieceType.Pawn);
-                    moves.Add(new Move(from, to, piece, captured));
+                    moves.Add(new Move(from, to, piece, captured, MoveType.EnPassant));
                 }
             }
 
@@ -252,7 +259,7 @@ public static class MoveGeneration
                 {
                     var to = new Square(board.EnPassantFile, Rank.Sixth.FlipForBlack(board.SideToMove));
                     var captured = new Piece(board.SideToMove.Opposite, PieceType.Pawn);
-                    moves.Add(new Move(from, to, piece, captured));
+                    moves.Add(new Move(from, to, piece, captured, MoveType.EnPassant));
                 }
             }
         }
@@ -274,10 +281,12 @@ public static class MoveGeneration
         {
             var to = new Square(destinations.LSB);
             var from = new Square(to.Value - delta);
-            moves.Add(new Move(from, to, piece, board[to], new Piece(board.SideToMove, PieceType.Queen)));
-            moves.Add(new Move(from, to, piece, board[to], new Piece(board.SideToMove, PieceType.Rook)));
-            moves.Add(new Move(from, to, piece, board[to], new Piece(board.SideToMove, PieceType.Bishop)));
-            moves.Add(new Move(from, to, piece, board[to], new Piece(board.SideToMove, PieceType.Knight)));
+            var taken = board[to];
+            var type = taken.IsValid ? MoveType.CapturePromotion : MoveType.Promotion;
+            moves.Add(new Move(from, to, piece, taken, new Piece(board.SideToMove, PieceType.Queen),  type));
+            moves.Add(new Move(from, to, piece, taken, new Piece(board.SideToMove, PieceType.Rook),   type));
+            moves.Add(new Move(from, to, piece, taken, new Piece(board.SideToMove, PieceType.Bishop), type));
+            moves.Add(new Move(from, to, piece, taken, new Piece(board.SideToMove, PieceType.Knight), type));
 
             destinations = destinations.RemoveLSB();
         }
@@ -285,13 +294,14 @@ public static class MoveGeneration
 
     // TODO : Test if the inlining is justified
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void UnpackPawnMoves(Board board, Bitboard destinations, Piece piece, int fromDelta, IList<Move> moves)
+    private static void UnpackPawnMoves(Board board, Bitboard destinations, Piece piece, int fromDelta, MoveType type, IList<Move> moves)
     {
         while (destinations.Any)
         {
             var to = new Square(destinations.LSB);
             var from = new Square(to.Value + fromDelta);
-            moves.Add(new Move(from, to, piece, board[to]));
+            var taken = board[to];
+            moves.Add(new Move(from, to, piece, taken, type));
 
             destinations = destinations.RemoveLSB();
         }

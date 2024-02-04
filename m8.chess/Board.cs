@@ -28,6 +28,7 @@ public class Board
     private File[] _castlingFiles = new File[2 + 1];
     private File _enPassantFile = File.Invalid;
     private CastlingOptions _castlingOptions = CastlingOptions.None;
+    private CastlingOptions[] _castlingMasks = new CastlingOptions[SQUARES_ON_BOARD];
     private Color _sideToMove;
     private uint _halfMoveClock = 0;
     private uint _fullMoveNumber = 1;
@@ -54,6 +55,8 @@ public class Board
             hasNext = LoadXFenEnPassantSquare(it, hasNext);
             hasNext = LoadXFenHalfMoveClock(it, hasNext);
             _       = LoadXFenFullMoveNumber(it, hasNext);
+
+            SetCastlingMasks();
 
         }
         catch (InvalidFenException ex)
@@ -298,6 +301,44 @@ public class Board
         return hasNext;
     }
 
+    /// <summary>
+    ///  Set the castling masks
+    /// </summary>
+    /// <remarks>
+    ///  The castling masks are castling mask for each square on the board that represents 
+    ///  the castling options that might still be available after a move from or to this
+    ///  square. For most squares all castling options are still available after the
+    ///  square is involved into a move. However this is not true for the original king 
+    ///  and rooks squares. Once any move is made from theses square or to theses squares
+    ///  (captures of a rook for exemple) some castling options are no longer possible.
+    /// </remarks>
+    private void SetCastlingMasks()
+    {
+
+        foreach (var sq in Square.AllSquares)
+        {
+            _castlingMasks[sq.Value] = CastlingOptions.All;
+        }
+
+        RemoveFromCastlingMask(Color.White, CastlingSide.KingSide);
+        RemoveFromCastlingMask(Color.White, CastlingSide.QueenSide);
+        RemoveFromCastlingMask(Color.Black, CastlingSide.KingSide);
+        RemoveFromCastlingMask(Color.Black, CastlingSide.QueenSide);
+    }
+
+    private void RemoveFromCastlingMask(Color color, CastlingSide side)
+    {
+        var option = CastlingOptionsHelpers.Create(color, side);
+        if ((_castlingOptions & option) != CastlingOptions.None)
+        {
+            var king = new Piece(color, PieceType.King);
+            var kingSq = new Square(this[king].LSB);
+            var rookSq = new Square(GetCastlingFile(side), kingSq.Rank);
+            _castlingMasks[kingSq.Value] &= ~option;
+            _castlingMasks[rookSq.Value] &= ~option;
+        }
+    }
+
     #endregion
 
     #region Private mutators
@@ -313,6 +354,47 @@ public class Board
     private void SetCastlingOption(Color color, CastlingSide side)
     {
         _castlingOptions |= CastlingOptionsHelpers.Create(color, side);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void AddPiece(Square sq, Piece piece)
+    {
+        Debug.Assert(sq.IsValid, "The square is invalid");
+        Debug.Assert(piece.IsValid, "The piece is invalid");
+        Debug.Assert(!this[sq].IsValid, "The square is not empty");
+
+        _board[sq.Value] = piece;
+        _pieces[piece.Value] = _pieces[piece.Value].Set(sq.Value);
+        _colors[piece.Color.Value] = _colors[piece.Color.Value].Set(sq.Value);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void RemovePiece(Square sq)
+    {
+        Debug.Assert(sq.IsValid, "The square is invalid");
+        Debug.Assert(this[sq].IsValid, "The square is empty");
+
+        var piece = _board[sq.Value];
+        _board[sq.Value] = Piece.None;
+        _pieces[piece.Value] = _pieces[piece.Value].Unset(sq.Value);
+        _colors[piece.Color.Value] = _colors[piece.Color.Value].Unset(sq.Value);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void MovePiece(Square from, Square to)
+    {
+        Debug.Assert(from.IsValid, "The from square is invalid");
+        Debug.Assert(to.IsValid, "The to square is invalid");
+        Debug.Assert(_board[from.Value].IsValid, "No piece on the from square");
+
+        Piece piece = _board[from.Value];
+
+        _board[from.Value] = Piece.None;
+        _board[to.Value] = piece;
+
+        var bbXor = from.Bitboard | to.Bitboard;
+        _pieces[piece.Value] ^= bbXor;
+        _colors[piece.Color.Value] ^= bbXor;
     }
 
     #endregion
@@ -725,23 +807,106 @@ public class Board
 
     #endregion
 
-    #region Public mutators
+    #region Make
 
     /// <summary>
-    ///  Add a piece on the board.
+    ///  Make a move on the board
     /// </summary>
-    /// <param name="sq">Square on wich to add the piece</param>
-    /// <param name="piece">Piece to add</param>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    void AddPiece(Square sq, Piece piece)
+    public void Make(Move move)
     {
-        Debug.Assert(sq.IsValid, "The square is invalid");
-        Debug.Assert(piece.IsValid, "The piece is invalid");
-        Debug.Assert(!this[sq].IsValid, "The square is not empty");
+        Debug.Assert(this[move.From] == move.Piece);
+        Debug.Assert(_sideToMove == move.Piece.Color);
 
-        _board[sq.Value] = piece;
-        _pieces[piece.Value] = _pieces[piece.Value].Set(sq.Value);
-        _colors[piece.Color.Value] = _colors[piece.Color.Value].Set(sq.Value);
+        switch (move.MoveType)
+        {
+            case MoveType.Normal:
+                Debug.Assert(this[move.To].IsValid == false);
+
+                MovePiece(move.From, move.To);
+                _enPassantFile = File.Invalid;
+                _castlingOptions &= _castlingMasks[move.From.Value];
+                ++_halfMoveClock;
+                break;
+
+            case MoveType.Capture:
+                Debug.Assert(this[move.To] == move.Taken);
+
+                RemovePiece(move.To);
+                MovePiece(move.From, move.To);
+                _enPassantFile = File.Invalid;
+                _castlingOptions &= _castlingMasks[move.From.Value] | _castlingMasks[move.To.Value];
+                _halfMoveClock = 0;
+                break;
+
+            case MoveType.CastleKingSide:
+                Debug.Assert((_castlingOptions & CastlingOptionsHelpers.Create(_sideToMove, CastlingSide.KingSide)) != CastlingOptions.None);
+                Debug.Assert(move.To.File == File.g);
+
+                var rookFrom = new Square(GetCastlingFile(CastlingSide.KingSide), move.From.Rank);
+                var rookTo = new Square(File.f, move.From.Rank);
+                MovePiece(move.From, move.To);
+                MovePiece(rookFrom, rookTo);
+                _enPassantFile = File.Invalid;
+                _castlingOptions &= _castlingMasks[move.From.Value];
+                ++_halfMoveClock;
+                break;
+
+            case MoveType.CastleQueenSide:
+                Debug.Assert((_castlingOptions & CastlingOptionsHelpers.Create(_sideToMove, CastlingSide.QueenSide)) != CastlingOptions.None);
+                Debug.Assert(move.To.File == File.c);
+
+                rookFrom = new Square(GetCastlingFile(CastlingSide.QueenSide), move.From.Rank);
+                rookTo = new Square(File.d, move.From.Rank);
+                MovePiece(move.From, move.To);
+                MovePiece(rookFrom, rookTo);
+                _enPassantFile = File.Invalid;
+                _castlingOptions &= _castlingMasks[move.From.Value];
+                ++_halfMoveClock;
+                break;
+
+            case MoveType.PawnMove:
+                Debug.Assert(this[move.To].IsValid == false);
+
+                MovePiece(move.From, move.To);
+                _enPassantFile = File.Invalid;
+                _halfMoveClock = 0;
+                break;
+
+            case MoveType.PawnDouble:
+                Debug.Assert(this[move.To].IsValid == false);
+
+                MovePiece(move.From, move.To);
+                _enPassantFile = move.From.File;
+                _halfMoveClock = 0;
+                break;
+
+            case MoveType.EnPassant:
+                var enPassantSquare = new Square(move.To.File, move.From.Rank);
+                RemovePiece(enPassantSquare);
+                MovePiece(move.From, move.To);
+                _enPassantFile = File.Invalid;
+                _halfMoveClock = 0;
+                break;
+
+            case MoveType.Promotion:
+                RemovePiece(move.From);
+                AddPiece(move.To, move.PromoteTo);
+                _enPassantFile = File.Invalid;
+                _halfMoveClock = 0;
+                break;
+
+            case MoveType.CapturePromotion:
+                RemovePiece(move.From);
+                RemovePiece(move.To);
+                AddPiece(move.To, move.PromoteTo);
+                _enPassantFile = File.Invalid;
+                _castlingOptions &= _castlingMasks[move.To.Value];
+                _halfMoveClock = 0;
+                break;
+        }
+
+        _fullMoveNumber += _sideToMove.Value; // This trick increment when _sideToMove is black only.
+        _sideToMove = _sideToMove.Opposite;
     }
 
     #endregion

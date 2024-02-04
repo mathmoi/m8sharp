@@ -13,14 +13,14 @@ public class MoveGenerationTests
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.e4, Square.e5, Piece.WhiteKing),
-            new Move(Square.e4, Square.f5, Piece.WhiteKing),
-            new Move(Square.e4, Square.f4, Piece.WhiteKing),
-            new Move(Square.e4, Square.f3, Piece.WhiteKing),
-            new Move(Square.e4, Square.e3, Piece.WhiteKing),
-            new Move(Square.e4, Square.d3, Piece.WhiteKing),
-            new Move(Square.e4, Square.d4, Piece.WhiteKing),
-            new Move(Square.e4, Square.d5, Piece.WhiteKing)
+            new Move(Square.e4, Square.e5, Piece.WhiteKing, MoveType.Normal),
+            new Move(Square.e4, Square.f5, Piece.WhiteKing, MoveType.Normal),
+            new Move(Square.e4, Square.f4, Piece.WhiteKing, MoveType.Normal),
+            new Move(Square.e4, Square.f3, Piece.WhiteKing, MoveType.Normal),
+            new Move(Square.e4, Square.e3, Piece.WhiteKing, MoveType.Normal),
+            new Move(Square.e4, Square.d3, Piece.WhiteKing, MoveType.Normal),
+            new Move(Square.e4, Square.d4, Piece.WhiteKing, MoveType.Normal),
+            new Move(Square.e4, Square.d5, Piece.WhiteKing, MoveType.Normal)
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
@@ -46,9 +46,9 @@ public class MoveGenerationTests
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.e1, Square.d1, Piece.WhiteKing),
-            new Move(Square.e1, Square.d2, Piece.WhiteKing),
-            new Move(Square.e1, Square.f1, Piece.WhiteKing)
+            new Move(Square.e1, Square.d1, Piece.WhiteKing, MoveType.Normal),
+            new Move(Square.e1, Square.d2, Piece.WhiteKing, MoveType.Normal),
+            new Move(Square.e1, Square.f1, Piece.WhiteKing, MoveType.Normal)
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
@@ -63,9 +63,9 @@ public class MoveGenerationTests
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.a1, Square.a2, Piece.WhiteKing),
-            new Move(Square.a1, Square.b2, Piece.WhiteKing),
-            new Move(Square.a1, Square.b1, Piece.WhiteKing)
+            new Move(Square.a1, Square.a2, Piece.WhiteKing, MoveType.Normal),
+            new Move(Square.a1, Square.b2, Piece.WhiteKing, MoveType.Normal),
+            new Move(Square.a1, Square.b1, Piece.WhiteKing, MoveType.Normal)
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
@@ -80,9 +80,9 @@ public class MoveGenerationTests
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.h8, Square.g8, Piece.BlackKing),
-            new Move(Square.h8, Square.g7, Piece.BlackKing),
-            new Move(Square.h8, Square.h7, Piece.BlackKing)
+            new Move(Square.h8, Square.g8, Piece.BlackKing, MoveType.Normal),
+            new Move(Square.h8, Square.g7, Piece.BlackKing, MoveType.Normal),
+            new Move(Square.h8, Square.h7, Piece.BlackKing, MoveType.Normal)
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
@@ -98,14 +98,14 @@ public class MoveGenerationTests
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.f3, Square.d2, Piece.WhiteKnight),
-            new Move(Square.f3, Square.e1, Piece.WhiteKnight),
-            new Move(Square.f3, Square.d4, Piece.WhiteKnight),
-            new Move(Square.f3, Square.e5, Piece.WhiteKnight),
-            new Move(Square.f3, Square.g5, Piece.WhiteKnight),
-            new Move(Square.f3, Square.h4, Piece.WhiteKnight),
-            new Move(Square.f3, Square.h2, Piece.WhiteKnight),
-            new Move(Square.f3, Square.g1, Piece.WhiteKnight)
+            new Move(Square.f3, Square.d2, Piece.WhiteKnight, MoveType.Normal),
+            new Move(Square.f3, Square.e1, Piece.WhiteKnight, MoveType.Normal),
+            new Move(Square.f3, Square.d4, Piece.WhiteKnight, MoveType.Normal),
+            new Move(Square.f3, Square.e5, Piece.WhiteKnight, MoveType.Normal),
+            new Move(Square.f3, Square.g5, Piece.WhiteKnight, MoveType.Normal),
+            new Move(Square.f3, Square.h4, Piece.WhiteKnight, MoveType.Normal),
+            new Move(Square.f3, Square.h2, Piece.WhiteKnight, MoveType.Normal),
+            new Move(Square.f3, Square.g1, Piece.WhiteKnight, MoveType.Normal)
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
@@ -124,13 +124,13 @@ public class MoveGenerationTests
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.e1, Square.g1, Piece.WhiteKing, CastlingSide.KingSide),
-            new Move(Square.e1, Square.c1, Piece.WhiteKing, CastlingSide.QueenSide)
+            new Move(Square.e1, Square.g1, Piece.WhiteKing, MoveType.CastleKingSide),
+            new Move(Square.e1, Square.c1, Piece.WhiteKing, MoveType.CastleQueenSide)
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
 
-        actual.Where(x => x.CastlingSide != CastlingSide.None).Should().BeEquivalentTo(expected);
+        actual.Where(x => x.MoveType == MoveType.CastleQueenSide || x.MoveType == MoveType.CastleKingSide).Should().BeEquivalentTo(expected);
     }
 
     [Fact]
@@ -140,13 +140,13 @@ public class MoveGenerationTests
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.b1, Square.g1, Piece.WhiteKing, CastlingSide.KingSide),
-            new Move(Square.b1, Square.c1, Piece.WhiteKing, CastlingSide.QueenSide)
+            new Move(Square.b1, Square.g1, Piece.WhiteKing, MoveType.CastleKingSide),
+            new Move(Square.b1, Square.c1, Piece.WhiteKing, MoveType.CastleQueenSide)
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
 
-        actual.Where(x => x.CastlingSide != CastlingSide.None).Should().BeEquivalentTo(expected);
+        actual.Where(x => x.MoveType == MoveType.CastleQueenSide || x.MoveType == MoveType.CastleKingSide).Should().BeEquivalentTo(expected);
     }
 
     [Fact]
@@ -156,12 +156,12 @@ public class MoveGenerationTests
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.e1, Square.c1, Piece.WhiteKing, CastlingSide.QueenSide)
+            new Move(Square.e1, Square.c1, Piece.WhiteKing, MoveType.CastleQueenSide)
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
 
-        actual.Where(x => x.CastlingSide != CastlingSide.None).Should().BeEquivalentTo(expected);
+        actual.Where(x => x.MoveType == MoveType.CastleQueenSide || x.MoveType == MoveType.CastleKingSide).Should().BeEquivalentTo(expected);
     }
 
     [Fact]
@@ -172,7 +172,7 @@ public class MoveGenerationTests
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
 
-        actual.Where(x => x.CastlingSide != CastlingSide.None).Should().BeEmpty();
+        actual.Where(x => x.MoveType == MoveType.CastleQueenSide || x.MoveType == MoveType.CastleKingSide).Should().BeEmpty();
     }
 
     [Fact]
@@ -183,7 +183,7 @@ public class MoveGenerationTests
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
 
-        actual.Where(x => x.CastlingSide != CastlingSide.None).Should().BeEmpty();
+        actual.Where(x => x.MoveType == MoveType.CastleQueenSide || x.MoveType == MoveType.CastleKingSide).Should().BeEmpty();
     }
 
     #endregion
@@ -208,9 +208,9 @@ public class MoveGenerationTests
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.h7, Square.f8, Piece.WhiteKnight),
-            new Move(Square.h7, Square.f6, Piece.WhiteKnight),
-            new Move(Square.h7, Square.g5, Piece.WhiteKnight)
+            new Move(Square.h7, Square.f8, Piece.WhiteKnight, MoveType.Normal),
+            new Move(Square.h7, Square.f6, Piece.WhiteKnight, MoveType.Normal),
+            new Move(Square.h7, Square.g5, Piece.WhiteKnight, MoveType.Normal)
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
@@ -229,20 +229,20 @@ public class MoveGenerationTests
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.b2, Square.b1, Piece.WhiteRook),
-            new Move(Square.b2, Square.b3, Piece.WhiteRook),
-            new Move(Square.b2, Square.b4, Piece.WhiteRook),
-            new Move(Square.b2, Square.b5, Piece.WhiteRook),
-            new Move(Square.b2, Square.b6, Piece.WhiteRook),
-            new Move(Square.b2, Square.b7, Piece.WhiteRook),
-            new Move(Square.b2, Square.b8, Piece.WhiteRook),
-            new Move(Square.b2, Square.a2, Piece.WhiteRook),
-            new Move(Square.b2, Square.c2, Piece.WhiteRook),
-            new Move(Square.b2, Square.d2, Piece.WhiteRook),
-            new Move(Square.b2, Square.e2, Piece.WhiteRook),
-            new Move(Square.b2, Square.f2, Piece.WhiteRook),
-            new Move(Square.b2, Square.g2, Piece.WhiteRook),
-            new Move(Square.b2, Square.h2, Piece.WhiteRook)
+            new Move(Square.b2, Square.b1, Piece.WhiteRook, MoveType.Normal),
+            new Move(Square.b2, Square.b3, Piece.WhiteRook, MoveType.Normal),
+            new Move(Square.b2, Square.b4, Piece.WhiteRook, MoveType.Normal),
+            new Move(Square.b2, Square.b5, Piece.WhiteRook, MoveType.Normal),
+            new Move(Square.b2, Square.b6, Piece.WhiteRook, MoveType.Normal),
+            new Move(Square.b2, Square.b7, Piece.WhiteRook, MoveType.Normal),
+            new Move(Square.b2, Square.b8, Piece.WhiteRook, MoveType.Normal),
+            new Move(Square.b2, Square.a2, Piece.WhiteRook, MoveType.Normal),
+            new Move(Square.b2, Square.c2, Piece.WhiteRook, MoveType.Normal),
+            new Move(Square.b2, Square.d2, Piece.WhiteRook, MoveType.Normal),
+            new Move(Square.b2, Square.e2, Piece.WhiteRook, MoveType.Normal),
+            new Move(Square.b2, Square.f2, Piece.WhiteRook, MoveType.Normal),
+            new Move(Square.b2, Square.g2, Piece.WhiteRook, MoveType.Normal),
+            new Move(Square.b2, Square.h2, Piece.WhiteRook, MoveType.Normal)
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
@@ -257,16 +257,16 @@ public class MoveGenerationTests
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.f6, Square.b6, Piece.WhiteRook),
-            new Move(Square.f6, Square.c6, Piece.WhiteRook),
-            new Move(Square.f6, Square.d6, Piece.WhiteRook),
-            new Move(Square.f6, Square.e6, Piece.WhiteRook),
-            new Move(Square.f6, Square.g6, Piece.WhiteRook),
-            new Move(Square.f6, Square.f2, Piece.WhiteRook),
-            new Move(Square.f6, Square.f3, Piece.WhiteRook),
-            new Move(Square.f6, Square.f4, Piece.WhiteRook),
-            new Move(Square.f6, Square.f5, Piece.WhiteRook),
-            new Move(Square.f6, Square.f7, Piece.WhiteRook)
+            new Move(Square.f6, Square.b6, Piece.WhiteRook, MoveType.Normal),
+            new Move(Square.f6, Square.c6, Piece.WhiteRook, MoveType.Normal),
+            new Move(Square.f6, Square.d6, Piece.WhiteRook, MoveType.Normal),
+            new Move(Square.f6, Square.e6, Piece.WhiteRook, MoveType.Normal),
+            new Move(Square.f6, Square.g6, Piece.WhiteRook, MoveType.Normal),
+            new Move(Square.f6, Square.f2, Piece.WhiteRook, MoveType.Normal),
+            new Move(Square.f6, Square.f3, Piece.WhiteRook, MoveType.Normal),
+            new Move(Square.f6, Square.f4, Piece.WhiteRook, MoveType.Normal),
+            new Move(Square.f6, Square.f5, Piece.WhiteRook, MoveType.Normal),
+            new Move(Square.f6, Square.f7, Piece.WhiteRook, MoveType.Normal)
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
@@ -300,15 +300,15 @@ public class MoveGenerationTests
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.d5, Square.c6, Piece.BlackQueen),
-            new Move(Square.d5, Square.d6, Piece.BlackQueen),
-            new Move(Square.d5, Square.e6, Piece.BlackQueen),
-            new Move(Square.d5, Square.e5, Piece.BlackQueen),
-            new Move(Square.d5, Square.e4, Piece.BlackQueen),
-            new Move(Square.d5, Square.d4, Piece.BlackQueen),
-            new Move(Square.d5, Square.c4, Piece.BlackQueen),
-            new Move(Square.d5, Square.c5, Piece.BlackQueen),
-            new Move(Square.d5, Square.f3, Piece.BlackQueen)
+            new Move(Square.d5, Square.c6, Piece.BlackQueen, MoveType.Normal),
+            new Move(Square.d5, Square.d6, Piece.BlackQueen, MoveType.Normal),
+            new Move(Square.d5, Square.e6, Piece.BlackQueen, MoveType.Normal),
+            new Move(Square.d5, Square.e5, Piece.BlackQueen, MoveType.Normal),
+            new Move(Square.d5, Square.e4, Piece.BlackQueen, MoveType.Normal),
+            new Move(Square.d5, Square.d4, Piece.BlackQueen, MoveType.Normal),
+            new Move(Square.d5, Square.c4, Piece.BlackQueen, MoveType.Normal),
+            new Move(Square.d5, Square.c5, Piece.BlackQueen, MoveType.Normal),
+            new Move(Square.d5, Square.f3, Piece.BlackQueen, MoveType.Normal)
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
@@ -338,8 +338,8 @@ public class MoveGenerationTests
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.d3, Square.d4, Piece.WhitePawn),
-            new Move(Square.f4, Square.f5, Piece.WhitePawn)
+            new Move(Square.d3, Square.d4, Piece.WhitePawn, MoveType.PawnMove),
+            new Move(Square.f4, Square.f5, Piece.WhitePawn, MoveType.PawnMove)
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
@@ -365,8 +365,8 @@ public class MoveGenerationTests
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.d7, Square.d5, Piece.BlackPawn),
-            new Move(Square.d7, Square.d6, Piece.BlackPawn)
+            new Move(Square.d7, Square.d5, Piece.BlackPawn, MoveType.PawnDouble),
+            new Move(Square.d7, Square.d6, Piece.BlackPawn, MoveType.PawnMove)
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
@@ -381,7 +381,7 @@ public class MoveGenerationTests
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.d7, Square.d6, Piece.BlackPawn)
+            new Move(Square.d7, Square.d6, Piece.BlackPawn, MoveType.PawnMove)
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
@@ -389,7 +389,6 @@ public class MoveGenerationTests
         actual.Where(x => x.Piece.Type == PieceType.Pawn).Should().BeEquivalentTo(expected);
     }
 
-    // TODO : GeneratePawnMoves_PawnOnStartingRowBlocked_NoMoves
     [Fact]
     public void GenerateQuietMoves_BlockedPawn_NoMoves()
     {
@@ -412,8 +411,8 @@ public class MoveGenerationTests
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.f1, Square.e2, Piece.WhiteKing, Piece.BlackPawn),
-            new Move(Square.f1, Square.f2, Piece.WhiteKing, Piece.BlackRook)
+            new Move(Square.f1, Square.e2, Piece.WhiteKing, Piece.BlackPawn, MoveType.Capture),
+            new Move(Square.f1, Square.f2, Piece.WhiteKing, Piece.BlackRook, MoveType.Capture)
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateCaptures(board, actual);
@@ -432,8 +431,8 @@ public class MoveGenerationTests
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.c4, Square.b2, Piece.BlackKnight, Piece.WhitePawn),
-            new Move(Square.c4, Square.d2, Piece.BlackKnight, Piece.WhitePawn)
+            new Move(Square.c4, Square.b2, Piece.BlackKnight, Piece.WhitePawn, MoveType.Capture),
+            new Move(Square.c4, Square.d2, Piece.BlackKnight, Piece.WhitePawn, MoveType.Capture)
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateCaptures(board, actual);
@@ -452,10 +451,10 @@ public class MoveGenerationTests
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.g4, Square.d7, Piece.BlackQueen, Piece.WhiteKnight),
-            new Move(Square.g4, Square.b4, Piece.BlackQueen, Piece.WhiteKnight),
-            new Move(Square.g4, Square.h4, Piece.BlackQueen, Piece.WhiteKnight),
-            new Move(Square.g4, Square.g2, Piece.BlackQueen, Piece.WhiteKnight)
+            new Move(Square.g4, Square.d7, Piece.BlackQueen, Piece.WhiteKnight, MoveType.Capture),
+            new Move(Square.g4, Square.b4, Piece.BlackQueen, Piece.WhiteKnight, MoveType.Capture),
+            new Move(Square.g4, Square.h4, Piece.BlackQueen, Piece.WhiteKnight, MoveType.Capture),
+            new Move(Square.g4, Square.g2, Piece.BlackQueen, Piece.WhiteKnight, MoveType.Capture)
 
         };
 
@@ -469,13 +468,13 @@ public class MoveGenerationTests
     #region GenerateCaptures Pawms
 
     [Fact]
-    public void GenerateQuietMoves_OneCapturesAvailableOnLeft_OneMovesReturned()
+    public void GenerateCaptures_OneCapturesAvailableOnLeft_OneMovesReturned()
     {
         var board = new Board("4k3/8/8/3n4/4P3/8/8/4K3 w - - 0 1");
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.e4, Square.d5, Piece.WhitePawn, Piece.BlackKnight)
+            new Move(Square.e4, Square.d5, Piece.WhitePawn, Piece.BlackKnight, MoveType.Capture)
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateCaptures(board, actual);
@@ -484,13 +483,13 @@ public class MoveGenerationTests
     }
 
     [Fact]
-    public void GenerateQuietMoves_OneCapturesAvailableOnRight_OneMovesReturned()
+    public void GenerateCaptures_OneCapturesAvailableOnRight_OneMovesReturned()
     {
         var board = new Board("4k3/8/8/5n2/4P3/8/8/4K3 w - - 0 1");
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.e4, Square.f5, Piece.WhitePawn, Piece.BlackKnight)
+            new Move(Square.e4, Square.f5, Piece.WhitePawn, Piece.BlackKnight, MoveType.Capture)
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateCaptures(board, actual);
@@ -499,16 +498,16 @@ public class MoveGenerationTests
     }
 
     [Fact]
-    public void GenerateQuietMoves_OnePawnInPositionToPromote_FourMovesReturned()
+    public void GenerateCaptures_OnePawnInPositionToPromote_FourMovesReturned()
     {
         var board = new Board("4k3/1P6/8/8/8/8/8/4K3 w - - 0 1");
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.b7, Square.b8, Piece.WhitePawn, Piece.None, Piece.WhiteQueen),
-            new Move(Square.b7, Square.b8, Piece.WhitePawn, Piece.None, Piece.WhiteRook),
-            new Move(Square.b7, Square.b8, Piece.WhitePawn, Piece.None, Piece.WhiteBishop),
-            new Move(Square.b7, Square.b8, Piece.WhitePawn, Piece.None, Piece.WhiteKnight)
+            new Move(Square.b7, Square.b8, Piece.WhitePawn, Piece.None, Piece.WhiteQueen,  MoveType.Promotion),
+            new Move(Square.b7, Square.b8, Piece.WhitePawn, Piece.None, Piece.WhiteRook,   MoveType.Promotion),
+            new Move(Square.b7, Square.b8, Piece.WhitePawn, Piece.None, Piece.WhiteBishop, MoveType.Promotion),
+            new Move(Square.b7, Square.b8, Piece.WhitePawn, Piece.None, Piece.WhiteKnight, MoveType.Promotion)
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateCaptures(board, actual);
@@ -517,16 +516,16 @@ public class MoveGenerationTests
     }
 
     [Fact]
-    public void GenerateQuietMoves_OnePawnInPositionToCaptureAndPromote_FourMovesReturned()
+    public void GenerateCaptures_OnePawnInPositionToCaptureAndPromote_FourMovesReturned()
     {
         var board = new Board("1Rr1k3/1P6/8/8/8/8/8/4K3 w - - 0 1");
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.b7, Square.c8, Piece.WhitePawn, Piece.BlackRook, Piece.WhiteQueen),
-            new Move(Square.b7, Square.c8, Piece.WhitePawn, Piece.BlackRook, Piece.WhiteRook),
-            new Move(Square.b7, Square.c8, Piece.WhitePawn, Piece.BlackRook, Piece.WhiteBishop),
-            new Move(Square.b7, Square.c8, Piece.WhitePawn, Piece.BlackRook, Piece.WhiteKnight)
+            new Move(Square.b7, Square.c8, Piece.WhitePawn, Piece.BlackRook, Piece.WhiteQueen, MoveType.CapturePromotion),
+            new Move(Square.b7, Square.c8, Piece.WhitePawn, Piece.BlackRook, Piece.WhiteRook, MoveType.CapturePromotion),
+            new Move(Square.b7, Square.c8, Piece.WhitePawn, Piece.BlackRook, Piece.WhiteBishop, MoveType.CapturePromotion),
+            new Move(Square.b7, Square.c8, Piece.WhitePawn, Piece.BlackRook, Piece.WhiteKnight, MoveType.CapturePromotion)
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateCaptures(board, actual);
@@ -534,13 +533,12 @@ public class MoveGenerationTests
         actual.Where(x => x.Piece.Type == PieceType.Pawn).Should().BeEquivalentTo(expected);
     }
 
-    // TODO : GeneratePawnCaptures_PriseEnPassantPossible_PriseEnPassantReturned
     [Fact]
-    public void GenerateQuietMoves_PriseEnPassantPossible_PriseEnPassantReturned()
+    public void GenerateCaptures_PriseEnPassantPossible_PriseEnPassantReturned()
     {
         var board = new Board("rnbqkbnr/p2ppppp/8/1Pp5/8/8/1PPPPPPP/RNBQKBNR w KQkq c6 0 1");
         var actual = new List<Move>();
-        var expected = new Move(Square.b5, Square.c6, Piece.WhitePawn, Piece.BlackPawn);
+        var expected = new Move(Square.b5, Square.c6, Piece.WhitePawn, Piece.BlackPawn, MoveType.EnPassant);
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateCaptures(board, actual);
 
@@ -558,26 +556,26 @@ public class MoveGenerationTests
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.a2, Square.a3, Piece.WhitePawn),   // a3
-            new Move(Square.b2, Square.b3, Piece.WhitePawn),   // b3
-            new Move(Square.c2, Square.c3, Piece.WhitePawn),   // c3
-            new Move(Square.d2, Square.d3, Piece.WhitePawn),   // d3
-            new Move(Square.e2, Square.e3, Piece.WhitePawn),   // e3
-            new Move(Square.f2, Square.f3, Piece.WhitePawn),   // f3
-            new Move(Square.g2, Square.g3, Piece.WhitePawn),   // g3
-            new Move(Square.h2, Square.h3, Piece.WhitePawn),   // h3
-            new Move(Square.a2, Square.a4, Piece.WhitePawn),   // a4
-            new Move(Square.b2, Square.b4, Piece.WhitePawn),   // b4
-            new Move(Square.c2, Square.c4, Piece.WhitePawn),   // c4
-            new Move(Square.d2, Square.d4, Piece.WhitePawn),   // d4
-            new Move(Square.e2, Square.e4, Piece.WhitePawn),   // e4
-            new Move(Square.f2, Square.f4, Piece.WhitePawn),   // f4
-            new Move(Square.g2, Square.g4, Piece.WhitePawn),   // g4
-            new Move(Square.h2, Square.h4, Piece.WhitePawn),   // h4
-            new Move(Square.b1, Square.a3, Piece.WhiteKnight), // Na3
-            new Move(Square.b1, Square.c3, Piece.WhiteKnight), // Nc3
-            new Move(Square.g1, Square.f3, Piece.WhiteKnight), // Nf3
-            new Move(Square.g1, Square.h3, Piece.WhiteKnight)  // Nh3
+            new Move(Square.a2, Square.a3, Piece.WhitePawn,   MoveType.PawnMove),   // a3
+            new Move(Square.b2, Square.b3, Piece.WhitePawn,   MoveType.PawnMove),   // b3
+            new Move(Square.c2, Square.c3, Piece.WhitePawn,   MoveType.PawnMove),   // c3
+            new Move(Square.d2, Square.d3, Piece.WhitePawn,   MoveType.PawnMove),   // d3
+            new Move(Square.e2, Square.e3, Piece.WhitePawn,   MoveType.PawnMove),   // e3
+            new Move(Square.f2, Square.f3, Piece.WhitePawn,   MoveType.PawnMove),   // f3
+            new Move(Square.g2, Square.g3, Piece.WhitePawn,   MoveType.PawnMove),   // g3
+            new Move(Square.h2, Square.h3, Piece.WhitePawn,   MoveType.PawnMove),   // h3
+            new Move(Square.a2, Square.a4, Piece.WhitePawn,   MoveType.PawnDouble), // a4
+            new Move(Square.b2, Square.b4, Piece.WhitePawn,   MoveType.PawnDouble), // b4
+            new Move(Square.c2, Square.c4, Piece.WhitePawn,   MoveType.PawnDouble), // c4
+            new Move(Square.d2, Square.d4, Piece.WhitePawn,   MoveType.PawnDouble), // d4
+            new Move(Square.e2, Square.e4, Piece.WhitePawn,   MoveType.PawnDouble), // e4
+            new Move(Square.f2, Square.f4, Piece.WhitePawn,   MoveType.PawnDouble), // f4
+            new Move(Square.g2, Square.g4, Piece.WhitePawn,   MoveType.PawnDouble), // g4
+            new Move(Square.h2, Square.h4, Piece.WhitePawn,   MoveType.PawnDouble), // h4
+            new Move(Square.b1, Square.a3, Piece.WhiteKnight, MoveType.Normal),     // Na3
+            new Move(Square.b1, Square.c3, Piece.WhiteKnight, MoveType.Normal),     // Nc3
+            new Move(Square.g1, Square.f3, Piece.WhiteKnight, MoveType.Normal),     // Nf3
+            new Move(Square.g1, Square.h3, Piece.WhiteKnight, MoveType.Normal)      // Nh3
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
@@ -592,213 +590,213 @@ public class MoveGenerationTests
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.c1, Square.e2, Piece.WhiteKnight), // Ne2
-            new Move(Square.c1, Square.b3, Piece.WhiteKnight), // Nb3#
-            new Move(Square.c1, Square.d3, Piece.WhiteKnight), // Nd3
-            new Move(Square.d1, Square.f2, Piece.WhiteKnight), // Nf2
-            new Move(Square.d1, Square.c3, Piece.WhiteKnight), // Nc3
-            new Move(Square.d1, Square.e3, Piece.WhiteKnight), // Ne3
-            new Move(Square.b1, Square.c2, Piece.WhiteBishop), // Bc2
-            new Move(Square.b1, Square.d3, Piece.WhiteBishop), // Bd3
-            new Move(Square.b1, Square.e4, Piece.WhiteBishop), // Be4
-            new Move(Square.b1, Square.f5, Piece.WhiteBishop), // Bf5
-            new Move(Square.g1, Square.f2, Piece.WhiteBishop), // Bf2
-            new Move(Square.g1, Square.h2, Piece.WhiteBishop), // Bh2
-            new Move(Square.g1, Square.e3, Piece.WhiteBishop), // Be3
-            new Move(Square.g1, Square.d4, Piece.WhiteBishop), // Bd4
-            new Move(Square.g1, Square.c5, Piece.WhiteBishop), // Bc5
-            new Move(Square.a8, Square.a4, Piece.WhiteRook),   // Ra4
-            new Move(Square.a8, Square.a5, Piece.WhiteRook),   // Ra5
-            new Move(Square.a8, Square.a6, Piece.WhiteRook),   // Ra6
-            new Move(Square.a8, Square.a7, Piece.WhiteRook),   // Ra7
-            new Move(Square.a8, Square.b8, Piece.WhiteRook),   // Rab8
-            new Move(Square.a8, Square.c8, Piece.WhiteRook),   // Rac8
-            new Move(Square.a8, Square.d8, Piece.WhiteRook),   // Rad8
-            new Move(Square.a8, Square.e8, Piece.WhiteRook),   // Rae8
-            new Move(Square.a8, Square.f8, Piece.WhiteRook),   // Raf8
-            new Move(Square.a8, Square.g8, Piece.WhiteRook),   // Rag8
-            new Move(Square.h8, Square.h5, Piece.WhiteRook),   // Rh5
-            new Move(Square.h8, Square.h6, Piece.WhiteRook),   // Rh6
-            new Move(Square.h8, Square.h7, Piece.WhiteRook),   // Rh7
-            new Move(Square.h8, Square.b8, Piece.WhiteRook),   // Rhb8
-            new Move(Square.h8, Square.c8, Piece.WhiteRook),   // Rhc8
-            new Move(Square.h8, Square.d8, Piece.WhiteRook),   // Rhd8
-            new Move(Square.h8, Square.e8, Piece.WhiteRook),   // Rhe8
-            new Move(Square.h8, Square.f8, Piece.WhiteRook),   // Rhf8
-            new Move(Square.h8, Square.g8, Piece.WhiteRook),   // Rhg8
-            new Move(Square.d2, Square.c2, Piece.WhiteQueen),  // Qdc2
-            new Move(Square.d2, Square.e2, Piece.WhiteQueen),  // Qde2
-            new Move(Square.d2, Square.f2, Piece.WhiteQueen),  // Qdf2
-            new Move(Square.d2, Square.g2, Piece.WhiteQueen),  // Qdg2
-            new Move(Square.d2, Square.h2, Piece.WhiteQueen),  // Qdh2
-            new Move(Square.d2, Square.c3, Piece.WhiteQueen),  // Qdc3
-            new Move(Square.d2, Square.d3, Piece.WhiteQueen),  // Q2d3
-            new Move(Square.d2, Square.e3, Piece.WhiteQueen),  // Qde3
-            new Move(Square.d2, Square.b4, Piece.WhiteQueen),  // Qdb4
-            new Move(Square.d2, Square.d4, Piece.WhiteQueen),  // Q2d4
-            new Move(Square.d2, Square.f4, Piece.WhiteQueen),  // Qdf4
-            new Move(Square.d2, Square.a5, Piece.WhiteQueen),  // Qda5
-            new Move(Square.d2, Square.d5, Piece.WhiteQueen),  // Q2d5
-            new Move(Square.d2, Square.g5, Piece.WhiteQueen),  // Qdg5
-            new Move(Square.d2, Square.d6, Piece.WhiteQueen),  // Q2d6
-            new Move(Square.d2, Square.h6, Piece.WhiteQueen),  // Qdh6
-            new Move(Square.a3, Square.b3, Piece.WhiteQueen),  // Qab3
-            new Move(Square.a3, Square.c3, Piece.WhiteQueen),  // Qac3
-            new Move(Square.a3, Square.d3, Piece.WhiteQueen),  // Qad3
-            new Move(Square.a3, Square.e3, Piece.WhiteQueen),  // Qae3
-            new Move(Square.a3, Square.a4, Piece.WhiteQueen),  // Qaa4
-            new Move(Square.a3, Square.b4, Piece.WhiteQueen),  // Qab4
-            new Move(Square.a3, Square.a5, Piece.WhiteQueen),  // Qaa5
-            new Move(Square.a3, Square.c5, Piece.WhiteQueen),  // Qac5
-            new Move(Square.a3, Square.a6, Piece.WhiteQueen),  // Qaa6
-            new Move(Square.a3, Square.d6, Piece.WhiteQueen),  // Qad6
-            new Move(Square.a3, Square.a7, Piece.WhiteQueen),  // Qaa7
-            new Move(Square.a3, Square.e7, Piece.WhiteQueen),  // Qae7
-            new Move(Square.a3, Square.f8, Piece.WhiteQueen),  // Qaf8
-            new Move(Square.f3, Square.f1, Piece.WhiteQueen),  // Qff1
-            new Move(Square.f3, Square.h1, Piece.WhiteQueen),  // Qfh1
-            new Move(Square.f3, Square.e2, Piece.WhiteQueen),  // Qfe2
-            new Move(Square.f3, Square.f2, Piece.WhiteQueen),  // Qff2
-            new Move(Square.f3, Square.g2, Piece.WhiteQueen),  // Qfg2
-            new Move(Square.f3, Square.b3, Piece.WhiteQueen),  // Qfb3
-            new Move(Square.f3, Square.c3, Piece.WhiteQueen),  // Qfc3
-            new Move(Square.f3, Square.d3, Piece.WhiteQueen),  // Qfd3
-            new Move(Square.f3, Square.e3, Piece.WhiteQueen),  // Qfe3
-            new Move(Square.f3, Square.g3, Piece.WhiteQueen),  // Qfg3
-            new Move(Square.f3, Square.h3, Piece.WhiteQueen),  // Qfh3
-            new Move(Square.f3, Square.e4, Piece.WhiteQueen),  // Qfe4
-            new Move(Square.f3, Square.f4, Piece.WhiteQueen),  // Qff4
-            new Move(Square.f3, Square.g4, Piece.WhiteQueen),  // Qfg4
-            new Move(Square.f3, Square.d5, Piece.WhiteQueen),  // Qfd5
-            new Move(Square.f3, Square.f5, Piece.WhiteQueen),  // Qff5
-            new Move(Square.f3, Square.h5, Piece.WhiteQueen),  // Qfh5
-            new Move(Square.f3, Square.c6, Piece.WhiteQueen),  // Qfc6
-            new Move(Square.f3, Square.f6, Piece.WhiteQueen),  // Qff6
-            new Move(Square.f3, Square.b7, Piece.WhiteQueen),  // Qfb7
-            new Move(Square.f3, Square.f7, Piece.WhiteQueen),  // Qff7
-            new Move(Square.f3, Square.f8, Piece.WhiteQueen),  // Qff8
-            new Move(Square.c4, Square.f1, Piece.WhiteQueen),  // Qcf1
-            new Move(Square.c4, Square.c2, Piece.WhiteQueen),  // Qcc2
-            new Move(Square.c4, Square.e2, Piece.WhiteQueen),  // Qce2
-            new Move(Square.c4, Square.b3, Piece.WhiteQueen),  // Qcb3
-            new Move(Square.c4, Square.c3, Piece.WhiteQueen),  // Qcc3
-            new Move(Square.c4, Square.d3, Piece.WhiteQueen),  // Qcd3
-            new Move(Square.c4, Square.a4, Piece.WhiteQueen),  // Qca4
-            new Move(Square.c4, Square.b4, Piece.WhiteQueen),  // Qcb4
-            new Move(Square.c4, Square.d4, Piece.WhiteQueen),  // Qcd4
-            new Move(Square.c4, Square.e4, Piece.WhiteQueen),  // Qce4
-            new Move(Square.c4, Square.f4, Piece.WhiteQueen),  // Qcf4
-            new Move(Square.c4, Square.g4, Piece.WhiteQueen),  // Qcg4
-            new Move(Square.c4, Square.b5, Piece.WhiteQueen),  // Qcb5
-            new Move(Square.c4, Square.c5, Piece.WhiteQueen),  // Qcc5
-            new Move(Square.c4, Square.d5, Piece.WhiteQueen),  // Qcd5
-            new Move(Square.c4, Square.a6, Piece.WhiteQueen),  // Qca6
-            new Move(Square.c4, Square.c6, Piece.WhiteQueen),  // Qcc6
-            new Move(Square.c4, Square.e6, Piece.WhiteQueen),  // Qce6
-            new Move(Square.c4, Square.c7, Piece.WhiteQueen),  // Qcc7
-            new Move(Square.c4, Square.f7, Piece.WhiteQueen),  // Qcf7
-            new Move(Square.c4, Square.c8, Piece.WhiteQueen),  // Qcc8
-            new Move(Square.c4, Square.g8, Piece.WhiteQueen),  // Qcg8
-            new Move(Square.h4, Square.h1, Piece.WhiteQueen),  // Qhh1
-            new Move(Square.h4, Square.f2, Piece.WhiteQueen),  // Qhf2
-            new Move(Square.h4, Square.h2, Piece.WhiteQueen),  // Qhh2
-            new Move(Square.h4, Square.g3, Piece.WhiteQueen),  // Qhg3
-            new Move(Square.h4, Square.h3, Piece.WhiteQueen),  // Qhh3
-            new Move(Square.h4, Square.d4, Piece.WhiteQueen),  // Qhd4
-            new Move(Square.h4, Square.e4, Piece.WhiteQueen),  // Qhe4
-            new Move(Square.h4, Square.f4, Piece.WhiteQueen),  // Qhf4
-            new Move(Square.h4, Square.g4, Piece.WhiteQueen),  // Qhg4
-            new Move(Square.h4, Square.g5, Piece.WhiteQueen),  // Qhg5
-            new Move(Square.h4, Square.h5, Piece.WhiteQueen),  // Qhh5
-            new Move(Square.h4, Square.f6, Piece.WhiteQueen),  // Qhf6
-            new Move(Square.h4, Square.h6, Piece.WhiteQueen),  // Qhh6
-            new Move(Square.h4, Square.e7, Piece.WhiteQueen),  // Qhe7
-            new Move(Square.h4, Square.h7, Piece.WhiteQueen),  // Qhh7
-            new Move(Square.h4, Square.d8, Piece.WhiteQueen),  // Qhd8
-            new Move(Square.e5, Square.e2, Piece.WhiteQueen),  // Qee2
-            new Move(Square.e5, Square.h2, Piece.WhiteQueen),  // Qeh2
-            new Move(Square.e5, Square.c3, Piece.WhiteQueen),  // Qec3
-            new Move(Square.e5, Square.e3, Piece.WhiteQueen),  // Qee3
-            new Move(Square.e5, Square.g3, Piece.WhiteQueen),  // Qeg3
-            new Move(Square.e5, Square.d4, Piece.WhiteQueen),  // Qed4
-            new Move(Square.e5, Square.e4, Piece.WhiteQueen),  // Qee4
-            new Move(Square.e5, Square.f4, Piece.WhiteQueen),  // Qef4
-            new Move(Square.e5, Square.a5, Piece.WhiteQueen),  // Qea5
-            new Move(Square.e5, Square.b5, Piece.WhiteQueen),  // Qeb5
-            new Move(Square.e5, Square.c5, Piece.WhiteQueen),  // Qec5
-            new Move(Square.e5, Square.d5, Piece.WhiteQueen),  // Qed5
-            new Move(Square.e5, Square.f5, Piece.WhiteQueen),  // Qef5
-            new Move(Square.e5, Square.g5, Piece.WhiteQueen),  // Qeg5
-            new Move(Square.e5, Square.h5, Piece.WhiteQueen),  // Qeh5
-            new Move(Square.e5, Square.d6, Piece.WhiteQueen),  // Qed6
-            new Move(Square.e5, Square.e6, Piece.WhiteQueen),  // Qee6
-            new Move(Square.e5, Square.f6, Piece.WhiteQueen),  // Qef6
-            new Move(Square.e5, Square.c7, Piece.WhiteQueen),  // Qec7
-            new Move(Square.e5, Square.e7, Piece.WhiteQueen),  // Qee7
-            new Move(Square.e5, Square.g7, Piece.WhiteQueen),  // Qeg7
-            new Move(Square.e5, Square.b8, Piece.WhiteQueen),  // Qeb8
-            new Move(Square.e5, Square.e8, Piece.WhiteQueen),  // Qee8
-            new Move(Square.b6, Square.f2, Piece.WhiteQueen),  // Qbf2
-            new Move(Square.b6, Square.b3, Piece.WhiteQueen),  // Qbb3
-            new Move(Square.b6, Square.e3, Piece.WhiteQueen),  // Qbe3
-            new Move(Square.b6, Square.b4, Piece.WhiteQueen),  // Qbb4
-            new Move(Square.b6, Square.d4, Piece.WhiteQueen),  // Qbd4
-            new Move(Square.b6, Square.a5, Piece.WhiteQueen),  // Qba5
-            new Move(Square.b6, Square.b5, Piece.WhiteQueen),  // Qbb5
-            new Move(Square.b6, Square.c5, Piece.WhiteQueen),  // Qbc5
-            new Move(Square.b6, Square.a6, Piece.WhiteQueen),  // Qba6
-            new Move(Square.b6, Square.c6, Piece.WhiteQueen),  // Qbc6
-            new Move(Square.b6, Square.d6, Piece.WhiteQueen),  // Qbd6
-            new Move(Square.b6, Square.e6, Piece.WhiteQueen),  // Qbe6
-            new Move(Square.b6, Square.f6, Piece.WhiteQueen),  // Qbf6
-            new Move(Square.b6, Square.a7, Piece.WhiteQueen),  // Qba7
-            new Move(Square.b6, Square.b7, Piece.WhiteQueen),  // Qbb7
-            new Move(Square.b6, Square.c7, Piece.WhiteQueen),  // Qbc7
-            new Move(Square.b6, Square.b8, Piece.WhiteQueen),  // Qbb8
-            new Move(Square.b6, Square.d8, Piece.WhiteQueen),  // Qbd8
-            new Move(Square.g6, Square.c2, Piece.WhiteQueen),  // Qgc2
-            new Move(Square.g6, Square.g2, Piece.WhiteQueen),  // Qgg2
-            new Move(Square.g6, Square.d3, Piece.WhiteQueen),  // Qgd3
-            new Move(Square.g6, Square.g3, Piece.WhiteQueen),  // Qgg3
-            new Move(Square.g6, Square.e4, Piece.WhiteQueen),  // Qge4
-            new Move(Square.g6, Square.g4, Piece.WhiteQueen),  // Qgg4
-            new Move(Square.g6, Square.f5, Piece.WhiteQueen),  // Qgf5
-            new Move(Square.g6, Square.g5, Piece.WhiteQueen),  // Qgg5
-            new Move(Square.g6, Square.h5, Piece.WhiteQueen),  // Qgh5
-            new Move(Square.g6, Square.c6, Piece.WhiteQueen),  // Qgc6
-            new Move(Square.g6, Square.d6, Piece.WhiteQueen),  // Qgd6
-            new Move(Square.g6, Square.e6, Piece.WhiteQueen),  // Qge6
-            new Move(Square.g6, Square.f6, Piece.WhiteQueen),  // Qgf6
-            new Move(Square.g6, Square.h6, Piece.WhiteQueen),  // Qgh6
-            new Move(Square.g6, Square.f7, Piece.WhiteQueen),  // Qgf7
-            new Move(Square.g6, Square.g7, Piece.WhiteQueen),  // Qgg7
-            new Move(Square.g6, Square.h7, Piece.WhiteQueen),  // Qgh7
-            new Move(Square.g6, Square.e8, Piece.WhiteQueen),  // Qge8
-            new Move(Square.g6, Square.g8, Piece.WhiteQueen),  // Qgg8
-            new Move(Square.d7, Square.d3, Piece.WhiteQueen),  // Q7d3
-            new Move(Square.d7, Square.h3, Piece.WhiteQueen),  // Qdh3
-            new Move(Square.d7, Square.a4, Piece.WhiteQueen),  // Qda4
-            new Move(Square.d7, Square.d4, Piece.WhiteQueen),  // Q7d4
-            new Move(Square.d7, Square.g4, Piece.WhiteQueen),  // Qdg4
-            new Move(Square.d7, Square.b5, Piece.WhiteQueen),  // Qdb5
-            new Move(Square.d7, Square.d5, Piece.WhiteQueen),  // Q7d5
-            new Move(Square.d7, Square.f5, Piece.WhiteQueen),  // Qdf5
-            new Move(Square.d7, Square.c6, Piece.WhiteQueen),  // Qdc6
-            new Move(Square.d7, Square.d6, Piece.WhiteQueen),  // Q7d6
-            new Move(Square.d7, Square.e6, Piece.WhiteQueen),  // Qde6
-            new Move(Square.d7, Square.a7, Piece.WhiteQueen),  // Qda7
-            new Move(Square.d7, Square.b7, Piece.WhiteQueen),  // Qdb7
-            new Move(Square.d7, Square.c7, Piece.WhiteQueen),  // Qdc7
-            new Move(Square.d7, Square.e7, Piece.WhiteQueen),  // Qde7
-            new Move(Square.d7, Square.f7, Piece.WhiteQueen),  // Qdf7
-            new Move(Square.d7, Square.g7, Piece.WhiteQueen),  // Qdg7
-            new Move(Square.d7, Square.h7, Piece.WhiteQueen),  // Qdh7
-            new Move(Square.d7, Square.c8, Piece.WhiteQueen),  // Qdc8
-            new Move(Square.d7, Square.d8, Piece.WhiteQueen),  // Qdd8
-            new Move(Square.d7, Square.e8, Piece.WhiteQueen),  // Qde8
-            new Move(Square.e1, Square.f1, Piece.WhiteKing),   // Kf1
-            new Move(Square.e1, Square.e2, Piece.WhiteKing),   // Ke2
-            new Move(Square.e1, Square.f2, Piece.WhiteKing)    // Kf2
+            new Move(Square.c1, Square.e2, Piece.WhiteKnight, MoveType.Normal), // Ne2
+            new Move(Square.c1, Square.b3, Piece.WhiteKnight, MoveType.Normal), // Nb3#
+            new Move(Square.c1, Square.d3, Piece.WhiteKnight, MoveType.Normal), // Nd3
+            new Move(Square.d1, Square.f2, Piece.WhiteKnight, MoveType.Normal), // Nf2
+            new Move(Square.d1, Square.c3, Piece.WhiteKnight, MoveType.Normal), // Nc3
+            new Move(Square.d1, Square.e3, Piece.WhiteKnight, MoveType.Normal), // Ne3
+            new Move(Square.b1, Square.c2, Piece.WhiteBishop, MoveType.Normal), // Bc2
+            new Move(Square.b1, Square.d3, Piece.WhiteBishop, MoveType.Normal), // Bd3
+            new Move(Square.b1, Square.e4, Piece.WhiteBishop, MoveType.Normal), // Be4
+            new Move(Square.b1, Square.f5, Piece.WhiteBishop, MoveType.Normal), // Bf5
+            new Move(Square.g1, Square.f2, Piece.WhiteBishop, MoveType.Normal), // Bf2
+            new Move(Square.g1, Square.h2, Piece.WhiteBishop, MoveType.Normal), // Bh2
+            new Move(Square.g1, Square.e3, Piece.WhiteBishop, MoveType.Normal), // Be3
+            new Move(Square.g1, Square.d4, Piece.WhiteBishop, MoveType.Normal), // Bd4
+            new Move(Square.g1, Square.c5, Piece.WhiteBishop, MoveType.Normal), // Bc5
+            new Move(Square.a8, Square.a4, Piece.WhiteRook,   MoveType.Normal), // Ra4
+            new Move(Square.a8, Square.a5, Piece.WhiteRook,   MoveType.Normal), // Ra5
+            new Move(Square.a8, Square.a6, Piece.WhiteRook,   MoveType.Normal), // Ra6
+            new Move(Square.a8, Square.a7, Piece.WhiteRook,   MoveType.Normal), // Ra7
+            new Move(Square.a8, Square.b8, Piece.WhiteRook,   MoveType.Normal), // Rab8
+            new Move(Square.a8, Square.c8, Piece.WhiteRook,   MoveType.Normal), // Rac8
+            new Move(Square.a8, Square.d8, Piece.WhiteRook,   MoveType.Normal), // Rad8
+            new Move(Square.a8, Square.e8, Piece.WhiteRook,   MoveType.Normal), // Rae8
+            new Move(Square.a8, Square.f8, Piece.WhiteRook,   MoveType.Normal), // Raf8
+            new Move(Square.a8, Square.g8, Piece.WhiteRook,   MoveType.Normal), // Rag8
+            new Move(Square.h8, Square.h5, Piece.WhiteRook,   MoveType.Normal), // Rh5
+            new Move(Square.h8, Square.h6, Piece.WhiteRook,   MoveType.Normal), // Rh6
+            new Move(Square.h8, Square.h7, Piece.WhiteRook,   MoveType.Normal), // Rh7
+            new Move(Square.h8, Square.b8, Piece.WhiteRook,   MoveType.Normal), // Rhb8
+            new Move(Square.h8, Square.c8, Piece.WhiteRook,   MoveType.Normal), // Rhc8
+            new Move(Square.h8, Square.d8, Piece.WhiteRook,   MoveType.Normal), // Rhd8
+            new Move(Square.h8, Square.e8, Piece.WhiteRook,   MoveType.Normal), // Rhe8
+            new Move(Square.h8, Square.f8, Piece.WhiteRook,   MoveType.Normal), // Rhf8
+            new Move(Square.h8, Square.g8, Piece.WhiteRook,   MoveType.Normal), // Rhg8
+            new Move(Square.d2, Square.c2, Piece.WhiteQueen,  MoveType.Normal), // Qdc2
+            new Move(Square.d2, Square.e2, Piece.WhiteQueen,  MoveType.Normal), // Qde2
+            new Move(Square.d2, Square.f2, Piece.WhiteQueen,  MoveType.Normal), // Qdf2
+            new Move(Square.d2, Square.g2, Piece.WhiteQueen,  MoveType.Normal), // Qdg2
+            new Move(Square.d2, Square.h2, Piece.WhiteQueen,  MoveType.Normal), // Qdh2
+            new Move(Square.d2, Square.c3, Piece.WhiteQueen,  MoveType.Normal), // Qdc3
+            new Move(Square.d2, Square.d3, Piece.WhiteQueen,  MoveType.Normal), // Q2d3
+            new Move(Square.d2, Square.e3, Piece.WhiteQueen,  MoveType.Normal), // Qde3
+            new Move(Square.d2, Square.b4, Piece.WhiteQueen,  MoveType.Normal), // Qdb4
+            new Move(Square.d2, Square.d4, Piece.WhiteQueen,  MoveType.Normal), // Q2d4
+            new Move(Square.d2, Square.f4, Piece.WhiteQueen,  MoveType.Normal), // Qdf4
+            new Move(Square.d2, Square.a5, Piece.WhiteQueen,  MoveType.Normal), // Qda5
+            new Move(Square.d2, Square.d5, Piece.WhiteQueen,  MoveType.Normal), // Q2d5
+            new Move(Square.d2, Square.g5, Piece.WhiteQueen,  MoveType.Normal), // Qdg5
+            new Move(Square.d2, Square.d6, Piece.WhiteQueen,  MoveType.Normal), // Q2d6
+            new Move(Square.d2, Square.h6, Piece.WhiteQueen,  MoveType.Normal), // Qdh6
+            new Move(Square.a3, Square.b3, Piece.WhiteQueen,  MoveType.Normal), // Qab3
+            new Move(Square.a3, Square.c3, Piece.WhiteQueen,  MoveType.Normal), // Qac3
+            new Move(Square.a3, Square.d3, Piece.WhiteQueen,  MoveType.Normal), // Qad3
+            new Move(Square.a3, Square.e3, Piece.WhiteQueen,  MoveType.Normal), // Qae3
+            new Move(Square.a3, Square.a4, Piece.WhiteQueen,  MoveType.Normal), // Qaa4
+            new Move(Square.a3, Square.b4, Piece.WhiteQueen,  MoveType.Normal), // Qab4
+            new Move(Square.a3, Square.a5, Piece.WhiteQueen,  MoveType.Normal), // Qaa5
+            new Move(Square.a3, Square.c5, Piece.WhiteQueen,  MoveType.Normal), // Qac5
+            new Move(Square.a3, Square.a6, Piece.WhiteQueen,  MoveType.Normal), // Qaa6
+            new Move(Square.a3, Square.d6, Piece.WhiteQueen,  MoveType.Normal), // Qad6
+            new Move(Square.a3, Square.a7, Piece.WhiteQueen,  MoveType.Normal), // Qaa7
+            new Move(Square.a3, Square.e7, Piece.WhiteQueen,  MoveType.Normal), // Qae7
+            new Move(Square.a3, Square.f8, Piece.WhiteQueen,  MoveType.Normal), // Qaf8
+            new Move(Square.f3, Square.f1, Piece.WhiteQueen,  MoveType.Normal), // Qff1
+            new Move(Square.f3, Square.h1, Piece.WhiteQueen,  MoveType.Normal), // Qfh1
+            new Move(Square.f3, Square.e2, Piece.WhiteQueen,  MoveType.Normal), // Qfe2
+            new Move(Square.f3, Square.f2, Piece.WhiteQueen,  MoveType.Normal), // Qff2
+            new Move(Square.f3, Square.g2, Piece.WhiteQueen,  MoveType.Normal), // Qfg2
+            new Move(Square.f3, Square.b3, Piece.WhiteQueen,  MoveType.Normal), // Qfb3
+            new Move(Square.f3, Square.c3, Piece.WhiteQueen,  MoveType.Normal), // Qfc3
+            new Move(Square.f3, Square.d3, Piece.WhiteQueen,  MoveType.Normal), // Qfd3
+            new Move(Square.f3, Square.e3, Piece.WhiteQueen,  MoveType.Normal), // Qfe3
+            new Move(Square.f3, Square.g3, Piece.WhiteQueen,  MoveType.Normal), // Qfg3
+            new Move(Square.f3, Square.h3, Piece.WhiteQueen,  MoveType.Normal), // Qfh3
+            new Move(Square.f3, Square.e4, Piece.WhiteQueen,  MoveType.Normal), // Qfe4
+            new Move(Square.f3, Square.f4, Piece.WhiteQueen,  MoveType.Normal), // Qff4
+            new Move(Square.f3, Square.g4, Piece.WhiteQueen,  MoveType.Normal), // Qfg4
+            new Move(Square.f3, Square.d5, Piece.WhiteQueen,  MoveType.Normal), // Qfd5
+            new Move(Square.f3, Square.f5, Piece.WhiteQueen,  MoveType.Normal), // Qff5
+            new Move(Square.f3, Square.h5, Piece.WhiteQueen,  MoveType.Normal), // Qfh5
+            new Move(Square.f3, Square.c6, Piece.WhiteQueen,  MoveType.Normal), // Qfc6
+            new Move(Square.f3, Square.f6, Piece.WhiteQueen,  MoveType.Normal), // Qff6
+            new Move(Square.f3, Square.b7, Piece.WhiteQueen,  MoveType.Normal), // Qfb7
+            new Move(Square.f3, Square.f7, Piece.WhiteQueen,  MoveType.Normal), // Qff7
+            new Move(Square.f3, Square.f8, Piece.WhiteQueen,  MoveType.Normal), // Qff8
+            new Move(Square.c4, Square.f1, Piece.WhiteQueen,  MoveType.Normal), // Qcf1
+            new Move(Square.c4, Square.c2, Piece.WhiteQueen,  MoveType.Normal), // Qcc2
+            new Move(Square.c4, Square.e2, Piece.WhiteQueen,  MoveType.Normal), // Qce2
+            new Move(Square.c4, Square.b3, Piece.WhiteQueen,  MoveType.Normal), // Qcb3
+            new Move(Square.c4, Square.c3, Piece.WhiteQueen,  MoveType.Normal), // Qcc3
+            new Move(Square.c4, Square.d3, Piece.WhiteQueen,  MoveType.Normal), // Qcd3
+            new Move(Square.c4, Square.a4, Piece.WhiteQueen,  MoveType.Normal), // Qca4
+            new Move(Square.c4, Square.b4, Piece.WhiteQueen,  MoveType.Normal), // Qcb4
+            new Move(Square.c4, Square.d4, Piece.WhiteQueen,  MoveType.Normal), // Qcd4
+            new Move(Square.c4, Square.e4, Piece.WhiteQueen,  MoveType.Normal), // Qce4
+            new Move(Square.c4, Square.f4, Piece.WhiteQueen,  MoveType.Normal), // Qcf4
+            new Move(Square.c4, Square.g4, Piece.WhiteQueen,  MoveType.Normal), // Qcg4
+            new Move(Square.c4, Square.b5, Piece.WhiteQueen,  MoveType.Normal), // Qcb5
+            new Move(Square.c4, Square.c5, Piece.WhiteQueen,  MoveType.Normal), // Qcc5
+            new Move(Square.c4, Square.d5, Piece.WhiteQueen,  MoveType.Normal), // Qcd5
+            new Move(Square.c4, Square.a6, Piece.WhiteQueen,  MoveType.Normal), // Qca6
+            new Move(Square.c4, Square.c6, Piece.WhiteQueen,  MoveType.Normal), // Qcc6
+            new Move(Square.c4, Square.e6, Piece.WhiteQueen,  MoveType.Normal), // Qce6
+            new Move(Square.c4, Square.c7, Piece.WhiteQueen,  MoveType.Normal), // Qcc7
+            new Move(Square.c4, Square.f7, Piece.WhiteQueen,  MoveType.Normal), // Qcf7
+            new Move(Square.c4, Square.c8, Piece.WhiteQueen,  MoveType.Normal), // Qcc8
+            new Move(Square.c4, Square.g8, Piece.WhiteQueen,  MoveType.Normal), // Qcg8
+            new Move(Square.h4, Square.h1, Piece.WhiteQueen,  MoveType.Normal), // Qhh1
+            new Move(Square.h4, Square.f2, Piece.WhiteQueen,  MoveType.Normal), // Qhf2
+            new Move(Square.h4, Square.h2, Piece.WhiteQueen,  MoveType.Normal), // Qhh2
+            new Move(Square.h4, Square.g3, Piece.WhiteQueen,  MoveType.Normal), // Qhg3
+            new Move(Square.h4, Square.h3, Piece.WhiteQueen,  MoveType.Normal), // Qhh3
+            new Move(Square.h4, Square.d4, Piece.WhiteQueen,  MoveType.Normal), // Qhd4
+            new Move(Square.h4, Square.e4, Piece.WhiteQueen,  MoveType.Normal), // Qhe4
+            new Move(Square.h4, Square.f4, Piece.WhiteQueen,  MoveType.Normal), // Qhf4
+            new Move(Square.h4, Square.g4, Piece.WhiteQueen,  MoveType.Normal), // Qhg4
+            new Move(Square.h4, Square.g5, Piece.WhiteQueen,  MoveType.Normal), // Qhg5
+            new Move(Square.h4, Square.h5, Piece.WhiteQueen,  MoveType.Normal), // Qhh5
+            new Move(Square.h4, Square.f6, Piece.WhiteQueen,  MoveType.Normal), // Qhf6
+            new Move(Square.h4, Square.h6, Piece.WhiteQueen,  MoveType.Normal), // Qhh6
+            new Move(Square.h4, Square.e7, Piece.WhiteQueen,  MoveType.Normal), // Qhe7
+            new Move(Square.h4, Square.h7, Piece.WhiteQueen,  MoveType.Normal), // Qhh7
+            new Move(Square.h4, Square.d8, Piece.WhiteQueen,  MoveType.Normal), // Qhd8
+            new Move(Square.e5, Square.e2, Piece.WhiteQueen,  MoveType.Normal), // Qee2
+            new Move(Square.e5, Square.h2, Piece.WhiteQueen,  MoveType.Normal), // Qeh2
+            new Move(Square.e5, Square.c3, Piece.WhiteQueen,  MoveType.Normal), // Qec3
+            new Move(Square.e5, Square.e3, Piece.WhiteQueen,  MoveType.Normal), // Qee3
+            new Move(Square.e5, Square.g3, Piece.WhiteQueen,  MoveType.Normal), // Qeg3
+            new Move(Square.e5, Square.d4, Piece.WhiteQueen,  MoveType.Normal), // Qed4
+            new Move(Square.e5, Square.e4, Piece.WhiteQueen,  MoveType.Normal), // Qee4
+            new Move(Square.e5, Square.f4, Piece.WhiteQueen,  MoveType.Normal), // Qef4
+            new Move(Square.e5, Square.a5, Piece.WhiteQueen,  MoveType.Normal), // Qea5
+            new Move(Square.e5, Square.b5, Piece.WhiteQueen,  MoveType.Normal), // Qeb5
+            new Move(Square.e5, Square.c5, Piece.WhiteQueen,  MoveType.Normal), // Qec5
+            new Move(Square.e5, Square.d5, Piece.WhiteQueen,  MoveType.Normal), // Qed5
+            new Move(Square.e5, Square.f5, Piece.WhiteQueen,  MoveType.Normal), // Qef5
+            new Move(Square.e5, Square.g5, Piece.WhiteQueen,  MoveType.Normal), // Qeg5
+            new Move(Square.e5, Square.h5, Piece.WhiteQueen,  MoveType.Normal), // Qeh5
+            new Move(Square.e5, Square.d6, Piece.WhiteQueen,  MoveType.Normal), // Qed6
+            new Move(Square.e5, Square.e6, Piece.WhiteQueen,  MoveType.Normal), // Qee6
+            new Move(Square.e5, Square.f6, Piece.WhiteQueen,  MoveType.Normal), // Qef6
+            new Move(Square.e5, Square.c7, Piece.WhiteQueen,  MoveType.Normal), // Qec7
+            new Move(Square.e5, Square.e7, Piece.WhiteQueen,  MoveType.Normal), // Qee7
+            new Move(Square.e5, Square.g7, Piece.WhiteQueen,  MoveType.Normal), // Qeg7
+            new Move(Square.e5, Square.b8, Piece.WhiteQueen,  MoveType.Normal), // Qeb8
+            new Move(Square.e5, Square.e8, Piece.WhiteQueen,  MoveType.Normal), // Qee8
+            new Move(Square.b6, Square.f2, Piece.WhiteQueen,  MoveType.Normal), // Qbf2
+            new Move(Square.b6, Square.b3, Piece.WhiteQueen,  MoveType.Normal), // Qbb3
+            new Move(Square.b6, Square.e3, Piece.WhiteQueen,  MoveType.Normal), // Qbe3
+            new Move(Square.b6, Square.b4, Piece.WhiteQueen,  MoveType.Normal), // Qbb4
+            new Move(Square.b6, Square.d4, Piece.WhiteQueen,  MoveType.Normal), // Qbd4
+            new Move(Square.b6, Square.a5, Piece.WhiteQueen,  MoveType.Normal), // Qba5
+            new Move(Square.b6, Square.b5, Piece.WhiteQueen,  MoveType.Normal), // Qbb5
+            new Move(Square.b6, Square.c5, Piece.WhiteQueen,  MoveType.Normal), // Qbc5
+            new Move(Square.b6, Square.a6, Piece.WhiteQueen,  MoveType.Normal), // Qba6
+            new Move(Square.b6, Square.c6, Piece.WhiteQueen,  MoveType.Normal), // Qbc6
+            new Move(Square.b6, Square.d6, Piece.WhiteQueen,  MoveType.Normal), // Qbd6
+            new Move(Square.b6, Square.e6, Piece.WhiteQueen,  MoveType.Normal), // Qbe6
+            new Move(Square.b6, Square.f6, Piece.WhiteQueen,  MoveType.Normal), // Qbf6
+            new Move(Square.b6, Square.a7, Piece.WhiteQueen,  MoveType.Normal), // Qba7
+            new Move(Square.b6, Square.b7, Piece.WhiteQueen,  MoveType.Normal), // Qbb7
+            new Move(Square.b6, Square.c7, Piece.WhiteQueen,  MoveType.Normal), // Qbc7
+            new Move(Square.b6, Square.b8, Piece.WhiteQueen,  MoveType.Normal), // Qbb8
+            new Move(Square.b6, Square.d8, Piece.WhiteQueen,  MoveType.Normal), // Qbd8
+            new Move(Square.g6, Square.c2, Piece.WhiteQueen,  MoveType.Normal), // Qgc2
+            new Move(Square.g6, Square.g2, Piece.WhiteQueen,  MoveType.Normal), // Qgg2
+            new Move(Square.g6, Square.d3, Piece.WhiteQueen,  MoveType.Normal), // Qgd3
+            new Move(Square.g6, Square.g3, Piece.WhiteQueen,  MoveType.Normal), // Qgg3
+            new Move(Square.g6, Square.e4, Piece.WhiteQueen,  MoveType.Normal), // Qge4
+            new Move(Square.g6, Square.g4, Piece.WhiteQueen,  MoveType.Normal), // Qgg4
+            new Move(Square.g6, Square.f5, Piece.WhiteQueen,  MoveType.Normal), // Qgf5
+            new Move(Square.g6, Square.g5, Piece.WhiteQueen,  MoveType.Normal), // Qgg5
+            new Move(Square.g6, Square.h5, Piece.WhiteQueen,  MoveType.Normal), // Qgh5
+            new Move(Square.g6, Square.c6, Piece.WhiteQueen,  MoveType.Normal), // Qgc6
+            new Move(Square.g6, Square.d6, Piece.WhiteQueen,  MoveType.Normal), // Qgd6
+            new Move(Square.g6, Square.e6, Piece.WhiteQueen,  MoveType.Normal), // Qge6
+            new Move(Square.g6, Square.f6, Piece.WhiteQueen,  MoveType.Normal), // Qgf6
+            new Move(Square.g6, Square.h6, Piece.WhiteQueen,  MoveType.Normal), // Qgh6
+            new Move(Square.g6, Square.f7, Piece.WhiteQueen,  MoveType.Normal), // Qgf7
+            new Move(Square.g6, Square.g7, Piece.WhiteQueen,  MoveType.Normal), // Qgg7
+            new Move(Square.g6, Square.h7, Piece.WhiteQueen,  MoveType.Normal), // Qgh7
+            new Move(Square.g6, Square.e8, Piece.WhiteQueen,  MoveType.Normal), // Qge8
+            new Move(Square.g6, Square.g8, Piece.WhiteQueen,  MoveType.Normal), // Qgg8
+            new Move(Square.d7, Square.d3, Piece.WhiteQueen,  MoveType.Normal), // Q7d3
+            new Move(Square.d7, Square.h3, Piece.WhiteQueen,  MoveType.Normal), // Qdh3
+            new Move(Square.d7, Square.a4, Piece.WhiteQueen,  MoveType.Normal), // Qda4
+            new Move(Square.d7, Square.d4, Piece.WhiteQueen,  MoveType.Normal), // Q7d4
+            new Move(Square.d7, Square.g4, Piece.WhiteQueen,  MoveType.Normal), // Qdg4
+            new Move(Square.d7, Square.b5, Piece.WhiteQueen,  MoveType.Normal), // Qdb5
+            new Move(Square.d7, Square.d5, Piece.WhiteQueen,  MoveType.Normal), // Q7d5
+            new Move(Square.d7, Square.f5, Piece.WhiteQueen,  MoveType.Normal), // Qdf5
+            new Move(Square.d7, Square.c6, Piece.WhiteQueen,  MoveType.Normal), // Qdc6
+            new Move(Square.d7, Square.d6, Piece.WhiteQueen,  MoveType.Normal), // Q7d6
+            new Move(Square.d7, Square.e6, Piece.WhiteQueen,  MoveType.Normal), // Qde6
+            new Move(Square.d7, Square.a7, Piece.WhiteQueen,  MoveType.Normal), // Qda7
+            new Move(Square.d7, Square.b7, Piece.WhiteQueen,  MoveType.Normal), // Qdb7
+            new Move(Square.d7, Square.c7, Piece.WhiteQueen,  MoveType.Normal), // Qdc7
+            new Move(Square.d7, Square.e7, Piece.WhiteQueen,  MoveType.Normal), // Qde7
+            new Move(Square.d7, Square.f7, Piece.WhiteQueen,  MoveType.Normal), // Qdf7
+            new Move(Square.d7, Square.g7, Piece.WhiteQueen,  MoveType.Normal), // Qdg7
+            new Move(Square.d7, Square.h7, Piece.WhiteQueen,  MoveType.Normal), // Qdh7
+            new Move(Square.d7, Square.c8, Piece.WhiteQueen,  MoveType.Normal), // Qdc8
+            new Move(Square.d7, Square.d8, Piece.WhiteQueen,  MoveType.Normal), // Qdd8
+            new Move(Square.d7, Square.e8, Piece.WhiteQueen,  MoveType.Normal), // Qde8
+            new Move(Square.e1, Square.f1, Piece.WhiteKing,   MoveType.Normal), // Kf1
+            new Move(Square.e1, Square.e2, Piece.WhiteKing,   MoveType.Normal), // Ke2
+            new Move(Square.e1, Square.f2, Piece.WhiteKing,   MoveType.Normal)  // Kf2
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
@@ -813,15 +811,15 @@ public class MoveGenerationTests
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.c1, Square.a2, Piece.WhiteKnight, Piece.BlackPawn), // Nxa2>
-            new Move(Square.d1, Square.b2, Piece.WhiteKnight, Piece.BlackPawn), // Nxb2
-            new Move(Square.b1, Square.a2, Piece.WhiteBishop, Piece.BlackPawn), // Bxa2
-            new Move(Square.d2, Square.b2, Piece.WhiteQueen,  Piece.BlackPawn), // Qdxb2#
-            new Move(Square.a3, Square.a2, Piece.WhiteQueen,  Piece.BlackPawn), // Qaxa2#
-            new Move(Square.a3, Square.b2, Piece.WhiteQueen,  Piece.BlackPawn), // Qaxb2#
-            new Move(Square.c4, Square.a2, Piece.WhiteQueen,  Piece.BlackPawn), // Qcxa2#
-            new Move(Square.e5, Square.b2, Piece.WhiteQueen,  Piece.BlackPawn), // Qexb2#
-            new Move(Square.b6, Square.b2, Piece.WhiteQueen,  Piece.BlackPawn)  // Qbxb2#
+            new Move(Square.c1, Square.a2, Piece.WhiteKnight, Piece.BlackPawn, MoveType.Capture), // Nxa2>
+            new Move(Square.d1, Square.b2, Piece.WhiteKnight, Piece.BlackPawn, MoveType.Capture), // Nxb2
+            new Move(Square.b1, Square.a2, Piece.WhiteBishop, Piece.BlackPawn, MoveType.Capture), // Bxa2
+            new Move(Square.d2, Square.b2, Piece.WhiteQueen,  Piece.BlackPawn, MoveType.Capture), // Qdxb2#
+            new Move(Square.a3, Square.a2, Piece.WhiteQueen,  Piece.BlackPawn, MoveType.Capture), // Qaxa2#
+            new Move(Square.a3, Square.b2, Piece.WhiteQueen,  Piece.BlackPawn, MoveType.Capture), // Qaxb2#
+            new Move(Square.c4, Square.a2, Piece.WhiteQueen,  Piece.BlackPawn, MoveType.Capture), // Qcxa2#
+            new Move(Square.e5, Square.b2, Piece.WhiteQueen,  Piece.BlackPawn, MoveType.Capture), // Qexb2#
+            new Move(Square.b6, Square.b2, Piece.WhiteQueen,  Piece.BlackPawn, MoveType.Capture)  // Qbxb2#
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateCaptures(board, actual);
@@ -836,46 +834,46 @@ public class MoveGenerationTests
         var actual = new List<Move>();
         var expected = new List<Move>()
         {
-            new Move(Square.a2, Square.a3, Piece.WhitePawn),   // a3
-            new Move(Square.b2, Square.b3, Piece.WhitePawn),   // b3
-            new Move(Square.g2, Square.g3, Piece.WhitePawn),   // g3
-            new Move(Square.d5, Square.d6, Piece.WhitePawn),   // d6
-            new Move(Square.a2, Square.a4, Piece.WhitePawn),   // a4
-            new Move(Square.g2, Square.g4, Piece.WhitePawn),   // g4
-            new Move(Square.c3, Square.b1, Piece.WhiteKnight), // Nb1
-            new Move(Square.c3, Square.d1, Piece.WhiteKnight), // Nd1
-            new Move(Square.c3, Square.a4, Piece.WhiteKnight), // Na4
-            new Move(Square.c3, Square.b5, Piece.WhiteKnight), // Nb5
-            new Move(Square.e5, Square.d3, Piece.WhiteKnight), // Nd3
-            new Move(Square.e5, Square.c4, Piece.WhiteKnight), // Nc4
-            new Move(Square.e5, Square.g4, Piece.WhiteKnight), // Ng4
-            new Move(Square.e5, Square.c6, Piece.WhiteKnight), // Nc6
-            new Move(Square.d2, Square.c1, Piece.WhiteBishop), // Bc1
-            new Move(Square.d2, Square.e3, Piece.WhiteBishop), // Be3
-            new Move(Square.d2, Square.f4, Piece.WhiteBishop), // Bf4
-            new Move(Square.d2, Square.g5, Piece.WhiteBishop), // Bg5
-            new Move(Square.d2, Square.h6, Piece.WhiteBishop), // Bh6
-            new Move(Square.e2, Square.d1, Piece.WhiteBishop), // Bd1
-            new Move(Square.e2, Square.f1, Piece.WhiteBishop), // Bf1
-            new Move(Square.e2, Square.d3, Piece.WhiteBishop), // Bd3
-            new Move(Square.e2, Square.c4, Piece.WhiteBishop), // Bc4
-            new Move(Square.e2, Square.b5, Piece.WhiteBishop), // Bb5
-            new Move(Square.a1, Square.b1, Piece.WhiteRook),   // Rb1
-            new Move(Square.a1, Square.c1, Piece.WhiteRook),   // Rc1
-            new Move(Square.a1, Square.d1, Piece.WhiteRook),   // Rd1
-            new Move(Square.h1, Square.f1, Piece.WhiteRook),   // Rf1
-            new Move(Square.h1, Square.g1, Piece.WhiteRook),   // Rg1
-            new Move(Square.f3, Square.d3, Piece.WhiteQueen),  // Qd3
-            new Move(Square.f3, Square.e3, Piece.WhiteQueen),  // Qe3
-            new Move(Square.f3, Square.g3, Piece.WhiteQueen),  // Qg3
-            new Move(Square.f3, Square.f4, Piece.WhiteQueen),  // Qf4
-            new Move(Square.f3, Square.g4, Piece.WhiteQueen),  // Qg4
-            new Move(Square.f3, Square.f5, Piece.WhiteQueen),  // Qf5
-            new Move(Square.f3, Square.h5, Piece.WhiteQueen),  // Qh5
-            new Move(Square.e1, Square.d1, Piece.WhiteKing),   // Kd1
-            new Move(Square.e1, Square.f1, Piece.WhiteKing),   // Kf1
-            new Move(Square.e1, Square.g1, Piece.WhiteKing, CastlingSide.KingSide), // O-O
-            new Move(Square.e1, Square.c1, Piece.WhiteKing, CastlingSide.QueenSide) // O-O-O
+            new Move(Square.a2, Square.a3, Piece.WhitePawn,   MoveType.PawnMove),   // a3
+            new Move(Square.b2, Square.b3, Piece.WhitePawn,   MoveType.PawnMove),   // b3
+            new Move(Square.g2, Square.g3, Piece.WhitePawn,   MoveType.PawnMove),   // g3
+            new Move(Square.d5, Square.d6, Piece.WhitePawn,   MoveType.PawnMove),   // d6
+            new Move(Square.a2, Square.a4, Piece.WhitePawn,   MoveType.PawnDouble), // a4
+            new Move(Square.g2, Square.g4, Piece.WhitePawn,   MoveType.PawnDouble), // g4
+            new Move(Square.c3, Square.b1, Piece.WhiteKnight, MoveType.Normal),     // Nb1
+            new Move(Square.c3, Square.d1, Piece.WhiteKnight, MoveType.Normal),     // Nd1
+            new Move(Square.c3, Square.a4, Piece.WhiteKnight, MoveType.Normal),     // Na4
+            new Move(Square.c3, Square.b5, Piece.WhiteKnight, MoveType.Normal),     // Nb5
+            new Move(Square.e5, Square.d3, Piece.WhiteKnight, MoveType.Normal),     // Nd3
+            new Move(Square.e5, Square.c4, Piece.WhiteKnight, MoveType.Normal),     // Nc4
+            new Move(Square.e5, Square.g4, Piece.WhiteKnight, MoveType.Normal),     // Ng4
+            new Move(Square.e5, Square.c6, Piece.WhiteKnight, MoveType.Normal),     // Nc6
+            new Move(Square.d2, Square.c1, Piece.WhiteBishop, MoveType.Normal),     // Bc1
+            new Move(Square.d2, Square.e3, Piece.WhiteBishop, MoveType.Normal),     // Be3
+            new Move(Square.d2, Square.f4, Piece.WhiteBishop, MoveType.Normal),     // Bf4
+            new Move(Square.d2, Square.g5, Piece.WhiteBishop, MoveType.Normal),     // Bg5
+            new Move(Square.d2, Square.h6, Piece.WhiteBishop, MoveType.Normal),     // Bh6
+            new Move(Square.e2, Square.d1, Piece.WhiteBishop, MoveType.Normal),     // Bd1
+            new Move(Square.e2, Square.f1, Piece.WhiteBishop, MoveType.Normal),     // Bf1
+            new Move(Square.e2, Square.d3, Piece.WhiteBishop, MoveType.Normal),     // Bd3
+            new Move(Square.e2, Square.c4, Piece.WhiteBishop, MoveType.Normal),     // Bc4
+            new Move(Square.e2, Square.b5, Piece.WhiteBishop, MoveType.Normal),     // Bb5
+            new Move(Square.a1, Square.b1, Piece.WhiteRook,   MoveType.Normal),     // Rb1
+            new Move(Square.a1, Square.c1, Piece.WhiteRook,   MoveType.Normal),     // Rc1
+            new Move(Square.a1, Square.d1, Piece.WhiteRook,   MoveType.Normal),     // Rd1
+            new Move(Square.h1, Square.f1, Piece.WhiteRook,   MoveType.Normal),     // Rf1
+            new Move(Square.h1, Square.g1, Piece.WhiteRook,   MoveType.Normal),     // Rg1
+            new Move(Square.f3, Square.d3, Piece.WhiteQueen,  MoveType.Normal),     // Qd3
+            new Move(Square.f3, Square.e3, Piece.WhiteQueen,  MoveType.Normal),     // Qe3
+            new Move(Square.f3, Square.g3, Piece.WhiteQueen,  MoveType.Normal),     // Qg3
+            new Move(Square.f3, Square.f4, Piece.WhiteQueen,  MoveType.Normal),     // Qf4
+            new Move(Square.f3, Square.g4, Piece.WhiteQueen,  MoveType.Normal),     // Qg4
+            new Move(Square.f3, Square.f5, Piece.WhiteQueen,  MoveType.Normal),     // Qf5
+            new Move(Square.f3, Square.h5, Piece.WhiteQueen,  MoveType.Normal),     // Qh5
+            new Move(Square.e1, Square.d1, Piece.WhiteKing,   MoveType.Normal),     // Kd1
+            new Move(Square.e1, Square.f1, Piece.WhiteKing,   MoveType.Normal),     // Kf1
+            new Move(Square.e1, Square.g1, Piece.WhiteKing,   MoveType.CastleKingSide), // O-O
+            new Move(Square.e1, Square.c1, Piece.WhiteKing,   MoveType.CastleQueenSide) // O-O-O
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateQuietMoves(board, actual);
@@ -884,20 +882,20 @@ public class MoveGenerationTests
     }
 
     [Fact]
-    public void GenerateCaptures_KiwipetePosition_AllQuietMovesReturned()
+    public void GenerateCaptures_KiwipetePosition_AllCapturesReturned()
     {
         var board = new Board("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq");
         var actual = new List<Move>();
         var expected = new List<Move>()
         {  
-            new Move(Square.g2, Square.h3, Piece.WhitePawn,   Piece.BlackPawn),   // gxh3
-            new Move(Square.d5, Square.e6, Piece.WhitePawn,   Piece.BlackPawn),   // dxe6
-            new Move(Square.e5, Square.g6, Piece.WhiteKnight, Piece.BlackPawn),   // Nxg6
-            new Move(Square.e5, Square.d7, Piece.WhiteKnight, Piece.BlackPawn),   // Nxd7
-            new Move(Square.e5, Square.f7, Piece.WhiteKnight, Piece.BlackPawn),   // Nxf7
-            new Move(Square.e2, Square.a6, Piece.WhiteBishop, Piece.BlackBishop), // Bxa6
-            new Move(Square.f3, Square.h3, Piece.WhiteQueen,  Piece.BlackPawn),   // Qxh3
-            new Move(Square.f3, Square.f6, Piece.WhiteQueen,  Piece.BlackKnight)  // Qxf6
+            new Move(Square.g2, Square.h3, Piece.WhitePawn,   Piece.BlackPawn, MoveType.Capture),   // gxh3
+            new Move(Square.d5, Square.e6, Piece.WhitePawn,   Piece.BlackPawn, MoveType.Capture),   // dxe6
+            new Move(Square.e5, Square.g6, Piece.WhiteKnight, Piece.BlackPawn, MoveType.Capture),   // Nxg6
+            new Move(Square.e5, Square.d7, Piece.WhiteKnight, Piece.BlackPawn, MoveType.Capture),   // Nxd7
+            new Move(Square.e5, Square.f7, Piece.WhiteKnight, Piece.BlackPawn, MoveType.Capture),   // Nxf7
+            new Move(Square.e2, Square.a6, Piece.WhiteBishop, Piece.BlackBishop, MoveType.Capture), // Bxa6
+            new Move(Square.f3, Square.h3, Piece.WhiteQueen,  Piece.BlackPawn, MoveType.Capture),   // Qxh3
+            new Move(Square.f3, Square.f6, Piece.WhiteQueen,  Piece.BlackKnight, MoveType.Capture)  // Qxf6
         };
 
         m8.chess.MoveGeneration.MoveGeneration.GenerateCaptures(board, actual);

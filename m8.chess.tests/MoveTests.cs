@@ -11,14 +11,14 @@ public class MoveTests
         var to = Square.c4;
         var piece = Piece.WhiteQueen;
 
-        var move = new Move(from, to, piece);
+        var move = new Move(from, to, piece, MoveType.Normal);
 
         move.From.Should().Be(from);
         move.To.Should().Be(to);
         move.Piece.Should().Be(piece);
         move.Taken.IsValid.Should().BeFalse();
         move.PromoteTo.IsValid.Should().BeFalse();
-        move.CastlingSide.Should().Be(CastlingSide.None);
+        move.MoveType.Should().Be(MoveType.Normal);
     }
 
     [Fact]
@@ -29,14 +29,14 @@ public class MoveTests
         var piece = Piece.WhiteRook;
         var taken = Piece.BlackRook;
 
-        var move = new Move(from, to, piece, taken);
+        var move = new Move(from, to, piece, taken, MoveType.Capture);
 
         move.From.Should().Be(from);
         move.To.Should().Be(to);
         move.Piece.Should().Be(piece);
         move.Taken.Should().Be(taken);
         move.PromoteTo.IsValid.Should().BeFalse();
-        move.CastlingSide.Should().Be(CastlingSide.None);
+        move.MoveType.Should().Be(MoveType.Capture);
     }
 
     [Fact]
@@ -48,13 +48,13 @@ public class MoveTests
         var taken = Piece.None;
         var promoteTo = Piece.WhiteQueen;
 
-        var move = new Move(from, to, piece, taken, promoteTo);
+        var move = new Move(from, to, piece, taken, promoteTo, MoveType.Promotion);
 
         move.From.Should().Be(from);
         move.To.Should().Be(to);
         move.Piece.Should().Be(piece);
         taken.IsValid.Should().BeFalse();
         move.PromoteTo.Should().Be(promoteTo);
-        move.CastlingSide.Should().Be(CastlingSide.None);
+        move.MoveType.Should().Be(MoveType.Promotion);
     }
 }

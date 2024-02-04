@@ -233,4 +233,269 @@ public class BoardTests
     }
 
     #endregion
+
+    #region Make tests
+
+    [Fact]
+    public void Make_AnyMove_SideToMoveSwitch()
+    {
+        var sut = new Board("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+        var move = new Move(Square.f3, Square.g4, Piece.WhiteQueen, MoveType.Normal);
+
+        sut.Make(move);
+
+        sut.SideToMove.Should().Be(Color.Black);
+    }
+
+    [Fact]
+    public void Make_SimpleMove_PieceIsMoved()
+    {
+        var sut = new Board("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+        var move = new Move(Square.f3, Square.g4, Piece.WhiteQueen, MoveType.Normal);
+
+        sut.Make(move);
+
+        sut[move.From].IsValid.Should().BeFalse();
+        sut[move.To].Should().Be(Piece.WhiteQueen);
+    }
+
+    [Fact]
+    public void Make_SimpleCapture_PieceIsMoved()
+    {
+        var sut = new Board("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+        var move = new Move(Square.e5, Square.f7, Piece.WhiteKnight, Piece.BlackPawn, MoveType.Capture);
+
+        sut.Make(move);
+
+        sut[move.From].IsValid.Should().BeFalse();
+        sut[move.To].Should().Be(Piece.WhiteKnight);
+    }
+
+    [Fact]
+    public void Make_KingSideCastling_KingAndRookAreMoved()
+    {
+        var sut = new Board("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+        var move = new Move(Square.e1, Square.g1, Piece.WhiteKing, MoveType.CastleKingSide);
+
+        sut.Make(move);
+
+        sut[Square.e1].IsValid.Should().BeFalse();
+        sut[Square.h1].IsValid.Should().BeFalse();
+        sut[Square.g1].Should().Be(Piece.WhiteKing);
+        sut[Square.f1].Should().Be(Piece.WhiteRook);
+    }
+
+    [Fact]
+    public void Make_QueenSideCastling_KingAndRookAreMoved()
+    {
+        var sut = new Board("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R b KQkq - 0 1");
+        var move = new Move(Square.e8, Square.c8, Piece.BlackKing, MoveType.CastleQueenSide);
+
+        sut.Make(move);
+
+        sut[Square.e8].IsValid.Should().BeFalse();
+        sut[Square.a8].IsValid.Should().BeFalse();
+        sut[Square.c8].Should().Be(Piece.BlackKing);
+        sut[Square.d8].Should().Be(Piece.BlackRook);
+    }
+
+    [Fact]
+    public void Make_PawnMove_PieceIsMoved()
+    {
+        var sut = new Board("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+        var move = new Move(Square.d5, Square.d6, Piece.WhitePawn, MoveType.PawnMove);
+
+        sut.Make(move);
+
+        sut[Square.d5].IsValid.Should().BeFalse();
+        sut[Square.d6].Should().Be(Piece.WhitePawn);
+        sut.EnPassantFile.IsValid.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Make_PawnMoveTwoSquares_EnPassantIsSet()
+    {
+        var sut = new Board("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+        var move = new Move(Square.a2, Square.a4, Piece.WhitePawn, MoveType.PawnDouble);
+
+        sut.Make(move);
+
+        sut.EnPassantFile.Should().Be(File.a);
+    }
+
+    [Fact]
+    public void Make_AnyMoveAfterPawnDoublePush_EnPassantIsReset()
+    {
+        var sut = new Board("r3k2r/p1ppqpb1/bn2pnp1/3PN3/Pp2P3/2N2Q1p/1PPBBPPP/R3K2R b KQkq a3 0 1");
+        var move = new Move(Square.g6, Square.g5, Piece.BlackPawn, MoveType.PawnMove);
+
+        sut.Make(move);
+
+        sut.EnPassantFile.IsValid.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Make_PawnCapture_PieceAreMoved()
+    {
+        var sut = new Board("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+        var move = new Move(Square.d5, Square.e6, Piece.WhitePawn, Piece.BlackPawn, MoveType.Capture);
+
+        sut.Make(move);
+
+        sut[Square.d5].IsValid.Should().BeFalse();
+        sut[Square.e6].Should().Be(Piece.WhitePawn);
+    }
+
+    [Fact]
+    public void Make_PawnCaptureEnPassant_PieceAreMoved()
+    {
+        var sut = new Board("r3k2r/p1ppqpb1/bn2pnp1/3PN3/Pp2P3/2N2Q1p/1PPBBPPP/R3K2R b KQkq a3 0 1");
+        var move = new Move(Square.b4, Square.a3, Piece.BlackPawn, Piece.WhitePawn, MoveType.EnPassant);
+
+        sut.Make(move);
+
+        sut[Square.b4].IsValid.Should().BeFalse();
+        sut[Square.a4].IsValid.Should().BeFalse();
+        sut[Square.a3].Should().Be(Piece.BlackPawn);
+    }
+
+    [Fact]
+    public void Make_PawnPromotion_PieceIsPromoted()
+    {
+        var sut = new Board("r3k2r/p1ppqpb1/bn2pnp1/3PN3/Pp2P3/2N2Q2/1PPBBPpP/R3K2R b KQkq - 0 2");
+        var move = new Move(Square.g2, Square.g1, Piece.BlackPawn, Piece.None, Piece.BlackKnight, MoveType.Promotion);
+
+        sut.Make(move);
+
+        sut[Square.g2].IsValid.Should().BeFalse();
+        sut[Square.g1].Should().Be(Piece.BlackKnight);
+    }
+
+    [Fact]
+    public void Make_PawnTakesAndPromote_PieceIsPromoted()
+    {
+        var sut = new Board("r3k2r/p1ppqpb1/bn2pnp1/3PN3/Pp2P3/2N2Q2/1PPBBPpP/R3K2R b KQkq - 0 2");
+        var move = new Move(Square.g2, Square.h1, Piece.BlackPawn, Piece.WhiteRook, Piece.BlackQueen, MoveType.CapturePromotion);
+
+        sut.Make(move);
+
+        sut[Square.g2].IsValid.Should().BeFalse();
+        sut[Square.h1].Should().Be(Piece.BlackQueen);
+    }
+
+    [Fact]
+    public void Make_CastlingMove_CastlingOptionsAreCleared()
+    {
+        var sut = new Board("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+        var move = new Move(Square.e1, Square.g1, Piece.WhiteKing, MoveType.CastleKingSide);
+
+        sut.Make(move);
+
+        sut.CastlingOptions.Should().Be(CastlingOptions.BlackKingside | CastlingOptions.BlackQueenside);
+    }
+
+    [Fact]
+    public void Make_KingSideRookMove_KingSideMoveOptionsReset()
+    {
+        var sut = new Board("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+        var move = new Move(Square.h1, Square.g1, Piece.WhiteRook, MoveType.Normal);
+
+        sut.Make(move);
+
+        sut.CastlingOptions.Should().Be(CastlingOptions.BlackKingside | CastlingOptions.BlackQueenside | CastlingOptions.WhiteQueenside);
+    }
+
+    [Fact]
+    public void Make_QueenSideRookMove_QueenSideMoveOptionsReset()
+    {
+        var sut = new Board("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+        var move = new Move(Square.a1, Square.b1, Piece.WhiteRook, MoveType.Normal);
+
+        sut.Make(move);
+
+        sut.CastlingOptions.Should().Be(CastlingOptions.BlackKingside | CastlingOptions.BlackQueenside | CastlingOptions.WhiteKingside);
+    }
+
+    [Fact]
+    public void Make_WhiteMove_FullMoveClockNotChanged()
+    {
+        var sut = new Board("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1");
+        var move = new Move(Square.a1, Square.b1, Piece.WhiteRook, MoveType.Normal);
+
+        sut.Make(move);
+
+        sut.FullMoveNumber.Should().Be(1);
+    }
+
+    [Fact]
+    public void Make_BlackMove_FullMoveClockIncremented()
+    {
+        var sut = new Board("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R b KQkq - 0 1");
+        var move = new Move(Square.b6, Square.c4, Piece.BlackKnight, MoveType.Normal);
+
+        sut.Make(move);
+
+        sut.FullMoveNumber.Should().Be(2);
+    }
+
+    [Fact]
+    public void Make_QuietMove_HalfMoveClockIncremented()
+    {
+        var sut = new Board("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R b KQkq - 12 1");
+        var move = new Move(Square.b6, Square.c4, Piece.BlackKnight, MoveType.Normal);
+
+        sut.Make(move);
+
+        sut.HalfMoveClock.Should().Be(13);
+    }
+
+    [Fact]
+    public void Make_PawnMove_HalfMoveClockReset()
+    {
+        var sut = new Board("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R b KQkq - 12 1");
+        var move = new Move(Square.g6, Square.g5, Piece.BlackPawn, MoveType.PawnMove);
+
+        sut.Make(move);
+
+        sut.HalfMoveClock.Should().Be(0);
+    }
+
+    [Fact]
+    public void Make_Capture_HalfMoveClockReset()
+    {
+        var sut = new Board("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R b KQkq - 12 1");
+        var move = new Move(Square.f6, Square.e4, Piece.BlackKnight, Piece.WhitePawn, MoveType.Capture);
+
+        sut.Make(move);
+
+        sut.HalfMoveClock.Should().Be(0);
+    }
+
+    [Fact]
+    public void Make_Chess960QueenSideCastling_KingAndRookAreMoved()
+    {
+        var sut = new Board("2k2r1r/8/8/8/8/8/8/RRK5 w Bf - 0 1");
+        var move = new Move(Square.c1, Square.c1, Piece.WhiteKing, MoveType.CastleQueenSide);
+
+        sut.Make(move);
+
+        sut[Square.b1].IsValid.Should().BeFalse();
+        sut[Square.c1].Should().Be(Piece.WhiteKing);
+        sut[Square.d1].Should().Be(Piece.WhiteRook);
+    }
+
+    [Fact]
+    public void Make_Chess960KingSideCastling_KingAndRookAreMoved()
+    {
+        var sut = new Board("2k2r1r/8/8/8/8/8/8/RRK5 b Bf - 0 1");
+        var move = new Move(Square.c8, Square.g8, Piece.BlackKing, MoveType.CastleKingSide);
+
+        sut.Make(move);
+
+        sut[Square.c8].IsValid.Should().BeFalse();
+        sut[Square.f8].Should().Be(Piece.BlackRook);
+        sut[Square.g8].Should().Be(Piece.BlackKing);
+    }
+
+    #endregion
 }
