@@ -22,16 +22,16 @@ public class Board
 
     #region Private Fields
 
-    private Piece[] _board = new Piece[SQUARES_ON_BOARD];
-    private Bitboard[] _pieces = new Bitboard[Piece.MAX_VALUE + 1];
-    private Bitboard[] _colors = new Bitboard[Color.MAX_VALUE + 1];
-    private File[] _castlingFiles = new File[2 + 1];
-    private File _enPassantFile = File.Invalid;
-    private CastlingOptions _castlingOptions = CastlingOptions.None;
-    private CastlingOptions[] _castlingMasks = new CastlingOptions[SQUARES_ON_BOARD];
-    private Color _sideToMove;
-    private uint _halfMoveClock = 0;
-    private uint _fullMoveNumber = 1;
+    private Piece[]           _board;
+    private Bitboard[]        _pieces;
+    private Bitboard[]        _colors;
+    private File[]            _castlingFiles;
+    private File              _enPassantFile;
+    private CastlingOptions   _castlingOptions;
+    private CastlingOptions[] _castlingMasks;
+    private Color             _sideToMove;
+    private uint              _halfMoveClock;
+    private uint              _fullMoveNumber;
 
     #endregion
 
@@ -44,6 +44,36 @@ public class Board
     ///  fen string representing the position to initiate the board</param>
     public Board(string fen = STARTING_POSITION_FEN)
     {
+        _board           = new Piece[SQUARES_ON_BOARD];
+        _pieces          = new Bitboard[Piece.MAX_VALUE + 1];
+        _colors          = new Bitboard[Color.MAX_VALUE + 1];
+        _castlingFiles   = new File[2 + 1];
+        _enPassantFile   = File.Invalid;
+        _castlingOptions = CastlingOptions.None;
+        _castlingMasks   = new CastlingOptions[SQUARES_ON_BOARD];
+
+        LoadXFen(fen);
+    }
+
+    /// <summary>
+    ///  Copy constructor. Does a deep-copy.
+    /// </summary>
+    public Board(Board original)
+    {
+        _board           = original._board.ToArray();
+        _pieces          = original._pieces.ToArray();
+        _colors          = original._colors.ToArray();
+        _castlingFiles   = original._castlingFiles.ToArray();
+        _enPassantFile   = original._enPassantFile;
+        _castlingOptions = original._castlingOptions;
+        _castlingMasks   = original._castlingMasks; // Superficial-copy, this object is never muted
+        _sideToMove      = original._sideToMove;
+        _halfMoveClock   = original._halfMoveClock;
+        _fullMoveNumber  = original._fullMoveNumber;
+    }
+
+    private void LoadXFen(string fen)
+    {
         var it = fen.GetEnumerator();
         var hasNext = it.MoveNext();
 
@@ -54,7 +84,7 @@ public class Board
             hasNext = LoadXFenCastlingOptions(it, hasNext);
             hasNext = LoadXFenEnPassantSquare(it, hasNext);
             hasNext = LoadXFenHalfMoveClock(it, hasNext);
-            _       = LoadXFenFullMoveNumber(it, hasNext);
+            _ = LoadXFenFullMoveNumber(it, hasNext);
 
             SetCastlingMasks();
 
@@ -803,6 +833,20 @@ public class Board
         }
 
         return sb.ToString();
+    }
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj)
+    {
+        return obj is Board other
+            && _board.SequenceEqual(other._board)
+            && _castlingFiles.SequenceEqual(other._castlingFiles)
+            && _enPassantFile == other._enPassantFile
+            && _castlingOptions == other._castlingOptions
+            && _castlingMasks.SequenceEqual(other._castlingMasks)
+            && _sideToMove == other._sideToMove
+            && _halfMoveClock == other._halfMoveClock
+            && _fullMoveNumber == other._fullMoveNumber;
     }
 
     #endregion
