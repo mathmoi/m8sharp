@@ -4,6 +4,7 @@ using m8.common.Extensions;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Linq;
 
 namespace m8.chess;
 
@@ -847,6 +848,19 @@ public class Board
             && _sideToMove == other._sideToMove
             && _halfMoveClock == other._halfMoveClock
             && _fullMoveNumber == other._fullMoveNumber;
+    }
+
+    /// <inheritdoc />
+    public override int GetHashCode()
+    {
+        return _board.Aggregate(0, (acc, x) => acc ^ x.GetHashCode())
+             ^ _castlingFiles.Aggregate(0, (acc, x) => acc ^ x.GetHashCode())
+             ^ _enPassantFile.GetHashCode()
+             ^ _castlingOptions.GetHashCode()
+             ^ _castlingMasks.Aggregate(0, (acc, x) => acc ^ x.GetHashCode())
+             ^ _sideToMove.GetHashCode()
+             ^ _halfMoveClock.GetHashCode()
+             ^ _fullMoveNumber.GetHashCode();
     }
 
     #endregion
