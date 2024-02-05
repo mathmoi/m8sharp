@@ -485,6 +485,30 @@ public class BoardTests
     }
 
     [Fact]
+    public void Make_Chess960KingSideCastlingKingRookExchangePositions_KingAndRookAreMoved()
+    {
+        var sut = new Board("5k2/8/8/8/8/8/8/5KR1 w K - 0 1");
+        var move = new Move(Square.f1, Square.g1, Piece.WhiteKing, MoveType.CastleKingSide);
+
+        sut.Make(move);
+
+        sut[Square.f1].Should().Be(Piece.WhiteRook);
+        sut[Square.g1].Should().Be(Piece.WhiteKing);
+    }
+
+    [Fact]
+    public void Make_Chess960QueenSideCastlingKingRookExchangePositions_KingAndRookAreMoved()
+    {
+        var sut = new Board("2rk4/8/8/8/8/8/8/3K4 b q - 0 1");
+        var move = new Move(Square.d8, Square.c8, Piece.BlackKing, MoveType.CastleQueenSide);
+
+        sut.Make(move);
+
+        sut[Square.d8].Should().Be(Piece.BlackRook);
+        sut[Square.c8].Should().Be(Piece.BlackKing);
+    }
+
+    [Fact]
     public void Make_Chess960KingSideCastling_KingAndRookAreMoved()
     {
         var sut = new Board("2k2r1r/8/8/8/8/8/8/RRK5 b Bf - 0 1");
@@ -495,6 +519,91 @@ public class BoardTests
         sut[Square.c8].IsValid.Should().BeFalse();
         sut[Square.f8].Should().Be(Piece.BlackRook);
         sut[Square.g8].Should().Be(Piece.BlackKing);
+    }
+
+    #endregion
+
+    #region Unmake tests
+
+    private void ExecuteUnmakeTest(string fen, Move move)
+    {
+        var original = new Board(fen);
+        var sut = new Board(original);
+
+        var unmakeInfo = sut.Make(move);
+        sut.Unmake(move, unmakeInfo);
+
+        sut.Should().Be(original);
+    }
+
+    [Fact]
+    public void Unmake_NormalMove_BoardEqualsOriginal()
+    {
+        ExecuteUnmakeTest("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1",
+                          new Move(Square.f3, Square.g4, Piece.WhiteQueen, MoveType.Normal));
+    }
+
+    [Fact]
+    public void Unmake_Capture_BoardEqualsOriginal()
+    {
+        ExecuteUnmakeTest("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1",
+                          new Move(Square.e5, Square.f7, Piece.WhiteKnight, Piece.BlackPawn, MoveType.Capture));
+    }
+
+    [Fact]
+    public void Unmake_KingSideCastle_BoardEqualsOriginal()
+    {
+        ExecuteUnmakeTest("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1",
+                          new Move(Square.e1, Square.g1, Piece.WhiteKing, MoveType.CastleKingSide));
+    }
+
+    [Fact]
+    public void Unmake_QueenSideCastle_BoardEqualsOriginal()
+    {
+        ExecuteUnmakeTest("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R b KQkq - 0 1",
+                          new Move(Square.e8, Square.c8, Piece.BlackKing, MoveType.CastleQueenSide));
+    }
+
+    [Fact]
+    public void Unmake_Pawn_BoardEqualsOriginal()
+    {
+        ExecuteUnmakeTest("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1",
+                          new Move(Square.d5, Square.d6, Piece.WhitePawn, MoveType.PawnMove));
+    }
+
+    [Fact]
+    public void Unmake_PawnMoveTwoSquared_BoardEqualsOriginal()
+    {
+        ExecuteUnmakeTest("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1",
+                          new Move(Square.a2, Square.a4, Piece.WhitePawn, MoveType.PawnDouble));
+    }
+
+    [Fact]
+    public void Unmake_PawnCapture_BoardEqualsOriginal()
+    {
+        ExecuteUnmakeTest("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1",
+                          new Move(Square.d5, Square.e6, Piece.WhitePawn, Piece.BlackPawn, MoveType.Capture));
+    }
+
+    [Fact]
+    public void Unmake_PawnCaptureEnPassant_BoardEqualsOriginal()
+    {
+        ExecuteUnmakeTest("r3k2r/p1ppqpb1/bn2pnp1/3PN3/Pp2P3/2N2Q1p/1PPBBPPP/R3K2R b KQkq a3 0 1",
+                          new Move(Square.b4, Square.a3, Piece.BlackPawn, Piece.WhitePawn, MoveType.EnPassant));
+    }
+
+    [Fact]
+    public void Unmake_PawnPromotion_BoardEqualsOriginal()
+    {
+        ExecuteUnmakeTest("r3k2r/p1ppqpb1/bn2pnp1/3PN3/Pp2P3/2N2Q2/1PPBBPpP/R3K2R b KQkq - 0 2",
+                          new Move(Square.g2, Square.g1, Piece.BlackPawn, Piece.None, Piece.BlackKnight, MoveType.Promotion));
+    }
+
+    [Fact]
+    public void Unmake_PawnTakesAndPromote_BoardEqualsOriginal()
+    {
+        ExecuteUnmakeTest("r3k2r/p1ppqpb1/bn2pnp1/3PN3/Pp2P3/2N2Q2/1PPBBPpP/R3K2R b KQkq - 0 2",
+                          new Move(Square.g2, Square.h1, Piece.BlackPawn, Piece.WhiteRook, Piece.BlackQueen, MoveType.CapturePromotion));
     }
 
     #endregion

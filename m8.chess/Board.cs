@@ -49,7 +49,7 @@ public class Board
         _pieces          = new Bitboard[Piece.MAX_VALUE + 1];
         _colors          = new Bitboard[Color.MAX_VALUE + 1];
         _castlingFiles   = new File[2 + 1];
-        _enPassantFile   = File.Invalid;
+        _enPassantFile   = File.None;
         _castlingOptions = CastlingOptions.None;
         _castlingMasks   = new CastlingOptions[SQUARES_ON_BOARD];
 
@@ -176,8 +176,8 @@ public class Board
     {
         hasNext = it.SkipWhiteSpaces(hasNext);
 
-        SetCastlingFile(CastlingSide.QueenSide, File.Invalid);
-        SetCastlingFile(CastlingSide.KingSide,  File.Invalid);
+        SetCastlingFile(CastlingSide.QueenSide, File.None);
+        SetCastlingFile(CastlingSide.KingSide,  File.None);
 
         while (hasNext && !char.IsWhiteSpace(it.Current))
         {
@@ -187,7 +187,7 @@ public class Board
                 Rank firstRank = Rank.First.FlipForBlack(color);
                 Piece rook = new(color, PieceType.Rook);
                 Square kingSquare = this.GetKingPosition(color);
-                File rookFile = File.Invalid;
+                File rookFile = File.None;
                 CastlingSide castlingSide = CastlingSide.None;
 
                 char lowerCurrentChar = char.ToLower(it.Current);
@@ -839,15 +839,22 @@ public class Board
     /// <inheritdoc />
     public override bool Equals(object? obj)
     {
-        return obj is Board other
-            && _board.SequenceEqual(other._board)
-            && _castlingFiles.SequenceEqual(other._castlingFiles)
-            && _enPassantFile == other._enPassantFile
-            && _castlingOptions == other._castlingOptions
-            && _castlingMasks.SequenceEqual(other._castlingMasks)
-            && _sideToMove == other._sideToMove
-            && _halfMoveClock == other._halfMoveClock
-            && _fullMoveNumber == other._fullMoveNumber;
+        if (obj is not Board)
+        {
+            return false;
+        }
+
+        Board other = (Board)obj;
+        var equals = _board.SequenceEqual(other._board);
+        equals = equals && _castlingFiles.SequenceEqual(other._castlingFiles);
+        equals = equals && _enPassantFile.Equals(other._enPassantFile);
+        equals = equals && _castlingOptions.Equals(other._castlingOptions);
+        equals = equals && _castlingMasks.SequenceEqual(other._castlingMasks);
+        equals = equals && _sideToMove.Equals(other._sideToMove);
+        equals = equals && _halfMoveClock.Equals(other._halfMoveClock);
+        equals = equals && _fullMoveNumber.Equals(other._fullMoveNumber);
+
+        return equals;
     }
 
     /// <inheritdoc />
@@ -865,15 +872,17 @@ public class Board
 
     #endregion
 
-    #region Make
+    #region Make & Unmake
 
     /// <summary>
     ///  Make a move on the board
     /// </summary>
-    public void Make(Move move)
+    public UnmakeInfo Make(Move move)
     {
         Debug.Assert(this[move.From] == move.Piece);
         Debug.Assert(_sideToMove == move.Piece.Color);
+
+        var unmakeInfo = new UnmakeInfo(_enPassantFile, _castlingOptions, _halfMoveClock);
 
         switch (move.MoveType)
         {
@@ -881,7 +890,7 @@ public class Board
                 Debug.Assert(this[move.To].IsValid == false);
 
                 MovePiece(move.From, move.To);
-                _enPassantFile = File.Invalid;
+                _enPassantFile = File.None;
                 _castlingOptions &= _castlingMasks[move.From.Value];
                 ++_halfMoveClock;
                 break;
@@ -891,7 +900,7 @@ public class Board
 
                 RemovePiece(move.To);
                 MovePiece(move.From, move.To);
-                _enPassantFile = File.Invalid;
+                _enPassantFile = File.None;
                 _castlingOptions &= _castlingMasks[move.From.Value] | _castlingMasks[move.To.Value];
                 _halfMoveClock = 0;
                 break;
@@ -902,9 +911,11 @@ public class Board
 
                 var rookFrom = new Square(GetCastlingFile(CastlingSide.KingSide), move.From.Rank);
                 var rookTo = new Square(File.f, move.From.Rank);
-                MovePiece(move.From, move.To);
-                MovePiece(rookFrom, rookTo);
-                _enPassantFile = File.Invalid;
+                RemovePiece(move.From);
+                RemovePiece(rookFrom);
+                AddPiece(move.To, new Piece(_sideToMove, PieceType.King));
+                AddPiece(rookTo, new Piece(_sideToMove, PieceType.Rook));
+                _enPassantFile = File.None;
                 _castlingOptions &= _castlingMasks[move.From.Value];
                 ++_halfMoveClock;
                 break;
@@ -915,9 +926,11 @@ public class Board
 
                 rookFrom = new Square(GetCastlingFile(CastlingSide.QueenSide), move.From.Rank);
                 rookTo = new Square(File.d, move.From.Rank);
-                MovePiece(move.From, move.To);
-                MovePiece(rookFrom, rookTo);
-                _enPassantFile = File.Invalid;
+                RemovePiece(move.From);
+                RemovePiece(rookFrom);
+                AddPiece(move.To, new Piece(_sideToMove, PieceType.King));
+                AddPiece(rookTo, new Piece(_sideToMove, PieceType.Rook));
+                _enPassantFile = File.None;
                 _castlingOptions &= _castlingMasks[move.From.Value];
                 ++_halfMoveClock;
                 break;
@@ -926,7 +939,7 @@ public class Board
                 Debug.Assert(this[move.To].IsValid == false);
 
                 MovePiece(move.From, move.To);
-                _enPassantFile = File.Invalid;
+                _enPassantFile = File.None;
                 _halfMoveClock = 0;
                 break;
 
@@ -942,14 +955,14 @@ public class Board
                 var enPassantSquare = new Square(move.To.File, move.From.Rank);
                 RemovePiece(enPassantSquare);
                 MovePiece(move.From, move.To);
-                _enPassantFile = File.Invalid;
+                _enPassantFile = File.None;
                 _halfMoveClock = 0;
                 break;
 
             case MoveType.Promotion:
                 RemovePiece(move.From);
                 AddPiece(move.To, move.PromoteTo);
-                _enPassantFile = File.Invalid;
+                _enPassantFile = File.None;
                 _halfMoveClock = 0;
                 break;
 
@@ -957,7 +970,7 @@ public class Board
                 RemovePiece(move.From);
                 RemovePiece(move.To);
                 AddPiece(move.To, move.PromoteTo);
-                _enPassantFile = File.Invalid;
+                _enPassantFile = File.None;
                 _castlingOptions &= _castlingMasks[move.To.Value];
                 _halfMoveClock = 0;
                 break;
@@ -965,6 +978,67 @@ public class Board
 
         _fullMoveNumber += _sideToMove.Value; // This trick increment when _sideToMove is black only.
         _sideToMove = _sideToMove.Opposite;
+
+        return unmakeInfo;
+    }
+
+    public void Unmake(Move move, UnmakeInfo unmakeInfo)
+    {
+        switch (move.MoveType)
+        {
+            case MoveType.Normal:
+            case MoveType.PawnMove:
+            case MoveType.PawnDouble:
+                MovePiece(move.To, move.From);
+                break;
+
+            case MoveType.Capture:
+                MovePiece(move.To, move.From);
+                AddPiece(move.To, move.Taken);
+                break;
+
+            case MoveType.CastleKingSide:
+                var rookFrom = new Square(GetCastlingFile(CastlingSide.KingSide), move.From.Rank);
+                var rookTo = new Square(File.f, move.From.Rank);
+                RemovePiece(move.To);
+                RemovePiece(rookTo);
+                AddPiece(move.From, move.Piece);
+                AddPiece(rookFrom, new Piece(_sideToMove.Opposite, PieceType.Rook));
+                break;
+
+            case MoveType.CastleQueenSide:
+                rookFrom = new Square(GetCastlingFile(CastlingSide.QueenSide), move.From.Rank);
+                rookTo = new Square(File.d, move.From.Rank);
+                RemovePiece(move.To);
+                RemovePiece(rookTo);
+                AddPiece(move.From, move.Piece);
+                AddPiece(rookFrom, new Piece(_sideToMove.Opposite, PieceType.Rook));
+                break;
+
+            case MoveType.EnPassant:
+                var enPassantSquare = new Square(move.To.File, move.From.Rank);
+                MovePiece(move.To, move.From);
+                AddPiece(enPassantSquare, new Piece(_sideToMove, PieceType.Pawn));
+                break;
+
+            case MoveType.Promotion:
+                RemovePiece(move.To);
+                AddPiece(move.From, move.Piece);
+                break;
+
+            case MoveType.CapturePromotion:
+                RemovePiece(move.To);
+                AddPiece(move.From, move.Piece);
+                AddPiece(move.To, move.Taken);
+                break;
+        }
+
+        _sideToMove = _sideToMove.Opposite;
+        _enPassantFile = unmakeInfo.EnPassantFile;
+        _castlingOptions = unmakeInfo.CastlingOptions;
+        _halfMoveClock = unmakeInfo.HalfMoveClock;
+
+        _fullMoveNumber -= _sideToMove.Value; // This trick decrement when _sideToMove is black only.
     }
 
     #endregion

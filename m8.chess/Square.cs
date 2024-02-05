@@ -142,7 +142,7 @@ public readonly struct Square
     ///  Represent an invalid square.
     /// </summary>
     /// <remarks>This value can be used to represent the absence of a square</remarks>
-    public static readonly Square Invalid = new(byte.MaxValue);
+    public static readonly Square None = new(byte.MaxValue);
 
     /// <summary>
     ///  All the ranks from First to Eight
@@ -267,22 +267,13 @@ public readonly struct Square
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override bool Equals(object? obj)
     {
-        if (!this.IsValid)
+        if (obj is not Square)
         {
             return false;
         }
 
-        if (obj is Square other)
-        {
-            if (!other.IsValid)
-            {
-                return false;
-            }
-
-            return this == other;
-        }
-
-        return false;
+        var other = (Square)obj;
+        return (!IsValid && !other.IsValid) || _value == other._value;
     }
 
     /// <summary>
@@ -290,7 +281,14 @@ public readonly struct Square
     /// </summary>
     /// <returns>A hash code for the current object.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public override int GetHashCode() => _value.GetHashCode();
+    public override int GetHashCode()
+    {
+        if (!IsValid)
+        {
+            return None._value.GetHashCode();
+        }
+        return _value.GetHashCode();
+    }
 
     #endregion
 

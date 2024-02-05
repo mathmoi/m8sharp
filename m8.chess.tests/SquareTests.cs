@@ -218,7 +218,7 @@ public class SquareTests
     [Fact]
     public void IsValid_InvalidSquare_ReturnsFalse()
     {
-        Square.Invalid.IsValid.Should().BeFalse();
+        Square.None.IsValid.Should().BeFalse();
     }
 
     [Fact]

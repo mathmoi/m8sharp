@@ -24,7 +24,7 @@ public class FileTests
     [Fact]
     public void IsValid_InvalidFile_ReturnsFalse()
     {
-        File.Invalid.IsValid.Should().BeFalse();
+        File.None.IsValid.Should().BeFalse();
     }
 
     [Theory]

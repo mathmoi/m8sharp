@@ -148,6 +148,8 @@ public readonly struct Piece
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator ==(Piece lhs, Piece rhs)
     {
+        Debug.Assert(lhs.IsValid || lhs.Value == Piece.None.Value);
+        Debug.Assert(rhs.IsValid || rhs.Value == Piece.None.Value);
         return lhs._value == rhs._value;
     }
 
@@ -160,8 +162,8 @@ public readonly struct Piece
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator !=(Piece lhs, Piece rhs)
     {
-        Debug.Assert(lhs.IsValid);
-        Debug.Assert(rhs.IsValid);
+        Debug.Assert(lhs.IsValid || lhs.Value == Piece.None.Value);
+        Debug.Assert(rhs.IsValid || rhs.Value == Piece.None.Value);
         return lhs._value != rhs._value;
     }
 
@@ -173,22 +175,13 @@ public readonly struct Piece
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override bool Equals(object? obj)
     {
-        if (!this.IsValid)
+        if (obj is not Piece)
         {
             return false;
         }
 
-        if (obj is Piece other)
-        {
-            if (!other.IsValid)
-            {
-                return false;
-            }
-
-            return this == other;
-        }
-
-        return false;
+        var other = (Piece)obj;
+        return (!IsValid && !other.IsValid) || _value == other._value;
     }
 
     /// <summary>
@@ -196,7 +189,14 @@ public readonly struct Piece
     /// </summary>
     /// <returns>A hash code for the current object.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public override int GetHashCode() => _value.GetHashCode();
+    public override int GetHashCode()
+    {
+        if (!IsValid)
+        {
+            return None._value.GetHashCode();
+        }
+        return _value.GetHashCode();
+    }
 
     #endregion
 

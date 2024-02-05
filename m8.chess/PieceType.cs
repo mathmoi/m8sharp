@@ -188,19 +188,17 @@ public readonly struct PieceType
     }
 
     /// <summary>
-    ///  Verify if another instance is equal to this instance.
-    /// </summary>
-    public bool Equals(PieceType other)
-    {
-        return this._value == other._value;
-    }
-
-    /// <summary>
     ///  Verify if another object is equal to this instance.
     /// </summary>
     public override bool Equals([NotNullWhen(true)] object? obj)
     {
-        return obj is PieceType other && this._value == other._value;
+        if (obj is not PieceType)
+        {
+            return false;
+        }
+
+        var other = (PieceType)obj;
+        return (!IsValid && !other.IsValid) || _value == other._value;
     }
 
     /// <summary>
@@ -208,6 +206,10 @@ public readonly struct PieceType
     /// </summary>
     public override int GetHashCode()
     {
+        if (!IsValid)
+        {
+            return None._value.GetHashCode();
+        }
         return _value.GetHashCode();
     }
 

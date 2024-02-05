@@ -88,7 +88,7 @@ public readonly struct Rank(byte value)
     ///  Represent an invalid rank.
     /// </summary>
     /// <remarks>This value can be used to represent the absence of a rank,</remarks>
-    public static readonly Rank Invalid = new(byte.MaxValue);
+    public static readonly Rank None = new(byte.MaxValue);
 
     #endregion
 
@@ -186,22 +186,13 @@ public readonly struct Rank(byte value)
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override bool Equals(object? obj)
     {
-        if (!this.IsValid)
+        if (obj is not Rank)
         {
             return false;
         }
 
-        if (obj is Rank other)
-        {
-            if (!other.IsValid)
-            {
-                return false;
-            }
-
-            return this == other;
-        }
-
-        return false;
+        var other = (Rank)obj;
+        return (!IsValid && !other.IsValid) || _value == other._value;
     }
 
     /// <summary>
@@ -209,7 +200,14 @@ public readonly struct Rank(byte value)
     /// </summary>
     /// <returns>A hash code for the current object.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public override int GetHashCode() => _value.GetHashCode();
+    public override int GetHashCode()
+    {
+        if (!IsValid)
+        {
+            return None._value.GetHashCode();
+        }
+        return _value.GetHashCode();
+    }
 
     #endregion
 

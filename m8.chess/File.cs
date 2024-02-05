@@ -31,7 +31,7 @@ public readonly struct File(byte value)
     /// <param name="c"></param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public File(char c)
-    : this ((byte)(c - 'a'))
+    : this((byte)(c - 'a'))
     {
         Debug.Assert(this.IsValid);
     }
@@ -84,7 +84,7 @@ public readonly struct File(byte value)
     ///  Represent an invalid file.
     /// </summary>
     /// <remarks>This value can be used to represent the absence of a file</remarks>
-    public static readonly File Invalid = new(byte.MaxValue);
+    public static readonly File None = new(byte.MaxValue);
 
     /// <summary>
     /// Collection of all the files.
@@ -187,22 +187,13 @@ public readonly struct File(byte value)
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override bool Equals(object? obj)
     {
-        if (!this.IsValid)
+        if (obj is not File)
         {
             return false;
         }
-        
-        if (obj is File other)
-        {
-            if (!other.IsValid)
-            {
-                return false;
-            }
 
-            return this == other;
-        }
-
-        return false;
+        var other = (File)obj;
+        return (!IsValid && !other.IsValid) || _value == other._value;
     }
 
     /// <summary>
@@ -210,7 +201,14 @@ public readonly struct File(byte value)
     /// </summary>
     /// <returns>A hash code for the current object.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public override int GetHashCode() => _value.GetHashCode();
+    public override int GetHashCode()
+    {
+        if (!IsValid)
+        {
+            return None._value.GetHashCode();
+        }
+        return _value.GetHashCode();
+    }
 
     #endregion
 

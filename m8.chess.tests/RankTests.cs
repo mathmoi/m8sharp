@@ -24,7 +24,7 @@ public class RankTests
     [Fact]
     public void IsValid_InvalidRank_ReturnsFalse()
     {
-        Rank.Invalid.IsValid.Should().BeFalse();
+        Rank.None.IsValid.Should().BeFalse();
     }
 
     [Theory]
