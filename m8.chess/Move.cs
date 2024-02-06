@@ -137,5 +137,16 @@ public readonly struct Move
         get => (MoveType)((_value >> MOVE_TYPE_OFFSET) & ((1 << MOVE_TYPE_SIZE) - 1));
     }
 
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        var promotion = string.Empty;
+        if (Taken.IsValid)
+        {
+            promotion = $"={Taken.Type.Character}";
+        }
+        return $"{From}{To}{promotion}";
+    }
+
     #endregion
 }

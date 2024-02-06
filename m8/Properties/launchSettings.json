@@ -2,7 +2,7 @@
   "profiles": {
     "m8": {
       "commandName": "Project",
-      "commandLineArgs": "magics"
+      "commandLineArgs": "perft --depth 5"
     }
   }
 }
